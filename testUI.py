@@ -9,7 +9,7 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-
+from rSignalEmitter import rSignalEmitter
 import networktableHelper
 from tableDeligate import tableDeligate
 class Ui_MainWindow(tableDeligate):
@@ -46,17 +46,23 @@ class Ui_MainWindow(tableDeligate):
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
         self.networktable = networktableHelper.networktableHelper(self)
-
+        self.rSignalEmitter = rSignalEmitter()
+        self.rSignalEmitter.rSignal.connect(self.updateR)
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
 
-    def rChange(self, value):
+    def updateR(self, value):
+        print(value)
         self.textBrowser.setText(value)
+    def rChange(self, value):
+        self.rSignalEmitter.rSignal.emit(value)
     def gChange(self, value):
-        self.textBrowser_2.setText(value)
+        self.textBrowser_2.append(value)
+        print("g"+value)
     def bChange(self, value):
-        self.textBrowser_3.setText(value)
+        self.textBrowser_3.append(value)
+        print("b"+value)
 
 if __name__ == "__main__":
     import sys
