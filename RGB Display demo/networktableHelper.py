@@ -8,13 +8,9 @@ class networktableHelper:
         rollerTable.addEntryListener(self.valueChanged)
     def valueChanged(self, table, key, value, isNew):
         value = str(value)
-        if not isNew:
-            return
         if key == 'R':
             self.delegate.rChange(value)
-        """
         elif key == 'G':
             self.delegate.gChange(value)
         elif key == 'B':
             self.delegate.bChange(value)
-            """
