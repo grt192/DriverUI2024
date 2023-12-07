@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 import sys
-from PyQt5.QtWidgets import *
-from PyQt5.QtGui import *
-from PyQt5 import QtCore
+from PyQt6.QtWidgets import *
+from PyQt6.QtGui import *
+from PyQt6 import QtCore
 from PIL import ImageQt
 
 class getColorLabel(QLabel):
@@ -33,8 +33,10 @@ class MainWindow(QWidget):
     def get(self, pos):
         xIndex = pos.x()
         yIndex = pos.y()
-        self.crosshair1.setGeometry(QtCore.QRect(xIndex-100,yIndex-100,500,500))
+        self.crosshair1.setGeometry(QtCore.QRect(xIndex-12.5,yIndex-12.5,25,25))
+        self.crosshair1.setAttribute(QtCore.Qt.WidgetAttribute.WA_TransparentForMouseEvents)
         self.crosshair1.show()
+        #self.crosshair1.lower()
         print(str(xIndex) + " "+ str(yIndex))
 
 
@@ -42,4 +44,4 @@ if __name__ == '__main__':
     app = QApplication([])
     window = MainWindow()
     window.show()
-    sys.exit(app.exec_())
+    sys.exit(app.exec())
