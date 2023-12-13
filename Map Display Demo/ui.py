@@ -26,10 +26,6 @@ class MainWindow(QWidget):
         self.setWindowTitle('Map Display Demo')
 
         # Get Position
-        self.label = getColorLabel(self)
-        self.label.setGeometry(0, 0, 780, 400)
-        self.label.setPixmap(QPixmap('./AnimeGirl.png'))
-        self.label.setScaledContents(True)
 
         self.crosshair1 = QLabel(self)
         self.crosshair1.setObjectName("crosshair1")
@@ -43,11 +39,11 @@ class MainWindow(QWidget):
         self.robot.setPixmap(self.robotPixmap)
         self.robot.setGeometry(QtCore.QRect(15,15,30,30))
         self.robot.setAttribute(QtCore.Qt.WidgetAttribute.WA_TransparentForMouseEvents)
-        print(">?")
+        #print(">?")
         self.networktableHelper = networktableHelper(self)
-        print("pa")
+        #print("pa")
         t1 = Thread(target= self.refreshRobotLoop)
-        print("??")
+        #print("??")
         t1.start()
     def get(self, pos):
         xIndex = pos.x()
@@ -72,11 +68,12 @@ class MainWindow(QWidget):
         if self.robotX<0 or self.robotY<0:
             return
         try:
-            print(robotX)
-            print(robotY)
-            print(robotZ)
-            self.robot.setPixmap(self.robotPixmap.transformed(QTransform.rotate(QTransform(),robotZ)))
-            self.robot.move(int(robotX), int(robotY))
+            print("x: "+str(robotX))
+            print("y: "+str(robotY))
+            print("z: "+str(robotZ))
+            self.robot.setPixmap(self.robotPixmap.transformed(QTransform.rotate(QTransform(),robotZ-90)))
+            #if(robotZ<0)
+            self.robot.move(int((robotX-4)/643*370), int(200-(robotY/257*200-15)))
             self.robot.show()
         except Exception as e:
             print(e)
