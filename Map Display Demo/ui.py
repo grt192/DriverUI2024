@@ -45,6 +45,15 @@ class MainWindow(QWidget):
         t1 = Thread(target= self.refreshRobotLoop)
         #print("??")
         t1.start()
+
+        self.field = QLabel(self)
+        self.field.setObjectName("field")
+        try:
+            self.fieldPixmap = QPixmap("./field23.png").scaled(1200,600)
+            self.field.setPixmap(self.fieldPixmap)
+            self.field.setGeometry(QtCore.QRect(100,100,1200,600))
+        except Exception as e:
+            print(e)
     def get(self, pos):
         xIndex = pos.x()
         yIndex = pos.y()
@@ -73,10 +82,11 @@ class MainWindow(QWidget):
             print("z: "+str(robotZ))
             self.robot.setPixmap(self.robotPixmap.transformed(QTransform.rotate(QTransform(),robotZ-90)))
             #if(robotZ<0)
-            self.robot.move(int((robotX-4)/643*370), int(200-(robotY/257*200-15)))
+            self.robot.move(int(robotX/651.25*1200-15)+100, int(700-(robotY/315.5*600))-15)
             self.robot.show()
         except Exception as e:
             print(e)
+        self.robot.raise_()
     def xChange(self, value):
         self.robotX = value
         #self.refreshRobot()
