@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import os
 import sys
 import time
 from threading import Thread
@@ -29,12 +30,17 @@ class MainWindow(QWidget):
         super(MainWindow, self).__init__()
         self.resize(1920, 1080)
         self.setWindowTitle('Swerve')
-        self.wheelPixmap = QPixmap("./RobotWheel.png")
-        self.arrowPixmap = QPixmap("./arrow.png")
+        # self.wheelPixmap = QPixmap("./RobotWheel.png")
+        self.wheelPixmap = QPixmap(f"{os.path.dirname(__file__)}/RobotWheel.png")
+        # self.arrowPixmap = QPixmap("./arrow.png")
+        self.arrowPixmap = QPixmap(f"{os.path.dirname(__file__)}/arrow.png")
+        
         # Get Position
         self.robot = QLabel(self)
         self.robot.setObjectName("robot")
-        self.robotPixmap = QPixmap("./RobotFrame.png")
+        # self.robotPixmap = QPixmap("./RobotFrame.png")
+        self.robotPixmap = QPixmap(f"{os.path.dirname(__file__)}/RobotFrame.png")
+        
         self.robot.setPixmap(self.robotPixmap)
         self.robot.setGeometry(QtCore.QRect(450,200,500,500))
         self.networktableHelper = networktableHelper(self)
@@ -43,42 +49,53 @@ class MainWindow(QWidget):
 
         self.robotWheel1 = QLabel(self)
         self.robotWheel1.setObjectName("robotWheel1")
-        self.robotWheel1.setPixmap(QPixmap("./RobotWheel.png"))
+        # self.robotWheel1.setPixmap(QPixmap("./RobotWheel.png"))
+        self.robotWheel1.setPixmap(QPixmap(f"{os.path.dirname(__file__)}/RobotWheel.png"))
+        
         self.robotWheel1.setGeometry(455,220,80,80)
 
         self.arrow1 = QLabel(self)
         self.arrow1.setObjectName("arrow1")
-        self.arrow1.setPixmap(QPixmap("./arrow.png"))
+        # self.arrow1.setPixmap(QPixmap("./arrow.png"))
+        self.arrow1.setPixmap(QPixmap(f"{os.path.dirname(__file__)}/arrow.png"))
+        
         self.arrow1.setGeometry(455,220,80,80)
 
         self.robotWheel2 = QLabel(self)
         self.robotWheel2.setObjectName("robotWheel2")
-        self.robotWheel2.setPixmap(QPixmap("./RobotWheel.png"))
+        # self.robotWheel2.setPixmap(QPixmap("./RobotWheel.png"))
+        self.robotWheel2.setPixmap(QPixmap(f"{os.path.dirname(__file__)}/RobotWheel.png"))
+        
         self.robotWheel2.setGeometry(865,220,80,80)
 
         self.arrow2 = QLabel(self)
         self.arrow2.setObjectName("arrow2")
-        self.arrow2.setPixmap(QPixmap("./arrow.png"))
+        # self.arrow2.setPixmap(QPixmap("./arrow.png"))
+        self.arrow2.setPixmap(QPixmap(f"{os.path.dirname(__file__)}/arrow.png"))
         self.arrow2.setGeometry(865,220,80,80)
 
         self.robotWheel3 = QLabel(self)
         self.robotWheel3.setObjectName("robotWheel3")
-        self.robotWheel3.setPixmap(QPixmap("./RobotWheel.png"))
+        # self.robotWheel3.setPixmap(QPixmap("./RobotWheel.png"))
+        self.robotWheel3.setPixmap(QPixmap(f"{os.path.dirname(__file__)}/RobotWheel.png"))
         self.robotWheel3.setGeometry(455,600,80,80)
 
         self.arrow3 = QLabel(self)
         self.arrow3.setObjectName("arrow3")
-        self.arrow3.setPixmap(QPixmap("./arrow.png"))
+        # self.arrow3.setPixmap(QPixmap("./arrow.png"))
+        self.arrow3.setPixmap(QPixmap(f"{os.path.dirname(__file__)}/arrow.png"))
         self.arrow3.setGeometry(455,600,80,80)
 
         self.robotWheel4 = QLabel(self)
         self.robotWheel4.setObjectName("robotWheel4")
-        self.robotWheel4.setPixmap(QPixmap("./RobotWheel.png"))
+        # self.robotWheel4.setPixmap(QPixmap("./RobotWheel.png"))
+        self.robotWheel4.setPixmap(QPixmap(f"{os.path.dirname(__file__)}/RobotWheel.png"))
         self.robotWheel4.setGeometry(865,600,80,80)
 
         self.arrow4 = QLabel(self)
         self.arrow4.setObjectName("arrow4")
-        self.arrow4.setPixmap(QPixmap("./arrow.png"))
+        # self.arrow4.setPixmap(QPixmap("./arrow.png"))
+        self.arrow4.setPixmap(QPixmap(f"{os.path.dirname(__file__)}/arrow.png"))
         self.arrow4.setGeometry(865,600,80,80)
 
 
