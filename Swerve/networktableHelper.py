@@ -12,26 +12,23 @@ class networktableHelper:
         #self.delegate.zChange(90)
 
     def valueChanged(self, table, key, value, isNew):
-        value = str(value)
+        value = float(value)
         try:
-            if key == 'r1':
-                #print("x: "+str(value))
-                self.delegate.r1(int(value))
-            elif key == 'r2':
-                #print("y: "+str(value))
-                self.delegate.r2(int(value))
-            elif key == 'r3':
-                #print("z: "+str(value))
-                self.delegate.r3(int(value))
-            elif key == 'r4':
-                self.delegate.r4(int(value))
-            elif key == 'v1':
-                self.delegate.v1(int(value))
-            elif key == 'v2':
-                self.delegate.v2(int(value))
-            elif key == 'v3':
-                self.delegate.v3(int(value))
-            elif key == 'v4':
-                self.delegate.v4(int(value))
+            if key == 'module1vel':
+                self.delegate.v1(value)
+            elif key == 'module2vel':
+                self.delegate.v2(value)
+            elif key == 'module3vel':
+                self.delegate.v3(value)
+            elif key == 'module4vel':
+                self.delegate.v4(value)
+            elif key == 'module1rot':
+                self.delegate.r1(value)
+            elif key == 'module2rot':
+                self.delegate.r2(value)
+            elif key == 'module3rot':
+                self.delegate.r3(value)
+            elif key == 'module4rot':
+                self.delegate.r4(value)
         except Exception as e:
             print(e)
