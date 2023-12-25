@@ -104,6 +104,9 @@ class MainWindow(QWidget):
 
 
     def refreshRobotLoop(self):
+
+        print(self.module1rot)
+
         # while True:
         #     time.sleep(0.02)
         self.refreshRobot()
@@ -111,36 +114,36 @@ class MainWindow(QWidget):
 
     def refreshRobot(self):
         #might get errors because of floats. Change floats to int may help address potential errors.
-        self.robotWheel1.setPixmap(self.wheelPixmap.transformed(QTransform.rotate(self.module1rot)))
-        self.robotWheel2.setPixmap(self.wheelPixmap.transformed(QTransform.rotate(self.module2rot)))
-        self.robotWheel3.setPixmap(self.wheelPixmap.transformed(QTransform.rotate(self.module3rot)))
-        self.robotWheel4.setPixmap(self.wheelPixmap.transformed(QTransform.rotate(self.module4rot)))
-        self.arrow1.setPixmap(self.arrowPixmap.transformed(QTransform.rotate(self.module1rot)))
-        self.arrow2.setPixmap(self.arrowPixmap.transformed(QTransform.rotate(self.module2rot)))
-        self.arrow3.setPixmap(self.arrowPixmap.transformed(QTransform.rotate(self.module3rot)))
-        self.arrow4.setPixmap(self.arrowPixmap.transformed(QTransform.rotate(self.module4rot)))
-        self.arrow1.move(self.x1 - self.module1vel/ 2, self.y1 - self.module1vel/ 2)
-        self.arrow2.move(self.x2-self.module2vel/2,self.y2-self.module2vel/2)
-        self.arrow3.move(self.x3-self.module3vel/2,self.y3-self.module3vel/2)
-        self.arrow4.move(self.x4-self.module4vel/2,self.x4-self.module4vel/2)
+        self.robotWheel1.setPixmap(self.wheelPixmap.transformed(QTransform().rotate(self.module1rot)))
+        self.robotWheel2.setPixmap(self.wheelPixmap.transformed(QTransform().rotate(self.module2rot)))
+        self.robotWheel3.setPixmap(self.wheelPixmap.transformed(QTransform().rotate(self.module3rot)))
+        self.robotWheel4.setPixmap(self.wheelPixmap.transformed(QTransform().rotate(self.module4rot)))
+        self.arrow1.setPixmap(self.arrowPixmap.transformed(QTransform().rotate(self.module1rot)))
+        self.arrow2.setPixmap(self.arrowPixmap.transformed(QTransform().rotate(self.module2rot)))
+        self.arrow3.setPixmap(self.arrowPixmap.transformed(QTransform().rotate(self.module3rot)))
+        self.arrow4.setPixmap(self.arrowPixmap.transformed(QTransform().rotate(self.module4rot)))
+        self.arrow1.move(int(self.x1 - self.module1vel/ 2), int(self.y1 - self.module1vel/ 2))
+        self.arrow2.move(int(self.x2-self.module2vel/2), int(self.y2-self.module2vel/2))
+        self.arrow3.move(int(self.x3-self.module3vel/2), int(self.y3-self.module3vel/2))
+        self.arrow4.move(int(self.x4-self.module4vel/2), int(self.y4-self.module4vel/2))
     #Tranform from radians to degrees
     def r1(self, value):
-        self.rotate1 = value*180/3.14
+        self.module1rot = value*180/3.14
     def r2(self, value):
-        self.rotate2 = value*180/3.14
+        self.module2rot = value*180/3.14
     def r3(self, value):
-        self.rotate3 = value*180/3.14
+        self.module3rot = value*180/3.14
     def r4(self, value):
-        self.rotate4 = value*180/3.14
+        self.module4rot = value*180/3.14
     #add 1 to make sure size doesn't go below original size (at least zoomed x1)
     def v1(self, value):
-        self.zoom1 = value+1
+        self.module1vel = value+1
     def v2(self, value):
-        self.zoom2 = value+1
+        self.module2vel = value+1
     def v3(self, value):
-        self.zoom3 = value+1
+        self.module3vel = value+1
     def v4(self, value):
-        self.zoom4 = value+1
+        self.module4vel = value+1
 if __name__ == '__main__':
     app = QApplication([])
     window = MainWindow()
