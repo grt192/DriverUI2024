@@ -44,8 +44,12 @@ class MainWindow(QWidget):
         self.robot.setPixmap(self.robotPixmap)
         self.robot.setGeometry(QtCore.QRect(450,200,500,500))
         self.networktableHelper = networktableHelper(self)
-        t1 = Thread(target= self.refreshRobotLoop)
-        #t1.start()
+        # t1 = Thread(target= self.refreshRobotLoop)
+        # #t1.start()
+        
+        self.timer = QtCore.QTimer()
+        self.timer.timeout.connect(self.refreshRobotLoop)
+        self.timer.start(1)
 
         self.robotWheel1 = QLabel(self)
         self.robotWheel1.setObjectName("robotWheel1")
@@ -100,9 +104,10 @@ class MainWindow(QWidget):
 
 
     def refreshRobotLoop(self):
-        while True:
-            time.sleep(0.02)
-            self.refreshRobot()
+        # while True:
+        #     time.sleep(0.02)
+        self.refreshRobot()
+        self.timer.start(1)
 
     def refreshRobot(self):
         #might get errors because of floats. Change floats to int may help address potential errors.
