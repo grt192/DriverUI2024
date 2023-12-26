@@ -18,14 +18,14 @@ class MainWindow(QWidget):
     module3rot = 0
     module4rot = 0
     #followings are positions for the 4 wheels.
-    x1 = 495
-    y1 = 260
-    x2 = 905
-    y2 = 260
-    x3 = 495
-    y3 = 640
-    x4 = 905
-    y4 = 640
+    x1 = 450
+    y1 = 200
+    x2 = 865
+    y2 = 200
+    x3 = 450
+    y3 = 620
+    x4 = 865
+    y4 = 620
     def __init__(self):
         super(MainWindow, self).__init__()
         self.resize(1920, 1080)
