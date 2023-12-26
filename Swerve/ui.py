@@ -118,14 +118,26 @@ class MainWindow(QWidget):
         self.robotWheel2.setPixmap(self.wheelPixmap.transformed(QTransform().rotate(self.module2rot)))
         self.robotWheel3.setPixmap(self.wheelPixmap.transformed(QTransform().rotate(self.module3rot)))
         self.robotWheel4.setPixmap(self.wheelPixmap.transformed(QTransform().rotate(self.module4rot)))
-        self.arrow1.setPixmap(self.arrowPixmap.transformed(QTransform().rotate(self.module1rot)))
-        self.arrow2.setPixmap(self.arrowPixmap.transformed(QTransform().rotate(self.module2rot)))
-        self.arrow3.setPixmap(self.arrowPixmap.transformed(QTransform().rotate(self.module3rot)))
-        self.arrow4.setPixmap(self.arrowPixmap.transformed(QTransform().rotate(self.module4rot)))
-        self.arrow1.move(int(self.x1 - self.module1vel/ 2), int(self.y1 - self.module1vel/ 2))
-        self.arrow2.move(int(self.x2-self.module2vel/2), int(self.y2-self.module2vel/2))
-        self.arrow3.move(int(self.x3-self.module3vel/2), int(self.y3-self.module3vel/2))
-        self.arrow4.move(int(self.x4-self.module4vel/2), int(self.y4-self.module4vel/2))
+        scaledSize1 = 80*self.module1vel
+        scaledSize2 = 80*self.module2vel
+        scaledSize3 = 80*self.module3vel
+        scaledSize4 = 80*self.module4vel
+        scaledArrow1 = self.arrowPixmap.scaled(scaledSize1, scaledSize1)
+        scaledArrow2 = self.arrowPixmap.scaled(scaledSize2, scaledSize2)
+        scaledArrow3 = self.arrowPixmap.scaled(scaledSize3, scaledSize3)
+        scaledArrow4 = self.arrowPixmap.scaled(scaledSize4, scaledSize4)
+        self.arrow1.setPixmap(scaledArrow4.transformed(QTransform().rotate(self.module1rot)))
+        self.arrow2.setPixmap(scaledArrow4.transformed(QTransform().rotate(self.module2rot)))
+        self.arrow3.setPixmap(scaledArrow4.transformed(QTransform().rotate(self.module3rot)))
+        self.arrow4.setPixmap(scaledArrow4.transformed(QTransform().rotate(self.module4rot)))
+        halfScaledSize1 = scaledSize1/2
+        halfScaledSize2 = scaledSize2/2
+        halfScaledSize3 = scaledSize3/2
+        halfScaledSize4 = scaledSize4/2
+        self.arrow1.move(int(self.x1 - halfScaledSize1), int(self.y1 - halfScaledSize1))
+        self.arrow2.move(int(self.x2- halfScaledSize2), int(self.y2- halfScaledSize2))
+        self.arrow3.move(int(self.x3- halfScaledSize3), int(self.y3- halfScaledSize3))
+        self.arrow4.move(int(self.x4- halfScaledSize4), int(self.y4- halfScaledSize4))
     #Tranform from radians to degrees
     def r1(self, value):
         self.module1rot = value*180/3.14
