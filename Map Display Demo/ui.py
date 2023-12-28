@@ -2,9 +2,9 @@
 import sys
 import time
 from threading import Thread
-from PyQt6.QtWidgets import *
-from PyQt6.QtGui import *
-from PyQt6 import QtCore
+from PySide6.QtWidgets import *
+from PySide6.QtGui import *
+from PySide6 import QtCore
 from networktableHelper import networktableHelper
 
 class getColorLabel(QLabel):
