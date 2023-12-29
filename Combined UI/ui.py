@@ -7,6 +7,8 @@ from mapLabel import mapLabel
 
 
 class MyWindow(QMainWindow):
+    QCheckBoxWidth = 50
+    QCheckBoxHeight = 50
     def __init__(self):
         super().__init__()
 
@@ -52,9 +54,25 @@ class MyWindow(QMainWindow):
 
         self.clickYDisplay = QLabel(self.tab1)
         self.clickYDisplay.setGeometry(1880, 65, 20, 10)
+
+        self.visionSwitch = QCheckBox(self.tab1)
+        self.visionSwitch.setGeometry(QRect(1850, 80, self.QCheckBoxWidth, self.QCheckBoxHeight))
+
+        tab1StyleSheetFile = QFile("./tab1StyleSheet.qss")
+        tab1StyleSheetFile.open(QFile.OpenModeFlag.ReadOnly)
+        try:
+            tab1StyleSheet = tab1StyleSheetFile.readAll().toStdString()
+            self.tab1.setStyleSheet(tab1StyleSheet)
+            #print(str(tab1StyleSheet))
+            #self.setStyleSheet("QCheckBox::indicator {width: 50;height: 59px;}")
+        except Exception as e:
+            print(e)
+
         # Set the central widget to the tab widget
         self.setCentralWidget(self.tab_widget)
         self.networktableHelper = networktableHelper(self)
+
+
 
     def getClickPosition(self, pos):
         print(str(pos.x()) + " " + str(pos.y()))
