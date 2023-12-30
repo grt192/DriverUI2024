@@ -1,6 +1,6 @@
 from networktables import NetworkTables
 class networktableHelper:
-    NetworkTables.initialize(server='10.1.92.2')
+    NetworkTables.initialize(server='127.0.0.1')
     def __init__(self, delegate):
         rollerTable = NetworkTables.getTable("Testing")
         self.delegate = delegate

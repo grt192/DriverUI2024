@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import os
 import sys
 import time
 from threading import Thread
@@ -30,12 +31,16 @@ class MainWindow(QWidget):
         self.crosshair1 = QLabel(self)
         self.crosshair1.setObjectName("crosshair1")
         self.crosshair1.setAttribute(QtCore.Qt.WidgetAttribute.WA_TransparentForMouseEvents)
-        self.crosshair1.setPixmap(QPixmap('./crosshair.png'))
+        # self.crosshair1.setPixmap(QPixmap('./crosshair.png'))
+        self.crosshair1.setPixmap(QPixmap(f'{os.path.dirname(__file__)}/crosshair.png'))
+        
         self.crosshair1.hide()
 
         self.robot = QLabel(self)
         self.robot.setObjectName("robot")
-        self.robotPixmap = QPixmap("./RobotArrow.png")
+        # self.robotPixmap = QPixmap("./RobotArrow.png")
+        self.robotPixmap = QPixmap(f"{os.path.dirname(__file__)}/RobotArrow.png")
+        
         self.robot.setPixmap(self.robotPixmap)
         self.robot.setGeometry(QtCore.QRect(15,15,30,30))
         self.robot.setAttribute(QtCore.Qt.WidgetAttribute.WA_TransparentForMouseEvents)
@@ -49,7 +54,9 @@ class MainWindow(QWidget):
         self.field = QLabel(self)
         self.field.setObjectName("field")
         try:
-            self.fieldPixmap = QPixmap("./field23.png").scaled(1200,600)
+            # self.fieldPixmap = QPixmap("./field23.png").scaled(1200,600)
+            self.fieldPixmap = QPixmap(f"{os.path.dirname(__file__)}/field23.png").scaled(1200,600)
+            
             self.field.setPixmap(self.fieldPixmap)
             self.field.setGeometry(QtCore.QRect(100,100,1200,600))
         except Exception as e:
