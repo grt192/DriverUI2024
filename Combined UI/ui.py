@@ -1,3 +1,4 @@
+import os
 from PySide6 import QtCore, QtGui, QtWidgets
 from PySide6.QtCore import *
 from PySide6.QtGui import *
@@ -30,12 +31,12 @@ class MyWindow(QMainWindow):
         self.crosshair1 = QLabel(self.tab1)
         self.crosshair1.setObjectName("crosshair1")
         self.crosshair1.setAttribute(QtCore.Qt.WidgetAttribute.WA_TransparentForMouseEvents)
-        self.crosshair1.setPixmap(QPixmap("./crosshair.png"))
+        self.crosshair1.setPixmap(QPixmap(f"{os.path.dirname(__file__)}/crosshair.png"))
         self.crosshair1.hide()
 
         self.robot = QLabel(self.tab1)
         self.robot.setObjectName("robot")
-        self.robotPixmap = QPixmap("./RobotArrow.png")
+        self.robotPixmap = QPixmap(f"{os.path.dirname(__file__)}/RobotArrow.png")
         self.robot.setPixmap(self.robotPixmap)
         self.robot.setGeometry(QtCore.QRect(15, 15, 30, 30))
         self.robot.setAttribute(QtCore.Qt.WidgetAttribute.WA_TransparentForMouseEvents)
@@ -43,10 +44,10 @@ class MyWindow(QMainWindow):
 
         self.field = mapLabel(self.tab1, self)
         self.field.setObjectName("field")
-        self.fieldPixmap = QPixmap("./field23.png").scaled(600, 300)
+        self.fieldPixmap = QPixmap(f"{os.path.dirname(__file__)}/field23.png").scaled(600, 300)
         self.field.setPixmap(self.fieldPixmap)
         self.fieldOffsetX = 20
-        self.fieldOffsetY = 740
+        self.fieldOffsetY = 74
         self.field.setGeometry(QtCore.QRect(self.fieldOffsetX, self.fieldOffsetY, 600, 300))
 
         self.clickXDisplay = QLabel(self.tab1)
@@ -58,7 +59,7 @@ class MyWindow(QMainWindow):
         self.visionSwitch = QCheckBox(self.tab1)
         self.visionSwitch.setGeometry(QRect(1850, 80, self.QCheckBoxWidth, self.QCheckBoxHeight))
 
-        tab1StyleSheetFile = QFile("./tab1StyleSheet.qss")
+        tab1StyleSheetFile = QFile(f"{os.path.dirname(__file__)}/tab1StyleSheet.qss")
         tab1StyleSheetFile.open(QFile.OpenModeFlag.ReadOnly)
         try:
             tab1StyleSheet = tab1StyleSheetFile.readAll().toStdString()
