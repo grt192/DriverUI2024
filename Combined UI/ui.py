@@ -44,7 +44,7 @@ class MyWindow(QMainWindow):
 
         self.field = mapLabel(self.tab1, self)
         self.field.setObjectName("field")
-        self.fieldPixmap = QPixmap(f"{os.path.dirname(__file__)}/field23.png").scaled(600, 300)
+        self.fieldPixmap = QPixmap(f"{os.path.dirname(__file__)}/field24.png").scaled(600, 300)
         self.field.setPixmap(self.fieldPixmap)
         self.fieldOffsetX = 20
         self.fieldOffsetY = 74

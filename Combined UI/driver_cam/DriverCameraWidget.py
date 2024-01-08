@@ -1,9 +1,9 @@
 import sys
 import time
 from threading import Thread
-from PyQt6 import QtCore
-from PyQt6.QtWidgets import *
-from PyQt6.QtGui import *
+from PySide6 import QtCore
+from PySide6.QtWidgets import *
+from PySide6.QtGui import *
 from pyqtgraph import ImageItem, PlotWidget
 import numpy as np
 from time import perf_counter
@@ -16,7 +16,7 @@ class CameraWidget(QWidget):
         
         self.camera_display = QLabel()
         image_data = np.random.random((320, 160)) * 255  # Example random image data
-        width, height = image_data.shape
+        height, width = image_data.shape
 
         # Convert NumPy array to QImage
         image = QImage(image_data.data, width, height, height, QImage.Format.Format_Grayscale8)
@@ -52,10 +52,9 @@ class CameraWidget(QWidget):
         image_data = np.random.random((320, 160)) * 255  # Example random image data
         height, width = image_data.shape
 
-        # Convert NumPy array to QImage with correct format
+        # Convert NumPy array to QImage
         image = QImage(image_data.data, width, height, width, QImage.Format.Format_Grayscale8)
-        image = image.copy()  # Make sure to create a copy to avoid issues with the original data
-
+        
         # Convert QImage to QPixmap and set it to the QLabel
         pixmap = QPixmap.fromImage(image)
         self.camera_display.setPixmap(pixmap)
@@ -96,9 +95,9 @@ class DriverCameraWindow(QMainWindow):
         wid.setLayout(layout)
 
 
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    player = DriverCameraWindow()
-    player.resize(640, 480)
-    player.show()
-    sys.exit(app.exec())
+# if __name__ == '__main__':
+#     app = QApplication(sys.argv)
+#     player = DriverCameraWindow()
+#     player.resize(640, 480)
+#     player.show()
+#     sys.exit(app.exec())
