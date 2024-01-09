@@ -1,6 +1,7 @@
 import os
-from PySide6.QtWidgets import QWidget, QLabel
+from PySide6.QtWidgets import QWidget, QLabel, QSizePolicy
 from PySide6.QtGui import QPixmap, QTransform
+from PySide6.QtCore import Qt
 
 class GRTMapWidget(QWidget):
     def __init__(self, alliance, parent=None):
@@ -20,11 +21,15 @@ class GRTMapWidget(QWidget):
         self.mapLabel = QLabel(self)
         self.mapLabel.setGeometry(0, 0, self.mapPixmap.width(), self.mapPixmap.height())
         self.mapLabel.setPixmap(self.mapPixmap)
+        self.mapLabel.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
+        self.mapLabel.setScaledContents(True)  # Enable scaled contents
+
 
         # Set up QLabel for robot icon
         self.robotLabel = QLabel(self)
         self.robotLabel.setPixmap(self.robotPixmap)
         self.robotLabel.setMask(self.robotPixmap.mask())  # Use transparency information for masking
+        self.robotLabel.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
 
         # Set up QLabel for crosshair (position it at the center for now)
         self.crosshairLabel = QLabel(self)
@@ -32,6 +37,7 @@ class GRTMapWidget(QWidget):
                                         self.height() // 2 - self.crosshairPixmap.height() // 2,
                                         self.crosshairPixmap.width(), self.crosshairPixmap.height())
         self.crosshairLabel.setPixmap(self.crosshairPixmap)
+        self.crosshairLabel.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         
         # Set up initial rotation based on self.alliance
         self.rotate_map()
@@ -58,6 +64,16 @@ class GRTMapWidget(QWidget):
     def set_crosshair_position(self, x, y):
         # Set the position of the crosshair on the map
         self.crosshairLabel.setGeometry(x, y, self.crosshairPixmap.width(), self.crosshairPixmap.height())
+        
+    # def resizeEvent(self, event):
+    #     # Handle the resizing behavior
+    #     super().resizeEvent(event)
+    #     self.resize_map()
+
+    # def resize_map(self):
+    #     # Resize the map when the widget is resized
+    #     map_size = self.size()
+    #     self.mapLabel.setPixmap(self.mapPixmap.scaled(map_size, aspectMode=Qt.AspectRatioMode.KeepAspectRatio))
 
 # if __name__ == "__main__":
 #     import sys
@@ -66,7 +82,7 @@ class GRTMapWidget(QWidget):
 #     class MainApp(QApplication):
 #         def __init__(self, argv):
 #             super(MainApp, self).__init__(argv)
-#             self.main_window = GRTMapWidget()
+#             self.main_window = GRTMapWidget('red')
 #             self.main_window.show()
 
 #     app = MainApp(sys.argv)

@@ -11,6 +11,7 @@ from driver_cam.DriverCameraWidget import CameraWidget
 from MapWidget import GRTMapWidget
 from TelemGrid import TelemGrid
 from ToggleGrid import ToggleGrid
+from ActionGrid import ActionGrid
 
 class GRTDriverStation(QMainWindow):
     QCheckBoxWidth = 50
@@ -32,7 +33,7 @@ class GRTDriverStation(QMainWindow):
         self.central_widget.setLayout(self.main_layout)
 
         #Control Panel
-        self.control_panel = ControlPanel(self.alliance, self) # CONTROL PANEL IS USED FOR PRE MATCH SETTINGS
+        self.control_panel = ControlPanel() # CONTROL PANEL IS USED FOR PRE MATCH SETTINGS
         # Create a QVBoxLayout to organize the widgets
         self.match_layout = QVBoxLayout(self.central_widget)
         self.main_layout.addWidget(self.control_panel)
@@ -51,7 +52,23 @@ class GRTDriverStation(QMainWindow):
         self.match_layout.addWidget(self.match_debug_tab_widget)
 
         self.map_widget = GRTMapWidget(self.alliance)
+        
+        self.cam_action_layout = QVBoxLayout()
         self.driver_cam = CameraWidget()
+        
+        # Define a list of dictionaries with ActionWidget parameters
+        actions_info = [
+            {"action_name": "GO TO AMP", "alliance": self.alliance},
+            {"action_name": "GO TO SPEAKER", "alliance": self.alliance},
+            {"action_name": "GO TO SOURCE", "alliance": self.alliance},
+            {"action_name": "SCORE AMP", "alliance": self.alliance},
+            {"action_name": "SCORE SPEAKER", "alliance": self.alliance},
+            {"action_name": "INTAKE SOURCE", "alliance": self.alliance},
+        ]
+
+        self.action_grid = ActionGrid(actions_info)
+        self.cam_action_layout.addWidget(self.driver_cam)
+        self.cam_action_layout.addWidget(self.action_grid)
         
         self.telem_toggle_layout = QVBoxLayout()
         
@@ -70,7 +87,7 @@ class GRTDriverStation(QMainWindow):
         self.telem_grid = TelemGrid(self.telem_widget_data_preset)
         
         self.toggle_widget_data_preset = [
-                {"name": "Toggle 1", "value": True},
+                {"name": "Vision", "value": True , "states": ('Enabled', 'Disabled'), "colors": ('green', 'red')},
                 {"name": "Toggle 2", "value": False},
                 {"name": "Toggle 3", "value": True},
                 {"name": "Toggle 4", "value": False},
@@ -88,7 +105,7 @@ class GRTDriverStation(QMainWindow):
         
         self.match_telem_layout = QHBoxLayout(self.match_tab)
         self.match_telem_layout.addWidget(self.map_widget)
-        self.match_telem_layout.addWidget(self.driver_cam)
+        self.match_telem_layout.addLayout(self.cam_action_layout)
         self.match_telem_layout.addLayout(self.telem_toggle_layout)
 
         # # Add content to Tab 1
@@ -131,38 +148,38 @@ class GRTDriverStation(QMainWindow):
         self.visionSwitch = QCheckBox(self.match_tab)
         self.visionSwitch.setGeometry(QRect(1850, 80, self.QCheckBoxWidth, self.QCheckBoxHeight))
 
-        # Create a QHBoxLayout for the row of buttons
-        button_layout = QHBoxLayout()
+        # # Create a QHBoxLayout for the row of buttons
+        # button_layout = QHBoxLayout()
 
-        # Create buttons and set their icons as backgrounds
-        self.amp_button = QPushButton(self.match_tab)
-        self.amp_button.setIcon(QIcon(f"{os.path.dirname(__file__)}/ui_images/{self.alliance}_amp.png"))
-        self.amp_button.setStyleSheet("border: none;")
-        self.amp_button.setFixedSize(150, 150)  # Set the size of the button
-        self.amp_button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)  # Fix the size policy
-        self.amp_button.setIconSize(QSize(150, 150))  # Set the size of the icon
+        # # Create buttons and set their icons as backgrounds
+        # self.amp_button = QPushButton(self.match_tab)
+        # self.amp_button.setIcon(QIcon(f"{os.path.dirname(__file__)}/ui_images/{self.alliance}_amp.png"))
+        # self.amp_button.setStyleSheet("border: none;")
+        # self.amp_button.setFixedSize(150, 150)  # Set the size of the button
+        # self.amp_button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)  # Fix the size policy
+        # self.amp_button.setIconSize(QSize(150, 150))  # Set the size of the icon
 
-        self.source_button = QPushButton(self.match_tab)
-        self.source_button.setIcon(QPixmap(f"{os.path.dirname(__file__)}/ui_images/{self.alliance}_source.png"))
-        self.source_button.setStyleSheet("border: none;")
-        self.source_button.setFixedSize(150, 150)  # Set the size of the button
-        self.source_button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)  # Fix the size policy
-        self.source_button.setIconSize(QSize(150, 150))  # Set the size of the icon
+        # self.source_button = QPushButton(self.match_tab)
+        # self.source_button.setIcon(QPixmap(f"{os.path.dirname(__file__)}/ui_images/{self.alliance}_source.png"))
+        # self.source_button.setStyleSheet("border: none;")
+        # self.source_button.setFixedSize(150, 150)  # Set the size of the button
+        # self.source_button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)  # Fix the size policy
+        # self.source_button.setIconSize(QSize(150, 150))  # Set the size of the icon
 
-        self.speaker_button = QPushButton(self.match_tab)
-        self.speaker_button.setIcon(QIcon(f"{os.path.dirname(__file__)}/ui_images/{self.alliance}_speaker.png"))
-        self.speaker_button.setStyleSheet("border: none;")
-        self.speaker_button.setFixedSize(150, 150)  # Set the size of the button
-        self.speaker_button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)  # Fix the size policy
-        self.speaker_button.setIconSize(QSize(150, 150))  # Set the size of the icon
+        # self.speaker_button = QPushButton(self.match_tab)
+        # self.speaker_button.setIcon(QIcon(f"{os.path.dirname(__file__)}/ui_images/{self.alliance}_speaker.png"))
+        # self.speaker_button.setStyleSheet("border: none;")
+        # self.speaker_button.setFixedSize(150, 150)  # Set the size of the button
+        # self.speaker_button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)  # Fix the size policy
+        # self.speaker_button.setIconSize(QSize(150, 150))  # Set the size of the icon
 
-        # Add your buttons to the button_layout
-        button_layout.addWidget(self.amp_button)
-        button_layout.addWidget(self.source_button)
-        button_layout.addWidget(self.speaker_button)
+        # # Add your buttons to the button_layout
+        # button_layout.addWidget(self.amp_button)
+        # button_layout.addWidget(self.source_button)
+        # button_layout.addWidget(self.speaker_button)
 
-        # Add the button_layout to the main layout
-        self.match_layout.addLayout(button_layout)
+        # # Add the button_layout to the main layout
+        # self.match_layout.addLayout(button_layout)
 
         # Initialize other components as needed
         self.networktableHelper = networktableHelper(self)

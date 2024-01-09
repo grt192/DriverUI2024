@@ -15,12 +15,14 @@ class ToggleGrid(QWidget):
                 toggle_info = toggle_data[row * 3 + col]
                 toggle_widget = ToggleWidget(parameter_name=toggle_info.get("name", ""),
                                              initial_value=toggle_info.get("value", False),
+                                             states=toggle_info.get("states", None),
+                                             colors=toggle_info.get("colors", None),
                                              parent=self)
                 self.grid_layout.addWidget(toggle_widget, row, col)
 
         # Set up main layout
-        self.main_layout = QGridLayout(self)
-        self.main_layout.addLayout(self.grid_layout, 0, 0)
+        # self.main_layout = QGridLayout(self)
+        # self.main_layout.addLayout(self.grid_layout, 0, 0)
 
 # Example usage
 # if __name__ == "__main__":

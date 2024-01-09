@@ -15,11 +15,11 @@ class CameraWidget(QWidget):
         # self.plot = PlotWidget()
         
         self.camera_display = QLabel()
-        image_data = np.random.random((320, 160)) * 255  # Example random image data
+        image_data = np.random.random((160, 320)) * 255  # Example random image data
         height, width = image_data.shape
 
         # Convert NumPy array to QImage
-        image = QImage(image_data.data, width, height, height, QImage.Format.Format_Grayscale8)
+        image = QImage(image_data.data, width, height, width, QImage.Format.Format_Grayscale8)
         
         # Convert QImage to QPixmap and set it to the QLabel
         pixmap = QPixmap.fromImage(image)
@@ -49,7 +49,7 @@ class CameraWidget(QWidget):
 
     def update_frame(self):
         # FETCH IMAGE DATA
-        image_data = np.random.random((320, 160)) * 255  # Example random image data
+        image_data = np.random.random((160, 320)) * 255  # Example random image data
         height, width = image_data.shape
 
         # Convert NumPy array to QImage

@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QLabel, QVBoxLayout, QGroupBox, QWidget
+from PySide6.QtWidgets import QLabel, QVBoxLayout, QGroupBox, QWidget, QSizePolicy
 from PySide6.QtGui import QFontMetrics, QFont
 from PySide6.QtCore import Qt, QTimer
 import random
@@ -11,6 +11,9 @@ class TelemWidget(QWidget):
         self.group_box = QGroupBox(self)
         self.label = QLabel(label, self.group_box)
         self.value_label = QLabel(str(initial_value), self.group_box)
+        
+        self.value_label.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        self.label.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
 
         # Set up layout
         self.layout = QVBoxLayout(self.group_box)
@@ -22,7 +25,7 @@ class TelemWidget(QWidget):
         self.main_layout.addWidget(self.group_box)
 
         # Adjust font size based on available space
-        self.adjust_font_size()
+        # self.adjust_font_size()
         
         self.timer = QTimer()
         self.timer.timeout.connect(self.update_value)
@@ -50,6 +53,5 @@ class TelemWidget(QWidget):
 
     def update_value(self):
         # IMPLEMENT
-        self.set_value(random.randint(1,5))
+        self.set_value(round(random.randint(1,5)*1.05, 2))
         self.timer.start(0)  # Adjust the interval as needed (e.g., 100 ms for 10 FPS)
-        "Run"

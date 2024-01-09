@@ -24,30 +24,30 @@ class TelemGrid(QWidget):
         
 
 # Example usage
-# if __name__ == "__main__":
-#     import sys
-#     from PySide6.QtWidgets import QApplication
+if __name__ == "__main__":
+    import sys
+    from PySide6.QtWidgets import QApplication
 
-#     class MainWindow(QMainWindow):
-#         def __init__(self):
-#             super().__init__()
+    class MainWindow(QMainWindow):
+        def __init__(self):
+            super().__init__()
 
-#             telem_data = [
-#                 {"name": "Quantity", "value": "0.00"},
-#                 {"name": "Quantity", "value": "0.00"},
-#                 {"name": "Quantity", "value": "0.00"},
-#                 {"name": "Quantity", "value": "0.00"},
-#                 {"name": "Quantity", "value": "0.00"},
-#                 {"name": "Quantity", "value": "0.00"},
-#                 {"name": "Quantity", "value": "0.00"},
-#                 {"name": "Quantity", "value": "0.00"},
-#                 {"name": "Quantity", "value": "0.00"}
-#             ]
+            telem_data = [
+                {"name": "Quantity", "value": "0.00"},
+                {"name": "Quantity", "value": "0.00"},
+                {"name": "Quantity", "value": "0.00"},
+                {"name": "Quantity", "value": "0.00"},
+                {"name": "Quantity", "value": "0.00"},
+                {"name": "Quantity", "value": "0.00"},
+                {"name": "Quantity", "value": "0.00"},
+                {"name": "Quantity", "value": "0.00"},
+                {"name": "Quantity", "value": "0.00"}
+            ]
 
-#             self.telem_grid = TelemGrid(telem_data)
-#             self.setCentralWidget(self.telem_grid)
+            self.telem_grid = TelemGrid(telem_data)
+            self.setCentralWidget(self.telem_grid)
 
-#     app = QApplication(sys.argv)
-#     window = MainWindow()
-#     window.show()
-#     sys.exit(app.exec())
+    app = QApplication(sys.argv)
+    window = MainWindow()
+    window.show()
+    sys.exit(app.exec())
