@@ -19,26 +19,25 @@ class GRTDriverStation(QMainWindow):
     def __init__(self):
         super().__init__()
 
+        self.alliance = 'red'
+
         # Set up the main window
         self.setWindowTitle("GRT 192 Driver Station")
         self.resize(1920, 1080)
-
         # Create a central widget and set a layout for it
         self.central_widget = QWidget(self)
         self.setCentralWidget(self.central_widget)
 
         self.main_layout = QHBoxLayout() # MAIN LAYOUT HAS THE PREMATCH CONTROL PANEL + THE REST OF THE UI
         self.central_widget.setLayout(self.main_layout)
-        
-        self.control_panel = ControlPanel() # CONTROL PANEL IS USED FOR PRE MATCH SETTINGS
-        self.alliance = 'red'
-        
+
+        #Control Panel
+        self.control_panel = ControlPanel(self.alliance, self) # CONTROL PANEL IS USED FOR PRE MATCH SETTINGS
         # Create a QVBoxLayout to organize the widgets
         self.match_layout = QVBoxLayout(self.central_widget)
-        
         self.main_layout.addWidget(self.control_panel)
         self.main_layout.addLayout(self.match_layout)
-        
+
         # Create the tab widget
         self.match_debug_tab_widget = QTabWidget(self.central_widget)
 
@@ -176,6 +175,9 @@ class GRTDriverStation(QMainWindow):
         self.crosshair1.show()
         self.crosshair1.raise_()
 
+    def changeAlliance(self, newAlliance):
+        self.alliance = newAlliance
+        #Refresh widget colors
 def main():
     app = QApplication([])
     window = GRTDriverStation()
