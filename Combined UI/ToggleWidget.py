@@ -25,7 +25,7 @@ class ToggleWidget(QWidget):
         self.button = QPushButton(str(self.current_state), self.group_box)
         
         self.button.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
-        self.label.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
+        self.label.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
 
         # Set up layout
         self.layout = QVBoxLayout(self.group_box)

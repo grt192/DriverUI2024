@@ -8,7 +8,7 @@ from mapLabel import mapLabel
 
 from ControlPanel import ControlPanel
 from driver_cam.DriverCameraWidget import CameraWidget
-from MapWidget import GRTMapWidget
+from pixmap_test import GRTMapWidget
 from TelemGrid import TelemGrid
 from ToggleGrid import ToggleGrid
 from ActionGrid import ActionGrid

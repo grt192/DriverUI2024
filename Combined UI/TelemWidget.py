@@ -13,7 +13,7 @@ class TelemWidget(QWidget):
         self.value_label = QLabel(str(initial_value), self.group_box)
         
         self.value_label.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
-        self.label.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
+        self.label.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
 
         # Set up layout
         self.layout = QVBoxLayout(self.group_box)

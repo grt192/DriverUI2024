@@ -17,6 +17,7 @@ class CameraWidget(QWidget):
         # self.plot = PlotWidget()
         
         self.camera_display = QLabel()
+        self.camera_display.setScaledContents(True)
         image_data = np.random.random((160, 320)) * 255  # Example random image data
         height, width = image_data.shape
 
@@ -32,8 +33,8 @@ class CameraWidget(QWidget):
         # self.plot.hideAxis('bottom')
         # self.plot.setMouseEnabled()
 
-        self.errorLabel = QLabel(self)
-        self.errorLabel.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Maximum)
+        self.errorLabel = QLabel()
+        self.errorLabel.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
 
         #setting up driver cam
         self.url = "http://10.1.92.2:1181/stream.mjpg"

@@ -20,7 +20,7 @@ class ActionWidget(QWidget):
         self.update_button()
         
         self.button.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
-        self.label.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
+        self.label.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
 
         # Set up layout
         self.layout = QVBoxLayout(self.group_box)
