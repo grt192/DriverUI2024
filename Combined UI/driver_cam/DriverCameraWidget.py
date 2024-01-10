@@ -32,15 +32,20 @@ class CameraWidget(QWidget):
         # self.plot.hideAxis('bottom')
         # self.plot.setMouseEnabled()
 
-        self.errorLabel = QLabel()
+        self.errorLabel = QLabel(self)
         self.errorLabel.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Maximum)
 
-        self.timer = QtCore.QTimer()
-        self.timer.timeout.connect(self.update_frame)
-        #self.timer.start(1)  # Adjust the interval as needed (e.g., 100 ms for 10 FPS)
+        #setting up driver cam
+        self.url = "http://10.1.92.2:1181/stream.mjpg"
+        self.response = requests.get(self.url, stream=True)
+        self.bytes = b''
 
-        CamThread = Thread(target=self.DisplayStream)
-        CamThread.start()
+        self.timer = QtCore.QTimer()
+        self.timer.timeout.connect(self.DisplayStream)
+        self.timer.start(1)  # Adjust the interval as needed (e.g., 100 ms for 10 FPS)
+
+        self.CamThread = Thread(target=self.DisplayStream)
+        self.CamThread.start()
 
         self.actual_fps = 0
         self.past_five_instantaneous_fps = [0, 0, 0, 0, 0]
@@ -84,31 +89,38 @@ class CameraWidget(QWidget):
         return avg
 
     def DisplayStream(self):
-        url = "http://10.1.92.2:1181/stream.mjpg"
-        response = requests.get(url, stream=True)
-        bytes = b''
-        for chunk in response.iter_content(chunk_size=1024):
-            if len(bytes) >  1024*512:
-                bytes = b''
-            bytes += chunk
-            a = bytes.find(b'\xff\xd8')  # JPEG start
-            b = bytes.find(b'\xff\xd9')  # JPEG end
-            if a != -1 and b != -1:
-                jpg = bytes[a:b + 2]  # Extract the JPEG image
-                bytes = bytes[b + 2:]  # Remove the processed bytes
+        try:
+            for chunk in self.response.iter_content(chunk_size=1024):
+                self.bytes += chunk
+                a = self.bytes.find(b'\xff\xd8')  # JPEG start
+                b = self.bytes.find(b'\xff\xd9')  # JPEG end
+                if a != -1 and b != -1:
+                    jpg = self.bytes[a:b + 2]  # Extract the JPEG image
+                    bytes = self.bytes[b + 2:]  # Remove the processed bytes
 
-                # Decode the JPEG image to a frame
-                frame = cv2.imdecode(np.frombuffer(jpg, dtype=np.uint8), cv2.IMREAD_COLOR)
+                    # Decode the JPEG image to a frame
+                    try:
+                        frame = cv2.imdecode(np.frombuffer(jpg, dtype=np.uint8), cv2.IMREAD_COLOR)
+                    except Exception as e:
+                        print(e)
 
-                # Convert to QImage
-                height, width, channel = frame.shape
-                bytesPerLine = 3 * width
-                qImg = QImage(frame.data, width, height, bytesPerLine, QImage.Format_RGB888).rgbSwapped()
-                pixmap = QPixmap.fromImage(qImg)
-                scaledPixmap = pixmap.scaled(300,300)
+                    # Convert to QImage
+                    height, width, channel = frame.shape
+                    bytesPerLine = 3 * width
+                    qImg = QImage(frame.data, width, height, bytesPerLine, QImage.Format_RGB888).rgbSwapped()
+                    pixmap = QPixmap.fromImage(qImg)
+                    scaledPixmap = pixmap.scaled(300,300)
 
 
-                self.camera_display.setPixmap(scaledPixmap)
+                    self.camera_display.setPixmap(scaledPixmap)
+                    self.response.close()
+                    self.response = requests.get(url=self.url, stream=True)
+                    self.bytes = b''
+                    return
+        except Exception as e:
+            #self.response = requests.get(self.url, stream=True)
+            #self.bytes = b''
+            print(e)
 
 
 class DriverCameraWindow(QMainWindow):
