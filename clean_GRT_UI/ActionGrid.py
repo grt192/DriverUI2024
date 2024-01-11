@@ -23,7 +23,7 @@ class ActionGrid(QWidget):
         for i in range(self.num_widgets):
             # widget = self.grid_layout.itemAt(i)
             widget = self.action_toggles[i]
-            print(widget)
+            # print(widget)
             widget.change_alliance_color(new_alliance_color)
 
 # EXAMPLE USAGE:

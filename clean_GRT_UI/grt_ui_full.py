@@ -3,16 +3,16 @@ from PySide6 import QtCore, QtGui, QtWidgets
 from PySide6.QtCore import *
 from PySide6.QtGui import *
 from PySide6.QtWidgets import *
+
 from networktableHelper import networktableHelper
 from mapLabel import mapLabel
-
+from MapWidget import MapWidget
 from ControlPanel import ControlPanel
-from driver_cam.DriverCameraWidget import CameraWidget
-from pixmap_test import GRTMapWidget
+from DriverCameraWidget import CameraWidget
 from TelemGrid import TelemGrid
 from ToggleGrid import ToggleGrid
 from ActionGrid import ActionGrid
-from Swerve.SwerveWheelWidget import SwerveWheelWidget
+from SwerveWheelWidget import SwerveWheelWidget
 
 class GRTDriverStation(QMainWindow):
     QCheckBoxWidth = 50
@@ -23,35 +23,53 @@ class GRTDriverStation(QMainWindow):
 
         self.alliance = 'red'
 
-        # Set up the main window
         self.setWindowTitle("GRT 192 Driver Station")
         self.resize(1920, 1080)
-        # Create a central widget and set a layout for it
+        
+        # MAIN LAYOUT HAS THE PREMATCH CONTROL PANEL + THE REST OF THE UI
+        self.main_layout = QHBoxLayout() 
+        
+        # Set the UI's central widget to a widget, and set that widget's layout to the whole UI
         self.central_widget = QWidget(self)
         self.setCentralWidget(self.central_widget)
-
-        self.main_layout = QHBoxLayout() # MAIN LAYOUT HAS THE PREMATCH CONTROL PANEL + THE REST OF THE UI
         self.central_widget.setLayout(self.main_layout)
-
-        self.control_panel = ControlPanel() # CONTROL PANEL IS USED FOR PRE MATCH SETTINGS
-
-        self.match_layout = QVBoxLayout(self.central_widget)
+        
+        # The control panel is used for holistic settings across the UI (e.g. alliance color, auton selection)
+        # NOT meant for mid-match inputs
+        self.control_panel = ControlPanel() 
+        
+        # The content layout is for the primary content of the GUI.
+        self.content_layout = QVBoxLayout(self.central_widget)
+        
+        # Adding widgets and layouts to the main layout
+        # Since it's a horizontal layout, we're adding elements in order of left to right
+        # The control panel goes on the left, followed by the content layout with everything else
         self.main_layout.addWidget(self.control_panel)
-        self.main_layout.addLayout(self.match_layout)
-
-        # Create the tab widget
+        self.main_layout.addLayout(self.content_layout)
+        
+        ''' 
+        Everything that's not the control panel will end up in one of three (?) tabs:
+            1. Auton - Visualizing the autonomous paths, possibly plotting and/or tuning?
+            2. Match - Telemetry and visualizations, driver inputs (MOST IMPORTANT)
+            3. Debug - Testing/Fixing stuff in the pits (e.g. testing swerve, simulating auton)
+        
+        '''
         self.match_debug_tab_widget = QTabWidget(self.central_widget)
 
-        # Create and add tabs
+        # Create and add the tabs as three widgets
+        self.auton_tab = QWidget()
         self.match_tab = QWidget()
         self.debug_tab = QWidget()
 
+        self.match_debug_tab_widget.addTab(self.auton_tab, "Auton")
         self.match_debug_tab_widget.addTab(self.match_tab, "Match")
         self.match_debug_tab_widget.addTab(self.debug_tab, "Debug")
+        self.match_debug_tab_widget.setCurrentIndex(1)
 
-        self.match_layout.addWidget(self.match_debug_tab_widget)
+        # The tabs are really the only thing in the content layout
+        self.content_layout.addWidget(self.match_debug_tab_widget)
 
-        self.map_widget = GRTMapWidget(self.alliance)
+        self.map_widget = MapWidget(self.alliance)
         
         self.cam_action_layout = QVBoxLayout()
         # self.driver_cam = CameraWidget()
@@ -68,6 +86,7 @@ class GRTDriverStation(QMainWindow):
 
         self.action_grid = ActionGrid(actions_info)
         self.control_panel.alliance_color_changed.connect(self.action_grid.change_alliance_color)
+        self.control_panel.alliance_color_changed.connect(self.map_widget.change_alliance_color)
         
         # self.cam_action_layout.addWidget(self.driver_cam)
         self.cam_action_layout.addWidget(self.action_grid)
@@ -112,7 +131,7 @@ class GRTDriverStation(QMainWindow):
 
         self.swerve_debug_layout = QHBoxLayout(self.debug_tab)
         self.swerve_wheel_model = SwerveWheelWidget()
-        self.swerve_auton_map_model = GRTMapWidget(self.alliance)
+        self.swerve_auton_map_model = MapWidget(self.alliance)
         self.swerve_debug_layout.addWidget(self.swerve_wheel_model)
         self.swerve_debug_layout.addWidget(self.swerve_auton_map_model)
 
@@ -146,7 +165,7 @@ class GRTDriverStation(QMainWindow):
         # rotated_pixmap = self.fieldPixmap.transformed(transform)
 
         # self.field.setPixmap(rotated_pixmap)
-
+        '''
         self.clickXDisplay = QLabel(self.match_tab)
         self.clickXDisplay.setGeometry(1880, 50, 20, 10)
 
@@ -155,7 +174,7 @@ class GRTDriverStation(QMainWindow):
 
         self.visionSwitch = QCheckBox(self.match_tab)
         self.visionSwitch.setGeometry(QRect(1850, 80, self.QCheckBoxWidth, self.QCheckBoxHeight))
-
+        '''
         # # Create a QHBoxLayout for the row of buttons
         # button_layout = QHBoxLayout()
 

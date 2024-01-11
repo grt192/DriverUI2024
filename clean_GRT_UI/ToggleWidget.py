@@ -50,7 +50,7 @@ class ToggleWidget(QWidget):
         self.current_state = not self.current_state
         self.text_value = self.true_state if self.current_state else self.false_state
         self.update_button()
-        self.toggled.emit(self.text_value)
+        self.toggled.emit(self.text_value.lower())
 
     def update_button(self):
         # Update the button text and background color based on the boolean value
