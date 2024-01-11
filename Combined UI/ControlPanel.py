@@ -1,10 +1,12 @@
 import sys
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel, QLineEdit, QComboBox, QCheckBox, QSizePolicy, QGroupBox
 from ToggleWidget import ToggleWidget
 from TelemWidget import TelemWidget
 
 class ControlPanel(QWidget):
+    alliance_color_changed = Signal((str))
+    
     def __init__(self):
         super().__init__()
 
@@ -21,6 +23,9 @@ class ControlPanel(QWidget):
         label3 = QLabel("Text Input 2:")
         text_input2 = QLineEdit(self)
 
+        self.alliance_color_toggle = ToggleWidget("Alliance", states=('Red', 'Blue'), colors=('red','blue'), initial_value=True)
+        self.alliance_color_toggle.toggled.connect(self.emit_color_changed_signal)
+        
         # Create a vertical layout for the control panel
         layout = QVBoxLayout(self)
         layout.addWidget(label1)
@@ -30,9 +35,9 @@ class ControlPanel(QWidget):
         layout.addWidget(checkbox)
         layout.addWidget(label3)
         layout.addWidget(text_input2)
-        layout.addWidget(ToggleWidget("Alliance", states=('Red', 'Blue'), colors=('red','blue')))
+        layout.addWidget(self.alliance_color_toggle)
         layout.addWidget(TelemWidget("test"))
-        layout.addStretch()  # Adds stretchable space at the end
+        # layout.addStretch()  # Adds stretchable space at the end
 
         # Set the size policy and maximum width for the control panel
         self.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Expanding)
@@ -46,6 +51,9 @@ class ControlPanel(QWidget):
         main_layout = QVBoxLayout(self)
         main_layout.addWidget(group_box)
         self.setLayout(main_layout)
+        
+    def emit_color_changed_signal(self, new_alliance_color):
+        self.alliance_color_changed.emit(new_alliance_color)
 
 # if __name__ == "__main__":
 #     import sys

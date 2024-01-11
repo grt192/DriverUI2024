@@ -69,6 +69,10 @@ class ActionWidget(QWidget):
         # REPLACE
         QTimer.singleShot(2000, self.action_complete)
 
+    def change_alliance_color(self, new_alliance_color):
+        self.alliance = new_alliance_color
+        self.update_button()
+    
     def update_button(self):
         # Update the button text and background color based on the alliance and pending state
         

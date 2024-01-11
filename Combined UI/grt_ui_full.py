@@ -12,6 +12,7 @@ from pixmap_test import GRTMapWidget
 from TelemGrid import TelemGrid
 from ToggleGrid import ToggleGrid
 from ActionGrid import ActionGrid
+from Swerve.SwerveWheelWidget import SwerveWheelWidget
 
 class GRTDriverStation(QMainWindow):
     QCheckBoxWidth = 50
@@ -32,9 +33,8 @@ class GRTDriverStation(QMainWindow):
         self.main_layout = QHBoxLayout() # MAIN LAYOUT HAS THE PREMATCH CONTROL PANEL + THE REST OF THE UI
         self.central_widget.setLayout(self.main_layout)
 
-        #Control Panel
         self.control_panel = ControlPanel() # CONTROL PANEL IS USED FOR PRE MATCH SETTINGS
-        # Create a QVBoxLayout to organize the widgets
+
         self.match_layout = QVBoxLayout(self.central_widget)
         self.main_layout.addWidget(self.control_panel)
         self.main_layout.addLayout(self.match_layout)
@@ -54,7 +54,7 @@ class GRTDriverStation(QMainWindow):
         self.map_widget = GRTMapWidget(self.alliance)
         
         self.cam_action_layout = QVBoxLayout()
-        self.driver_cam = CameraWidget()
+        # self.driver_cam = CameraWidget()
         
         # Define a list of dictionaries with ActionWidget parameters
         actions_info = [
@@ -67,7 +67,9 @@ class GRTDriverStation(QMainWindow):
         ]
 
         self.action_grid = ActionGrid(actions_info)
-        self.cam_action_layout.addWidget(self.driver_cam)
+        self.control_panel.alliance_color_changed.connect(self.action_grid.change_alliance_color)
+        
+        # self.cam_action_layout.addWidget(self.driver_cam)
         self.cam_action_layout.addWidget(self.action_grid)
         
         self.telem_toggle_layout = QVBoxLayout()
@@ -107,6 +109,12 @@ class GRTDriverStation(QMainWindow):
         self.match_telem_layout.addWidget(self.map_widget)
         self.match_telem_layout.addLayout(self.cam_action_layout)
         self.match_telem_layout.addLayout(self.telem_toggle_layout)
+
+        self.swerve_debug_layout = QHBoxLayout(self.debug_tab)
+        self.swerve_wheel_model = SwerveWheelWidget()
+        self.swerve_auton_map_model = GRTMapWidget(self.alliance)
+        self.swerve_debug_layout.addWidget(self.swerve_wheel_model)
+        self.swerve_debug_layout.addWidget(self.swerve_auton_map_model)
 
         # # Add content to Tab 1
         # # crosshair.png is 30*30

@@ -7,7 +7,7 @@ class TelemGrid(QWidget):
 
         # Set up the grid layout
         self.grid_layout = QGridLayout(self)
-        # self.grid_layout.setSpacing(10)  # Adjust the spacing between widgets
+        self.grid_layout.setSpacing(0)  # Adjust the spacing between widgets
 
         # Create TelemWidgets based on the provided telem_data
         for row in range(3):

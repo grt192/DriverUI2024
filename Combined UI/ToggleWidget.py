@@ -1,8 +1,11 @@
 from PySide6.QtWidgets import QPushButton, QVBoxLayout, QLabel, QWidget, QGroupBox, QSizePolicy
 from PySide6.QtGui import QColor
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, Signal
+
 
 class ToggleWidget(QWidget):
+    toggled = Signal((str))
+    
     def __init__(self, parameter_name, states=None, colors=None, initial_value=False, parent=None):
         super().__init__(parent)
 
@@ -47,6 +50,7 @@ class ToggleWidget(QWidget):
         self.current_state = not self.current_state
         self.text_value = self.true_state if self.current_state else self.false_state
         self.update_button()
+        self.toggled.emit(self.text_value)
 
     def update_button(self):
         # Update the button text and background color based on the boolean value
