@@ -23,7 +23,7 @@ class ControlPanel(QWidget):
         label3 = QLabel("Text Input 2:")
         text_input2 = QLineEdit(self)
 
-        self.alliance_color_toggle = ToggleWidget("Alliance", states=('Red', 'Blue'), colors=('red','blue'), initial_value=True)
+        self.alliance_color_toggle = ToggleWidget("Alliance", '', states=('Red', 'Blue'), colors=('red','blue'), initial_value=True)
         self.alliance_color_toggle.toggled.connect(self.emit_color_changed_signal)
         
         # Create a vertical layout for the control panel

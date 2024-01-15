@@ -2,9 +2,10 @@ from PySide6.QtWidgets import QPushButton, QVBoxLayout, QLabel, QWidget, QGroupB
 from PySide6.QtGui import QColor
 from PySide6.QtCore import Qt
 from PySide6.QtCore import QTimer
+from NetworktableHelper2 import NetworkTableManager
 
 class ActionWidget(QWidget):
-    def __init__(self, action_name, alliance='red', parent=None):
+    def __init__(self, action_name, table_name, entry_name, alliance='red', row=None, col=None, parent=None):
         super().__init__(parent)
 
         # Set initial properties
@@ -12,6 +13,9 @@ class ActionWidget(QWidget):
         self.alliance = alliance
         self.pending = False
         self.cancel = False
+
+        self.nt_manager = NetworkTableManager(table_name=table_name, entry_name=entry_name)
+        self.nt_manager.new_value_available.connect(self.update_nt_value)
 
         # Create widgets
         self.group_box = QGroupBox(self)
@@ -89,6 +93,11 @@ class ActionWidget(QWidget):
         self.button.setText(self.button_text)
         self.button.setStyleSheet(f"background-color: {color.name()};")
         self.button.setAutoFillBackground(True)
+        
+    def update_nt_value(self, key, value):
+        # FIX THIS FIX THIS FIX THIS
+        if not self.able_to_toggle:
+            self.current_state = value
 
 
 if __name__ == "__main__":

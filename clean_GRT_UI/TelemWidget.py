@@ -1,10 +1,11 @@
 from PySide6.QtWidgets import QLabel, QVBoxLayout, QGroupBox, QWidget, QSizePolicy
 from PySide6.QtGui import QFontMetrics, QFont
 from PySide6.QtCore import Qt, QTimer
+from NetworktableHelper2 import NetworkTableManager
 import random
 
 class TelemWidget(QWidget):
-    def __init__(self, label, initial_value="N/A", parent=None):
+    def __init__(self, label, table_name, entry_name, initial_value="N/A", parent=None):
         super().__init__(parent)
 
         # Set up widgets
@@ -14,6 +15,9 @@ class TelemWidget(QWidget):
         
         self.value_label.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.label.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
+        
+        self.nt_manager = NetworkTableManager(table_name=table_name, entry_name=entry_name)
+        self.nt_manager.new_value_available.connect(self.update_nt_value)
 
         # Set up layout
         self.layout = QVBoxLayout(self.group_box)
@@ -54,4 +58,8 @@ class TelemWidget(QWidget):
     def update_value(self):
         # IMPLEMENT
         self.set_value(round(random.randint(1,5)*1.05, 2))
+        self.timer.start(0)  # Adjust the interval as needed (e.g., 100 ms for 10 FPS)
+
+    def update_nt_value(self, key, value):
+        self.set_value(round(value, 2))
         self.timer.start(0)  # Adjust the interval as needed (e.g., 100 ms for 10 FPS)
