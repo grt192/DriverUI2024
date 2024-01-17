@@ -15,10 +15,10 @@ class ToggleGrid(QWidget):
             col = toggle_info.get("col", 0)
             able_to_toggle = toggle_info.get("able_to_toggle", True)
             table_name = toggle_info.get('table_name', '')
-            nt_name = toggle_info.get('nt_name', '')
+            entry_name = toggle_info.get('entry_name', '')
             toggle_widget = ToggleWidget(parameter_name=toggle_info.get("name", ""),
                                          table_name=table_name,
-                                         entry_name=nt_name,
+                                         entry_name=entry_name,
                                          initial_value=toggle_info.get("value", False),
                                          states=toggle_info.get("states", None),
                                          colors=toggle_info.get("colors", None),

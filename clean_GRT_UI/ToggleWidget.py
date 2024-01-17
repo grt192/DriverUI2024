@@ -69,6 +69,7 @@ class ToggleWidget(QWidget):
 
     @Slot(str, object)
     def update_nt_value(self, key:str, value:object):
+        print(f"key {key}, value {value}")
         if not self.able_to_toggle:
             self.current_state = value
         else:

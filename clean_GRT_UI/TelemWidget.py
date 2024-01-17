@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import QLabel, QVBoxLayout, QGroupBox, QWidget, QSizePolicy
 from PySide6.QtGui import QFontMetrics, QFont
-from PySide6.QtCore import Qt, QTimer
+from PySide6.QtCore import Qt, QTimer, Slot
 from NetworktableHelper2 import NetworkTableManager
 import random
 
@@ -32,7 +32,7 @@ class TelemWidget(QWidget):
         # self.adjust_font_size()
         
         self.timer = QTimer()
-        self.timer.timeout.connect(self.update_value)
+        # self.timer.timeout.connect(self.update_nt_value)
         self.timer.start(0)  # Adjust the interval as needed (e.g., 100 ms for 10 FPS)
 
     def adjust_font_size(self):
@@ -60,6 +60,8 @@ class TelemWidget(QWidget):
         self.set_value(round(random.randint(1,5)*1.05, 2))
         self.timer.start(0)  # Adjust the interval as needed (e.g., 100 ms for 10 FPS)
 
-    def update_nt_value(self, key, value):
+    @Slot(str, object)
+    def update_nt_value(self, key:str, value:object):
+        print("trying to nt telem")
         self.set_value(round(value, 2))
-        self.timer.start(0)  # Adjust the interval as needed (e.g., 100 ms for 10 FPS)
+        # self.timer.start(0)  # Adjust the interval as needed (e.g., 100 ms for 10 FPS)

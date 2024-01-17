@@ -98,16 +98,17 @@ class GRTDriverStation(QMainWindow):
         self.telem_toggle_layout = QVBoxLayout()
         
         self.telem_widget_data_preset = [
-                {"name": "Quantity", "value": "0.00", "row": 0, "col": 0},
-                {"name": "Quantity", "value": "0.00", "row": 0, "col": 1},
-                {"name": "Quantity", "value": "0.00", "row": 0, "col": 2},
-                {"name": "Quantity", "value": "0.00", "row": 1, "col": 0},
-                {"name": "Quantity", "value": "0.00", "row": 1, "col": 1},
-                {"name": "Quantity", "value": "0.00", "row": 1, "col": 2},
-                {"name": "Quantity", "value": "0.00", "row": 2, "col": 0},
-                {"name": "Quantity", "value": "0.00", "row": 2, "col": 1},
-                {"name": "Quantity", "value": "0.00", "row": 2, "col": 2}
-            ]
+                {"name": "Front x-pos", "value": "0.00", "table_name": "PhotonVision", "entry_name": "xPosFront", "row": 0, "col": 0},
+                {"name": "Front y-pos", "value": "0.00", "table_name": "PhotonVision", "entry_name": "yPosFront", "row": 0, "col": 1},
+                {"name": "Front Heading", "value": "0.00", "table_name": "PhotonVision", "entry_name": "headingFront", "row": 0, "col": 2},
+                {"name": "Back x-pos", "value": "0.00", "table_name": "PhotonVision", "entry_name": "xPosBack", "row": 1, "col": 0},
+                {"name": "Back y-pos", "value": "0.00", "table_name": "PhotonVision", "entry_name": "yPosBack", "row": 1, "col": 1},
+                {"name": "Back Heading", "value": "0.00", "table_name": "PhotonVision", "entry_name": "headingBack", "row": 1, "col": 2},
+                {"name": "Quantity", "value": "0.00", "table_name": "PhotonVision", "entry_name": "headingBack", "row": 0, "col": 1},
+                {"name": "Quantity", "value": "0.00", "table_name": "PhotonVision", "entry_name": "headingBack","row": 2, "col": 0},
+                {"name": "Quantity", "value": "0.00", "table_name": "PhotonVision", "entry_name": "headingBack", "row": 2, "col": 1},
+                {"name": "Quantity", "value": "0.00", "table_name": "PhotonVision", "entry_name": "headingBack", "row": 2, "col": 2}
+        ]
 
         self.telem_grid = TelemGrid(self.telem_widget_data_preset)
         
