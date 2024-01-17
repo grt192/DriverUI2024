@@ -1,12 +1,12 @@
 from networktables import NetworkTables
-from PySide6.QtCore import Qt, SignalInstance
+from PySide6.QtCore import Qt, Signal, QObject, Slot
 import requests
 
-class NetworkTableManager():
-    new_value_available = SignalInstance((str), (object))
+class NetworkTableManager(QObject):
+    new_value_available = Signal(str, object)
     
     def __init__(self, table_name, entry_name) -> None:
-        
+        super().__init__()
         NetworkTables.initialize(server='10.1.92.2')
         
         self.table = NetworkTables.getTable(table_name)

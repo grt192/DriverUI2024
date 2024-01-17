@@ -15,7 +15,7 @@ class ActionGrid(QWidget):
         for action_info in actions_info:
             row = action_info.get("row", 0)
             col = action_info.get("col", 0)
-            action_widget = ActionWidget(**action_info)
+            action_widget = ActionWidget(**action_info, table_name="table name", entry_name="entry name")
             self.action_toggles.append(action_widget)
             self.grid_layout.addWidget(action_widget, row, col)
             

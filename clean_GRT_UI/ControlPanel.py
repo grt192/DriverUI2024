@@ -23,7 +23,7 @@ class ControlPanel(QWidget):
         label3 = QLabel("Text Input 2:")
         text_input2 = QLineEdit(self)
 
-        self.alliance_color_toggle = ToggleWidget("Alliance", '', states=('Red', 'Blue'), colors=('red','blue'), initial_value=True)
+        self.alliance_color_toggle = ToggleWidget("Alliance", '', '', states=('Red', 'Blue'), colors=('red','blue'), initial_value=True)
         self.alliance_color_toggle.toggled.connect(self.emit_color_changed_signal)
         
         # Create a vertical layout for the control panel
@@ -36,7 +36,7 @@ class ControlPanel(QWidget):
         layout.addWidget(label3)
         layout.addWidget(text_input2)
         layout.addWidget(self.alliance_color_toggle)
-        layout.addWidget(TelemWidget("test"))
+        layout.addWidget(TelemWidget("test", "table name", "entry name"))
         # layout.addStretch()  # Adds stretchable space at the end
 
         # Set the size policy and maximum width for the control panel

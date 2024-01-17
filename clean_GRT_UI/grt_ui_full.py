@@ -5,6 +5,7 @@ from PySide6.QtGui import *
 from PySide6.QtWidgets import *
 
 from networktableHelper import networktableHelper
+from NetworktableHelper2 import NetworkTableManager
 from mapLabel import mapLabel
 from MapWidget import MapWidget
 from ControlPanel import ControlPanel
@@ -26,28 +27,27 @@ class GRTDriverStation(QMainWindow):
 
         self.setWindowTitle("GRT 192 Driver Station")
         self.resize(1920, 1080)
-        
         # MAIN LAYOUT HAS THE PREMATCH CONTROL PANEL + THE REST OF THE UI
-        self.main_layout = QHBoxLayout() 
-        
+        self.main_layout = QHBoxLayout()
+
         # Set the UI's central widget to a widget, and set that widget's layout to the whole UI
         self.central_widget = QWidget(self)
         self.setCentralWidget(self.central_widget)
         self.central_widget.setLayout(self.main_layout)
-        
+
         # The control panel is used for holistic settings across the UI (e.g. alliance color, auton selection)
         # NOT meant for mid-match inputs
-        self.control_panel = ControlPanel() 
-        
+        self.control_panel = ControlPanel()
+
         # The content layout is for the primary content of the GUI.
-        self.content_layout = QVBoxLayout(self.central_widget)
-        
+        self.content_layout = QVBoxLayout()
+
         # Adding widgets and layouts to the main layout
         # Since it's a horizontal layout, we're adding elements in order of left to right
         # The control panel goes on the left, followed by the content layout with everything else
         self.main_layout.addWidget(self.control_panel)
         self.main_layout.addLayout(self.content_layout)
-        
+
         ''' 
         Everything that's not the control panel will end up in one of four (?) tabs:
             1. Auton - Visualizing the autonomous paths, possibly plotting and/or tuning?
@@ -56,6 +56,7 @@ class GRTDriverStation(QMainWindow):
             4. Vision - Testing/Fixing vision (apriltags + driver cams) in the pits (e.g. 'are tags detected?')
         
         '''
+
         self.match_debug_tab_widget = QTabWidget(self.central_widget)
 
         # Create and add the tabs as three widgets
@@ -69,7 +70,6 @@ class GRTDriverStation(QMainWindow):
         self.match_debug_tab_widget.addTab(self.debug_tab, "Debug")
         self.match_debug_tab_widget.addTab(self.vision_tab, "Vision")
         self.match_debug_tab_widget.setCurrentIndex(1)
-
         # The tabs are really the only thing in the content layout
         self.content_layout.addWidget(self.match_debug_tab_widget)
 
@@ -142,7 +142,7 @@ class GRTDriverStation(QMainWindow):
         self.vision_debug_layout = QHBoxLayout(self.vision_tab)
         self.vision_debug_widget = VisionDebugWidget()
         self.vision_debug_layout.addWidget(self.vision_debug_widget)
-
+        
         # Add content to Tab 1
         # crosshair.png is 30*30
         self.crosshair1 = QLabel(self.match_tab)
@@ -171,7 +171,6 @@ class GRTDriverStation(QMainWindow):
         
         # transform = QTransform().rotate(rotation_angle)
         # rotated_pixmap = self.fieldPixmap.transformed(transform)
-
         # self.field.setPixmap(rotated_pixmap)
         '''
         self.clickXDisplay = QLabel(self.match_tab)
@@ -205,4 +204,5 @@ def main():
     app.exec()
 
 if __name__ == "__main__":
+    sdf = NetworkTableManager(table_name="df", entry_name="clean_GRT_UI")
     main()

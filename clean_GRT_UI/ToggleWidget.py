@@ -1,11 +1,11 @@
 from PySide6.QtWidgets import QPushButton, QVBoxLayout, QLabel, QWidget, QGroupBox, QSizePolicy
 from PySide6.QtGui import QColor
-from PySide6.QtCore import Qt, SignalInstance
+from PySide6.QtCore import Qt, SignalInstance, Slot, Signal
 from NetworktableHelper2 import NetworkTableManager
 
 
 class ToggleWidget(QWidget):
-    toggled = SignalInstance((str))
+    toggled = Signal(str, object)
     
     def __init__(self, parameter_name, table_name, entry_name, states=None, colors=None, initial_value=False, able_to_toggle=True, parent=None):
         super().__init__(parent)
@@ -66,7 +66,10 @@ class ToggleWidget(QWidget):
         color = QColor(self.true_color if self.current_state else self.false_color)
         self.button.setStyleSheet(f"background-color: {color.name()};")
         self.button.setAutoFillBackground(True)
-    
-    def update_nt_value(self, key, value):
+
+    @Slot(str, object)
+    def update_nt_value(self, key:str, value:object):
         if not self.able_to_toggle:
             self.current_state = value
+        else:
+            self.current_state = key
