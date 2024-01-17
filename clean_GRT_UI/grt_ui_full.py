@@ -77,7 +77,7 @@ class GRTDriverStation(QMainWindow):
         
         self.cam_action_layout = QVBoxLayout()
         self.driver_cam = CameraWidget()
-        
+
         # Define a list of dictionaries with ActionWidget parameters
         actions_info = [
             {"action_name": "GO TO AMP", "alliance": self.alliance, "row": 0, "col": 0},

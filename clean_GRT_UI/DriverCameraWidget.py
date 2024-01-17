@@ -13,6 +13,12 @@ from threading import *
 
 
 class CameraWidget(QWidget):
+    #TEST_URL = "http://127.0.0.1:5001"
+    TEST_URL = "http://10.1.92.2:1181"
+
+    #URL = "http://127.0.0.1:5001/cam.mjpg"
+    URL = "http://10.1.92.2:1181/stream.mjpg"
+
     def __init__(self, displayName='GRT Driver Cam', parent=None):
         super(CameraWidget, self).__init__(parent)
 
@@ -38,7 +44,7 @@ class CameraWidget(QWidget):
 
         if self.is_network_available:
             # Fetch video stream from the network
-            self.url = "http://10.1.92.2:1181/stream.mjpg"
+            self.url = self.URL
             self.response = requests.get(self.url, stream=True)
             self.bytes = b''
         else:
@@ -57,8 +63,8 @@ class CameraWidget(QWidget):
         self.timer.timeout.connect(self.DisplayStream)
         self.timer.start(1)  # Adjust the interval as needed (e.g., 100 ms for 10 FPS)
 
-        self.CamThread = Thread(target=self.DisplayStream)
-        self.CamThread.start()
+        #self.CamThread = Thread(target=self.DisplayStream)
+        #self.CamThread.start()
 
         self.actual_fps = 0
         self.past_five_instantaneous_fps = [0, 0, 0, 0, 0]
@@ -76,7 +82,7 @@ class CameraWidget(QWidget):
     def check_network(self):
         # Check if network is available
         try:
-            response = requests.get("http://10.1.92.2:1181", timeout=2)
+            response = requests.get(self.TEST_URL, timeout=2)
             return True
         except requests.ConnectionError:
             return False
@@ -114,15 +120,20 @@ class CameraWidget(QWidget):
         return avg
 
     def DisplayStream(self):
+        #print(1)
         try:
             if self.is_network_available:
                 for chunk in self.response.iter_content(chunk_size=1024):
                     self.bytes += chunk
                     a = self.bytes.find(b'\xff\xd8')  # JPEG start
                     b = self.bytes.find(b'\xff\xd9')  # JPEG end
+                    """
+                    a = self.bytes.find(b'--frame\r\nContent-Type: image/jpeg\r\n\r\n')
+                    b = self.bytes.find(b'\r\n')
+                    """
                     if a != -1 and b != -1:
                         jpg = self.bytes[a:b + 2]  # Extract the JPEG image
-                        bytes = self.bytes[b + 2:]  # Remove the processed bytes
+                        self.bytes = self.bytes[b + 2:]  # Remove the processed bytes
 
                         # Decode the JPEG image to a frame
                         try:
@@ -148,7 +159,7 @@ class CameraWidget(QWidget):
             # self.response = requests.get(self.url, stream=True)
             # self.bytes = b''
             print(e)
-
+        self.timer.start(1)
 
 class DriverCameraWindow(QMainWindow):
     def __init__(self, parent=None):
