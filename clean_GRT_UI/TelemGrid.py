@@ -16,8 +16,8 @@ class TelemGrid(QWidget):
             telem_widget = TelemWidget(label=telem_info.get("name", ""),
                                        initial_value=telem_info.get("value", "N/A"),
                                        parent=self,
-                                       table_name = "table name",
-                                       entry_name = "entry name")
+                                       table_name = "PhotonVision",
+                                       entry_name = "xPosFront")
             self.grid_layout.addWidget(telem_widget, row, col)
 
         # Set up main layout
