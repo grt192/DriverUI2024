@@ -5,7 +5,7 @@ from PySide6.QtCore import QTimer
 from NetworktableHelper2 import NetworkTableManager
 
 class ActionWidget(QWidget):
-    def __init__(self, action_name, table_name, entry_name, alliance='red', row=None, col=None, parent=None):
+    def __init__(self, action_name, table_name="Undefined", entry_name="Undefined", alliance='red', row=None, col=None, parent=None, message:str=None):
         super().__init__(parent)
 
         # Set initial properties
@@ -16,6 +16,7 @@ class ActionWidget(QWidget):
 
         self.nt_manager = NetworkTableManager(table_name=table_name, entry_name=entry_name)
         self.nt_manager.new_value_available.connect(self.update_nt_value)
+        self.message = message
 
         # Create widgets
         self.group_box = QGroupBox(self)
@@ -51,6 +52,9 @@ class ActionWidget(QWidget):
         
         # self.button.setEnabled(False)
         self.update_button()
+
+        self.nt_manager.putString(self.message)
+
 
     def action_complete(self):
         # Signal that the action is complete
@@ -95,9 +99,10 @@ class ActionWidget(QWidget):
         self.button.setAutoFillBackground(True)
         
     def update_nt_value(self, key, value):
+        pass
         # FIX THIS FIX THIS FIX THIS
-        if not self.able_to_toggle:
-            self.current_state = value
+        #if not self.able_to_toggle:
+            #self.current_state = value
 
 
 if __name__ == "__main__":
