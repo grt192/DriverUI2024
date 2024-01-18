@@ -8,7 +8,8 @@ class NetworkTableManager(QObject):
     def __init__(self, table_name, entry_name) -> None:
         super().__init__()
         NetworkTables.initialize(server='10.1.92.2')
-        
+
+        print("creating table: "+ table_name)
         self.table = NetworkTables.getTable(table_name)
         self.entry_name = entry_name
         
@@ -39,6 +40,11 @@ class NetworkTableManager(QObject):
             return True
         except requests.ConnectionError:
             return False
+
+    def putString(self, message):
+        print("puting: " + message)
+        self.table.putString(self.entry_name, message)
+        print(1)
         
         
         
