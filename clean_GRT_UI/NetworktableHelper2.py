@@ -5,7 +5,7 @@ import requests
 class NetworkTableManager(QObject):
     new_value_available = Signal(str, object)
     
-    def __init__(self, table_name, entry_name) -> None:
+    def __init__(self, table_name, entry_name="") -> None:
         super().__init__()
         NetworkTables.initialize(server='10.1.92.2')
 
@@ -17,8 +17,10 @@ class NetworkTableManager(QObject):
 
     def valueChanged(self, table, key, value, isNew):
 
-        if key == self.entry_name:
-            self.new_value_available.emit(key, value)
+        # if key == self.entry_name:
+        #     self.new_value_available.emit(key, value)
+        
+        self.new_value_available.emit(key, value)
         
         # try:
         #     if key == 'x':

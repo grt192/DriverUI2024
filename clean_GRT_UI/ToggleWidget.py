@@ -5,7 +5,8 @@ from NetworktableHelper2 import NetworkTableManager
 
 
 class ToggleWidget(QWidget):
-    toggled = Signal(str, object)
+    send_to_nt = Signal(str, object)
+    toggled = Signal(str)
     
     def __init__(self, parameter_name, table_name, entry_name, states=None, colors=None, initial_value=False, able_to_toggle=True, parent=None):
         super().__init__(parent)

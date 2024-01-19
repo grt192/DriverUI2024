@@ -79,6 +79,14 @@ class GRTDriverStation(QMainWindow):
         self.driver_cam = CameraWidget()
 
         # Define a list of dictionaries with ActionWidget parameters
+        actions_info = [
+            {"action_name": "GO TO AMP", "alliance": self.alliance, "table_name": "PhotonVision", "entry_name": "xPosFront", "row": 0, "col": 0},
+            {"action_name": "GO TO SPEAKER", "alliance": self.alliance, "table_name": "PhotonVision", "entry_name": "xPosFront", "row": 0, "col": 1},
+            {"action_name": "GO TO SOURCE", "alliance": self.alliance, "table_name": "PhotonVision", "entry_name": "xPosFront", "row": 0, "col": 2},
+            {"action_name": "SCORE AMP", "alliance": self.alliance, "table_name": "PhotonVision", "entry_name": "xPosFront", "row": 1, "col": 0},
+            {"action_name": "SCORE SPEAKER", "alliance": self.alliance, "table_name": "PhotonVision", "entry_name": "xPosFront", "row": 1, "col": 1},
+            {"action_name": "INTAKE SOURCE", "alliance": self.alliance, "table_name": "PhotonVision", "entry_name": "xPosFront", "row": 1, "col": 2},
+        ]
 
         """
         actions_info = [
@@ -119,18 +127,17 @@ class GRTDriverStation(QMainWindow):
                 {"name": "Front Heading", "value": "0.00", "table_name": "PhotonVision", "entry_name": "headingFront", "row": 0, "col": 2},
                 {"name": "Back x-pos", "value": "0.00", "table_name": "PhotonVision", "entry_name": "xPosBack", "row": 1, "col": 0},
                 {"name": "Back y-pos", "value": "0.00", "table_name": "PhotonVision", "entry_name": "yPosBack", "row": 1, "col": 1},
-                {"name": "Back Heading", "value": "0.00", "table_name": "PhotonVision", "entry_name": "headingBack", "row": 1, "col": 2},
-                {"name": "Quantity", "value": "0.00", "table_name": "PhotonVision", "entry_name": "headingBack", "row": 0, "col": 1},
-                {"name": "Quantity", "value": "0.00", "table_name": "PhotonVision", "entry_name": "headingBack","row": 2, "col": 0},
-                {"name": "Quantity", "value": "0.00", "table_name": "PhotonVision", "entry_name": "headingBack", "row": 2, "col": 1},
-                {"name": "Quantity", "value": "0.00", "table_name": "PhotonVision", "entry_name": "headingBack", "row": 2, "col": 2}
+                {"name": "Back Heading", "value": "0.00", "table_name": "PhotonVision", "entry_name": "headingBack", "row": 1, "col": 2}
+                # {"name": "Quantity", "value": "0.00", "table_name": "PhotonVision", "entry_name": "headingBack","row": 2, "col": 0},
+                # {"name": "Quantity", "value": "0.00", "table_name": "PhotonVision", "entry_name": "headingBack", "row": 2, "col": 1},
+                # {"name": "Quantity", "value": "0.00", "table_name": "PhotonVision", "entry_name": "headingBack", "row": 2, "col": 2}
         ]
 
         self.telem_grid = TelemGrid(self.telem_widget_data_preset)
         
         self.toggle_widget_data_preset = [
                 {"name": "Vision", "value": True , "states": ('Enabled', 'Disabled'), "colors": ('green', 'red'), "row": 0, "col": 0},
-                {"name": "Toggle 2", "value": False, "row": 0, "col": 1},
+                {"name": "Relative to", "value": True , "states": ('Field ', 'Robot'), "colors": ('green', 'red'), "row": 0, "col": 1},
                 {"name": "Toggle 3", "value": True, "row": 0, "col": 2},
                 {"name": "Toggle 4", "value": False, "row": 1, "col": 0},
                 {"name": "Toggle 5", "value": True, "row": 1, "col": 1},

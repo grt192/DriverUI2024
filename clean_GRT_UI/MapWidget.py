@@ -45,7 +45,6 @@ class MapWidget(QWidget):
         self.reload_maps()
 
     def reload_maps(self):
-        print(f"reloading {self.alliance}")
         self.mapPixmap = QPixmap(f"{os.path.dirname(__file__)}/field24.png").scaled(600, 300)  
         rotation_angle = 90 if self.alliance == "red" else -90
         transform = QTransform().rotate(rotation_angle)
