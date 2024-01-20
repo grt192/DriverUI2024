@@ -79,6 +79,7 @@ class GRTDriverStation(QMainWindow):
         self.driver_cam = CameraWidget()
 
         # Define a list of dictionaries with ActionWidget parameters
+        """
         actions_info = [
             {"action_name": "GO TO AMP", "alliance": self.alliance, "table_name": "PhotonVision", "entry_name": "xPosFront", "row": 0, "col": 0},
             {"action_name": "GO TO SPEAKER", "alliance": self.alliance, "table_name": "PhotonVision", "entry_name": "xPosFront", "row": 0, "col": 1},
@@ -87,6 +88,7 @@ class GRTDriverStation(QMainWindow):
             {"action_name": "SCORE SPEAKER", "alliance": self.alliance, "table_name": "PhotonVision", "entry_name": "xPosFront", "row": 1, "col": 1},
             {"action_name": "INTAKE SOURCE", "alliance": self.alliance, "table_name": "PhotonVision", "entry_name": "xPosFront", "row": 1, "col": 2},
         ]
+        """
 
         """
         actions_info = [
@@ -100,17 +102,17 @@ class GRTDriverStation(QMainWindow):
         """
         actions_info = [
             {"action_name": "Go TO AMP", "alliance": self.alliance, "row": 0, "col": 0,
-             "table_name": "elevator", "entry_name": "target_position", "message": "hello"},
+             "table_name": "", "entry_name": ""},
             {"action_name": "GO TO SPEAKER", "alliance": self.alliance, "row": 0, "col": 1,
-             "table_name": "elevator", "entry_name": "target_position"},
+             "table_name": "", "entry_name": "", "message": ""},
             {"action_name": "GO TO SOURCE", "alliance": self.alliance, "row": 0, "col": 2,
-             "table_name": "elevator", "entry_name": "target_position"},
+             "table_name": "", "entry_name": "", "message": ""},
             {"action_name": "SCORE AMP", "alliance": self.alliance, "row": 1, "col": 0,
-             "table_name": "elevator", "entry_name": "target_position"},
+             "table_name": "elevator", "entry_name": "target_position", "message": "AMP"},
             {"action_name": "SCORE SPEAKER", "alliance": self.alliance, "row": 1, "col": 1,
-             "table_name": "elevator", "entry_name": "target_position"},
+             "table_name": "elevator", "entry_name": "target_position", "message": "SPEAKER"},
             {"action_name": "INTAKE SOURCE", "alliance": self.alliance, "row": 1, "col": 2,
-             "table_name": "elevator", "entry_name": "target_position"},
+             "table_name": "elevator", "entry_name": "target_position", "message": "GROUND"},
         ]
         self.action_grid = ActionGrid(actions_info)
         self.control_panel.alliance_color_changed.connect(self.action_grid.change_alliance_color)
