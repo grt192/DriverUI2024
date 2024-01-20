@@ -22,9 +22,12 @@ class ControlPanel(QWidget):
 
         label3 = QLabel("Text Input 2:")
         text_input2 = QLineEdit(self)
-
+        
         self.alliance_color_toggle = ToggleWidget("Alliance", '', '', states=('Red', 'Blue'), colors=('red','blue'), initial_value=True)
         self.alliance_color_toggle.toggled.connect(self.emit_color_changed_signal)
+        
+        self.alliance_lock_toggle = ToggleWidget("LOCK", '', '', states=('Locked', 'Unlocked'), colors=('green','red'), initial_value=True)
+        self.alliance_lock_toggle.toggled.connect(self.lock_alliance)
         
         # Create a vertical layout for the control panel
         layout = QVBoxLayout(self)
@@ -35,6 +38,7 @@ class ControlPanel(QWidget):
         layout.addWidget(checkbox)
         layout.addWidget(label3)
         layout.addWidget(text_input2)
+        layout.addWidget(self.alliance_lock_toggle)
         layout.addWidget(self.alliance_color_toggle)
         layout.addWidget(TelemWidget("test", "table name", "entry name"))
         # layout.addStretch()  # Adds stretchable space at the end
@@ -54,6 +58,12 @@ class ControlPanel(QWidget):
         
     def emit_color_changed_signal(self, new_alliance_color):
         self.alliance_color_changed.emit(new_alliance_color)
+        
+    def lock_alliance(self, lock_state):
+        if lock_state == 'locked':
+            self.alliance_color_toggle.setEnabled(False)
+        else:
+            self.alliance_color_toggle.setEnabled(True)
 
 # if __name__ == "__main__":
 #     import sys
