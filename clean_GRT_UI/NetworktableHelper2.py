@@ -4,7 +4,9 @@ import requests
 
 class NetworkTableManager(QObject):
     new_value_available = Signal(str, object)
-    
+
+    #nt debug
+    cnt = 0
     def __init__(self, table_name, entry_name="") -> None:
         super().__init__()
         NetworkTables.initialize(server='10.1.92.2')
@@ -45,9 +47,9 @@ class NetworkTableManager(QObject):
 
     def putString(self, message):
         print("puting: " + message)
-        self.table.putString(self.entry_name, message)
-        print(1)
-        
+        self.table.putString(self.entry_name, str(message))
+        self.cnt += 1
+
         
         
         
