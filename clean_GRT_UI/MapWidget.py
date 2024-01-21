@@ -17,9 +17,12 @@ class MapWidget(QWidget):
         self.crosshairPixmap = QPixmap(f"{os.path.dirname(__file__)}/crosshair.png")
         
         self.alliance = alliance
-        
-        rotation_angle = 90 if self.alliance == "red" else -90
-        transform = QTransform().rotate(rotation_angle)
+
+        if self.alliance == "red":
+            rotationAngle = 90
+        else:
+            rotationAngle = -90
+        transform = QTransform().rotate(rotationAngle)
         self.mapPixmap = self.mapPixmap.transformed(transform)
         
         # Set up QLabel for robot icon
