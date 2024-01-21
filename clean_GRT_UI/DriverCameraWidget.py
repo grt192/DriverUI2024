@@ -66,6 +66,7 @@ class CameraWidget(QWidget):
         #print("Checking Network")
         try:
             response = requests.get(self.TEST_URL, timeout=2)
+            response.close()
             #print("On Network")
             return True
         except Exception as e:
@@ -74,29 +75,27 @@ class CameraWidget(QWidget):
 
     def update_frame(self):
         # FETCH IMAGE DATA
-        if not self.is_network_available:
-            #if driver cam is not accessable, use random images instead.
-            image_data = np.random.random((160, 320)) * 255  # Example random image data
-            height, width = image_data.shape
+        image_data = np.random.random((160, 320)) * 255  # Example random image data
+        height, width = image_data.shape
 
-            # Convert NumPy array to QImage
-            image = QImage(image_data.data, width, height, width, QImage.Format.Format_Grayscale8)
+        # Convert NumPy array to QImage
+        image = QImage(image_data.data, width, height, width, QImage.Format.Format_Grayscale8)
 
-            # Convert QImage to QPixmap and set it to the QLabel
-            pixmap = QPixmap.fromImage(image)
-            self.camera_display.setPixmap(pixmap.scaled(pixmap.size(), aspectMode=QtCore.Qt.AspectRatioMode.KeepAspectRatio))
+        # Convert QImage to QPixmap and set it to the QLabel
+        pixmap = QPixmap.fromImage(image)
+        self.camera_display.setPixmap(pixmap.scaled(pixmap.size(), aspectMode=QtCore.Qt.AspectRatioMode.KeepAspectRatio))
 
-            self.time_now = time.time()
-            self.actual_fps = 1 / self.calculate_actual_fps(self.time_now - self.time_old)
-            self.time_old = self.time_now
+        self.time_now = time.time()
+        self.actual_fps = 1 / self.calculate_actual_fps(self.time_now - self.time_old)
+        self.time_old = self.time_now
 
-            #Start timer for next frame.
-            self.timer.start(1)
-            now = perf_counter()
-            elapsed_now = now - self.updateTime
-            self.updateTime = now
-            self.elapsed = self.elapsed * 0.9 + elapsed_now * 0.1
-            self.errorLabel.setText(str(round(self.actual_fps, 2)) + " FPS")
+        #Start timer for next frame.
+        self.timer.start(1)
+        now = perf_counter()
+        elapsed_now = now - self.updateTime
+        self.updateTime = now
+        self.elapsed = self.elapsed * 0.9 + elapsed_now * 0.1
+        self.errorLabel.setText(str(round(self.actual_fps, 2)) + " FPS")
 
     def calculate_actual_fps(self, latest_instantaneous_fps):
         self.past_five_instantaneous_fps.pop(0)
