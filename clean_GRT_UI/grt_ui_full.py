@@ -27,26 +27,27 @@ class GRTDriverStation(QMainWindow):
 
         self.setWindowTitle("GRT 192 Driver Station")
         self.resize(1920, 1080)
+
         # MAIN LAYOUT HAS THE PREMATCH CONTROL PANEL + THE REST OF THE UI
-        self.main_layout = QHBoxLayout()
+        self.mainLayout = QHBoxLayout()
 
         # Set the UI's central widget to a widget, and set that widget's layout to the whole UI
-        self.central_widget = QWidget(self)
-        self.setCentralWidget(self.central_widget)
-        self.central_widget.setLayout(self.main_layout)
+        self.centralWidget = QWidget(self)
+        self.setCentralWidget(self.centralWidget)
+        self.centralWidget.setLayout(self.mainLayout)
 
         # The control panel is used for holistic settings across the UI (e.g. alliance color, auton selection)
         # NOT meant for mid-match inputs
-        self.control_panel = ControlPanel()
+        self.controlPanel = ControlPanel()
 
         # The content layout is for the primary content of the GUI.
-        self.content_layout = QVBoxLayout()
+        self.contentLayout = QVBoxLayout()
 
         # Adding widgets and layouts to the main layout
         # Since it's a horizontal layout, we're adding elements in order of left to right
         # The control panel goes on the left, followed by the content layout with everything else
-        self.main_layout.addWidget(self.control_panel)
-        self.main_layout.addLayout(self.content_layout)
+        self.mainLayout.addWidget(self.controlPanel)
+        self.mainLayout.addLayout(self.contentLayout)
 
         ''' 
         Everything that's not the control panel will end up in one of four (?) tabs:
@@ -57,26 +58,29 @@ class GRTDriverStation(QMainWindow):
         
         '''
 
-        self.match_debug_tab_widget = QTabWidget(self.central_widget)
+        self.match_debug_tab_widget = QTabWidget(self.centralWidget)
 
         # Create and add the tabs as three widgets
-        self.auton_tab = QWidget()
-        self.match_tab = QWidget()
-        self.debug_tab = QWidget()
-        self.vision_tab = QWidget()
+        self.autonTab = QWidget()
+        self.matchTab = QWidget()
+        self.debugTab = QWidget()
+        self.visionTab = QWidget()
 
-        self.match_debug_tab_widget.addTab(self.auton_tab, "Auton")
-        self.match_debug_tab_widget.addTab(self.match_tab, "Match")
-        self.match_debug_tab_widget.addTab(self.debug_tab, "Debug")
-        self.match_debug_tab_widget.addTab(self.vision_tab, "Vision")
+        #Added tabs to the tab widget
+        self.match_debug_tab_widget.addTab(self.autonTab, "Auton")
+        self.match_debug_tab_widget.addTab(self.matchTab, "Match")
+        self.match_debug_tab_widget.addTab(self.debugTab, "Debug")
+        self.match_debug_tab_widget.addTab(self.visionTab, "Vision")
+
         self.match_debug_tab_widget.setCurrentIndex(1)
+
         # The tabs are really the only thing in the content layout
-        self.content_layout.addWidget(self.match_debug_tab_widget)
+        self.contentLayout.addWidget(self.match_debug_tab_widget)
 
         self.map_widget = MapWidget(self.alliance)
         
-        self.cam_action_layout = QVBoxLayout()
-        self.driver_cam = CameraWidget()
+        self.cameraAndActionLayout = QVBoxLayout()
+        self.driverCameraWidget = CameraWidget()
 
         # Define a list of dictionaries with ActionWidget parameters
         """
@@ -107,20 +111,21 @@ class GRTDriverStation(QMainWindow):
              "table_name": "", "entry_name": "", "message": ""},
             {"action_name": "GO TO SOURCE", "alliance": self.alliance, "row": 0, "col": 2,
              "table_name": "", "entry_name": "", "message": ""},
-            {"action_name": "SCORE AMP", "alliance": self.alliance, "row": 1, "col": 0,
+            {"action_name": "Go TO AMP", "alliance": self.alliance, "row": 1, "col": 0,
              "table_name": "elevator", "entry_name": "target_position", "message": "AMP"},
             {"action_name": "SCORE SPEAKER", "alliance": self.alliance, "row": 1, "col": 1,
              "table_name": "elevator", "entry_name": "target_position", "message": "SPEAKER"},
             {"action_name": "INTAKE SOURCE", "alliance": self.alliance, "row": 1, "col": 2,
              "table_name": "elevator", "entry_name": "target_position", "message": "GROUND"},
         ]
-        self.action_grid = ActionGrid(actions_info)
-        self.control_panel.alliance_color_changed.connect(self.action_grid.change_alliance_color)
-        self.control_panel.alliance_color_changed.connect(self.map_widget.change_alliance_color)
+        self.actionGrid = ActionGrid(actions_info)
+        self.controlPanel.alliance_color_changed.connect(self.actionGrid.change_alliance_color)
+        self.controlPanel.alliance_color_changed.connect(self.map_widget.change_alliance_color)
         
-        self.cam_action_layout.addWidget(self.driver_cam)
-        self.cam_action_layout.addWidget(self.action_grid)
-        
+        self.cameraAndActionLayout.addWidget(self.driverCameraWidget)
+        self.cameraAndActionLayout.addWidget(self.actionGrid)
+
+
         self.telem_toggle_layout = QVBoxLayout()
         
         self.telem_widget_data_preset = [
@@ -154,30 +159,31 @@ class GRTDriverStation(QMainWindow):
         self.telem_toggle_layout.addWidget(self.telem_grid)
         self.telem_toggle_layout.addWidget(self.toggle_grid)
         
-        self.match_telem_layout = QHBoxLayout(self.match_tab)
-        self.match_telem_layout.addWidget(self.map_widget)
-        self.match_telem_layout.addLayout(self.cam_action_layout)
-        self.match_telem_layout.addLayout(self.telem_toggle_layout)
+        self.matchAndTelemetryLayout = QHBoxLayout(self.matchTab)
+        #Add mapWidget, cameraAndActionLayout, and telem_toggle_layout to match tab.
+        self.matchAndTelemetryLayout.addWidget(self.map_widget)
+        self.matchAndTelemetryLayout.addLayout(self.cameraAndActionLayout)
+        self.matchAndTelemetryLayout.addLayout(self.telem_toggle_layout)
 
-        self.swerve_debug_layout = QHBoxLayout(self.debug_tab)
+        self.swerve_debug_layout = QHBoxLayout(self.debugTab)
         self.swerve_wheel_model = SwerveWheelWidget()
         self.swerve_auton_map_model = MapWidget(self.alliance)
         self.swerve_debug_layout.addWidget(self.swerve_wheel_model)
         self.swerve_debug_layout.addWidget(self.swerve_auton_map_model)
         
-        self.vision_debug_layout = QHBoxLayout(self.vision_tab)
+        self.vision_debug_layout = QHBoxLayout(self.visionTab)
         self.vision_debug_widget = VisionDebugWidget()
         self.vision_debug_layout.addWidget(self.vision_debug_widget)
         
         # Add content to Tab 1
         # crosshair.png is 30*30
-        self.crosshair1 = QLabel(self.match_tab)
+        self.crosshair1 = QLabel(self.matchTab)
         self.crosshair1.setObjectName("crosshair1")
         self.crosshair1.setAttribute(QtCore.Qt.WidgetAttribute.WA_TransparentForMouseEvents)
         self.crosshair1.setPixmap(QPixmap(f"{os.path.dirname(__file__)}/crosshair.png"))
         self.crosshair1.hide()
 
-        self.robot = QLabel(self.match_tab)
+        self.robot = QLabel(self.matchTab)
         self.robot.setObjectName("robot")
         self.robotPixmap = QPixmap(f"{os.path.dirname(__file__)}/RobotArrow.png")
         self.robot.setPixmap(self.robotPixmap)
