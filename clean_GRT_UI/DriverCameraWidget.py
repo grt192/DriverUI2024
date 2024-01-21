@@ -22,8 +22,6 @@ class CameraWidget(QWidget):
     def __init__(self, displayName='GRT Driver Cam', parent=None):
         super(CameraWidget, self).__init__(parent)
 
-        # self.plot = PlotWidget()
-
         self.display_name = QLabel(displayName)
         self.display_name.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Maximum)
         
@@ -31,41 +29,24 @@ class CameraWidget(QWidget):
         self.camera_display.setScaledContents(True)
         self.camera_display.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
 
-        # Check if network is available
-        self.is_network_available = self.check_network()
-
-        # self.plot.addItem(self.camera_display)
-        # self.plot.hideAxis('left')
-        # self.plot.hideAxis('bottom')
-        # self.plot.setMouseEnabled()
-
         self.errorLabel = QLabel()
         self.errorLabel.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Maximum)
 
+        # Check if network is available
+        self.is_network_available = self.check_network()
+
         if self.is_network_available:
-            # Fetch video stream from the network
+            #init url, response, and byte stream.
             self.url = self.URL
             self.response = requests.get(self.url, stream=True)
             self.bytes = b''
-        else:
-            # Display random image data
-            image_data = np.random.random((160, 320)) * 255  # Example random image data
-            height, width = image_data.shape
 
-            # Convert NumPy array to QImage
-            image = QImage(image_data.data, width, height, width, QImage.Format.Format_Grayscale8)
-
-            # Convert QImage to QPixmap and set it to the QLabel
-            pixmap = QPixmap.fromImage(image)
-            self.camera_display.setPixmap(pixmap.scaled(pixmap.size(), aspectMode=QtCore.Qt.AspectRatioMode.KeepAspectRatio))
-
+        #use this time to call the DisplayStream method to retrieve and display frames.
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.DisplayStream)
         self.timer.start(1)  # Adjust the interval as needed (e.g., 100 ms for 10 FPS)
 
-        #self.CamThread = Thread(target=self.DisplayStream)
-        #self.CamThread.start()
-
+        #FPS calculation
         self.actual_fps = 0
         self.past_five_instantaneous_fps = [0, 0, 0, 0, 0]
         self.updateTime = perf_counter()
@@ -73,7 +54,8 @@ class CameraWidget(QWidget):
         self.time_old = time.time()
 
         layout = QVBoxLayout(self)
-        
+
+        #Add everything layout.
         layout.addWidget(self.display_name)
         layout.addWidget(self.camera_display)
         layout.addWidget(self.errorLabel)
@@ -81,18 +63,19 @@ class CameraWidget(QWidget):
 
     def check_network(self):
         # Check if network is available
-        print("Checking Network")
+        #print("Checking Network")
         try:
             response = requests.get(self.TEST_URL, timeout=2)
-            print("On Network")
+            #print("On Network")
             return True
         except requests.ConnectionError:
-            print("Not on network")
+            #print("Not on network")
             return False
 
     def update_frame(self):
         # FETCH IMAGE DATA
         if not self.is_network_available:
+            #if driver cam is not accessable, use random images instead.
             image_data = np.random.random((160, 320)) * 255  # Example random image data
             height, width = image_data.shape
 
@@ -107,6 +90,7 @@ class CameraWidget(QWidget):
             self.actual_fps = 1 / self.calculate_actual_fps(self.time_now - self.time_old)
             self.time_old = self.time_now
 
+            #Start timer for next frame.
             self.timer.start(1)
             now = perf_counter()
             elapsed_now = now - self.updateTime
@@ -123,20 +107,18 @@ class CameraWidget(QWidget):
         return avg
 
     def DisplayStream(self):
-        print(1)
         try:
             if self.is_network_available:
-                print("Network is available")
+                #if driver cam is accessable, then retrieve image from it.
+                #print("Network is available")
                 for chunk in self.response.iter_content(chunk_size=1024):
-                    print("waitig for frame")
+                    #print("waitig for frame")
                     self.bytes += chunk
+                    #Add new bytes to local list.
                     a = self.bytes.find(b'\xff\xd8')  # JPEG start
                     b = self.bytes.find(b'\xff\xd9')  # JPEG end
-                    """
-                    a = self.bytes.find(b'--frame\r\nContent-Type: image/jpeg\r\n\r\n')
-                    b = self.bytes.find(b'\r\n')
-                    """
                     if a != -1 and b != -1:
+                        #if the start index and end index are valid
                         jpg = self.bytes[a:b + 2]  # Extract the JPEG image
                         self.bytes = self.bytes[b + 2:]  # Remove the processed bytes
 
@@ -154,7 +136,9 @@ class CameraWidget(QWidget):
                         scaledPixmap = pixmap.scaled(300, 300)
 
                         self.camera_display.setPixmap(scaledPixmap.scaled(scaledPixmap.size(), aspectMode=QtCore.Qt.AspectRatioMode.KeepAspectRatio))
+                        #Close current response to avoid errors.
                         self.response.close()
+                        #Create new responce for the next frame
                         self.response = requests.get(url=self.url, stream=True)
                         self.bytes = b''
                         self.timer.start(1)
