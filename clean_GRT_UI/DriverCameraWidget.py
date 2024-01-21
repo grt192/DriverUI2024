@@ -81,10 +81,13 @@ class CameraWidget(QWidget):
 
     def check_network(self):
         # Check if network is available
+        print("Checking Network")
         try:
             response = requests.get(self.TEST_URL, timeout=2)
+            print("On Network")
             return True
         except requests.ConnectionError:
+            print("Not on network")
             return False
 
     def update_frame(self):
@@ -120,7 +123,7 @@ class CameraWidget(QWidget):
         return avg
 
     def DisplayStream(self):
-        #print(1)
+        print(1)
         try:
             if self.is_network_available:
                 for chunk in self.response.iter_content(chunk_size=1024):
@@ -152,6 +155,7 @@ class CameraWidget(QWidget):
                         self.response.close()
                         self.response = requests.get(url=self.url, stream=True)
                         self.bytes = b''
+                        self.timer.start(1)
                         return
             else:
                 self.update_frame()
@@ -159,7 +163,6 @@ class CameraWidget(QWidget):
             # self.response = requests.get(self.url, stream=True)
             # self.bytes = b''
             print(e)
-        self.timer.start(1)
 
 class DriverCameraWindow(QMainWindow):
     def __init__(self, parent=None):
