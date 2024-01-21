@@ -68,8 +68,8 @@ class CameraWidget(QWidget):
             response = requests.get(self.TEST_URL, timeout=2)
             #print("On Network")
             return True
-        except requests.ConnectionError:
-            #print("Not on network")
+        except Exception as e:
+            print(e)
             return False
 
     def update_frame(self):
