@@ -15,9 +15,11 @@ from threading import *
 class CameraWidget(QWidget):
     #TEST_URL = "http://127.0.0.1:5001"
     TEST_URL = "http://10.1.92.2:1181"
+    #TEST_URL = "http://photonvision.local:5800/#/dashboard"
 
     #URL = "http://127.0.0.1:5001/cam.mjpg"
     URL = "http://10.1.92.2:1181/stream.mjpg"
+    #URL = "http://photonvision.local:1184/stream.mjpg"
 
     def __init__(self, displayName='GRT Driver Cam', parent=None):
         super(CameraWidget, self).__init__(parent)
@@ -65,7 +67,7 @@ class CameraWidget(QWidget):
         # Check if network is available
         #print("Checking Network")
         try:
-            response = requests.get(self.TEST_URL, timeout=2)
+            response = requests.get(self.TEST_URL, timeout=10)
             response.close()
             #print("On Network")
             return True
@@ -108,6 +110,7 @@ class CameraWidget(QWidget):
     def DisplayStream(self):
         try:
             if self.is_network_available:
+                print(1)
                 #if driver cam is accessable, then retrieve image from it.
                 #print("Network is available")
                 for chunk in self.response.iter_content(chunk_size=1024):
@@ -118,6 +121,7 @@ class CameraWidget(QWidget):
                     b = self.bytes.find(b'\xff\xd9')  # JPEG end
                     if a != -1 and b != -1:
                         #if the start index and end index are valid
+                        #print("got a frame!")
                         jpg = self.bytes[a:b + 2]  # Extract the JPEG image
                         self.bytes = self.bytes[b + 2:]  # Remove the processed bytes
 
@@ -136,6 +140,7 @@ class CameraWidget(QWidget):
 
                         self.camera_display.setPixmap(scaledPixmap.scaled(scaledPixmap.size(), aspectMode=QtCore.Qt.AspectRatioMode.KeepAspectRatio))
                         #Close current response to avoid errors.
+                        #print("Finished processing this frame")
                         self.response.close()
                         #Create new responce for the next frame
                         self.response = requests.get(url=self.url, stream=True)
