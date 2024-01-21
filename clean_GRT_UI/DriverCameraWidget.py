@@ -126,7 +126,9 @@ class CameraWidget(QWidget):
         print(1)
         try:
             if self.is_network_available:
+                print("Network is available")
                 for chunk in self.response.iter_content(chunk_size=1024):
+                    print("waitig for frame")
                     self.bytes += chunk
                     a = self.bytes.find(b'\xff\xd8')  # JPEG start
                     b = self.bytes.find(b'\xff\xd9')  # JPEG end
