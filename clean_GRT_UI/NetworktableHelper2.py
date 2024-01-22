@@ -31,6 +31,7 @@ class NetworkTableManager(QObject):
     def putString(self, message):
         print("puting: " + message)
         self.table.putString(self.entry_name, str(message))
+        #cnt is just for debug
         self.cnt += 1
 
         
