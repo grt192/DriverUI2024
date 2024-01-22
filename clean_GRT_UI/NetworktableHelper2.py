@@ -18,25 +18,8 @@ class NetworkTableManager(QObject):
         self.table.addEntryListener(self.valueChanged)
 
     def valueChanged(self, table, key, value, isNew):
-
-        # if key == self.entry_name:
-        #     self.new_value_available.emit(key, value)
-        
         self.new_value_available.emit(key, value)
-        
-        # try:
-        #     if key == 'x':
-        #         #print("x: "+str(value))
-        #         self.delegate.xChange(float(value))
-        #     elif key == 'y':
-        #         #print("y: "+str(value))
-        #         self.delegate.yChange(float(value))
-        #     elif key == 'z':
-        #         #print("z: "+str(value))
-        #         self.delegate.zChange(float(value))
-        # except Exception as e:
-        #     print(e)
-        
+
     def check_network(self):
         # Check if network is available
         try:
