@@ -65,12 +65,15 @@ class CameraWidget(QWidget):
 
     def check_network(self):
         # Check if network is available
-        #print("Checking Network")
         try:
-            response = requests.get(self.TEST_URL, timeout=10)
-            response.close()
-            #print("On Network")
-            return True
+            response = requests.get(self.TEST_URL, timeout=2)
+            if response.status_code == 200:
+                response.close()
+                return True
+            else:
+                print(response.status_code)
+                response.close()
+                return False
         except Exception as e:
             print(e)
             return False
