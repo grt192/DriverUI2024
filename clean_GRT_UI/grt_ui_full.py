@@ -145,7 +145,8 @@ class GRTDriverStation(QMainWindow):
         self.toggle_widget_data_preset = [
                 {"name": "Vision", "value": True , "states": ('Enabled', 'Disabled'), "colors": ('green', 'red'), "row": 0, "col": 0},
                 {"name": "Relative to", "value": True , "states": ('Field ', 'Robot'), "colors": ('green', 'red'), "row": 0, "col": 1},
-                {"name": "Toggle 3", "value": True, "row": 0, "col": 2},
+                {"name": "Debug3", "value": True, "states": (True, False),"table_name": "PoseEstimates", "entry_name": "debugEnabled",
+                 "row": 0, "col": 2},
                 {"name": "Toggle 4", "value": False, "row": 1, "col": 0},
                 {"name": "Toggle 5", "value": True, "row": 1, "col": 1},
                 {"name": "Toggle 6", "value": False, "row": 1, "col": 2},
