@@ -15,6 +15,7 @@ class ToggleWidget(QWidget):
         self.current_state = initial_value
         self.parameter_name = parameter_name
         self.nt_name = entry_name # Network Table entry name
+        print("ToggleWidget table name: " + table_name + "Entry name: " + entry_name)
         self.nt_manager = NetworkTableManager(table_name=table_name, entry_name=entry_name)
         self.nt_manager.new_value_available.connect(self.update_nt_value)
         
@@ -55,11 +56,15 @@ class ToggleWidget(QWidget):
         self.main_layout.addWidget(self.group_box)
 
     def toggle(self):
+        print("toggle is called")
         # Toggle the boolean value and update the button
         self.current_state = not self.current_state
-        self.text_value = self.true_state if self.current_state else self.false_state
+        self.text_value = str(self.current_state)
+        self.text_value = self.text_value.lower()
         self.update_button()
-        self.toggled.emit(self.text_value.lower())
+        self.sendNTValue()
+        self.toggled.emit(self.current_state)
+
 
     def update_button(self):
         # Update the button text and background color based on the boolean value
@@ -75,3 +80,10 @@ class ToggleWidget(QWidget):
             self.current_state = value
         else:
             self.current_state = key
+
+    def sendNTValue(self):
+        if type(self.current_state) is bool:
+            self.nt_manager.putBool(self.current_state)
+        elif type(self.current_state) is str:
+            self.nt_manager.putString(str(self.current_state).lower())
+        return;
