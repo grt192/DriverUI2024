@@ -7,12 +7,13 @@ from PySide6.QtWidgets import *
 
 from Helpers.NetworktableHelper import NetworkTableManager
 from Widgets.ControlWidget import ControlWidget
-from Widgets.MapWidget import MapWidget
+from Widgets.MapDisplayWidget import MapDisplayWidget
 from Widgets.DriverCameraWidget import CameraWidget
 from Widgets.ToggleWidget import ToggleWidget
-
+from Widgets.MapWidget import MapWidget
 
 class GRT2024DriverUI(QMainWindow):
+    newCrosshairPosition = Signal(int, int)
     def __init__(self):
         super().__init__()
 
@@ -26,22 +27,13 @@ class GRT2024DriverUI(QMainWindow):
         self.centralWidget.setLayout(self.mainLayout)
 
         self.controlWidget = ControlWidget()
-        self.controlWidget.setMaximumWidth(200)
+        self.controlWidget.setMaximumWidth(100)
         self.mainLayout.addWidget(self.controlWidget)
 
-        self.mapWidget = MapWidget(
-            self.controlWidget.allianceToggle.currentText
-        )
-        self.controlWidget.allianceToggle.toggled.connect(
-            self.mapWidget.changeAllianceColor
-        )
+        self.mapWidget = MapWidget(self.controlWidget.allianceToggle.currentText)
+        self.controlWidget.allianceToggle.toggled.connect(self.mapWidget.changeAllianceColor)
         self.mainLayout.addWidget(self.mapWidget)
 
-        self.sendDestinationWidget = ToggleWidget(
-            "Send Destination", "", "", ("Send", "Sending...")
-        )
-        self.sendDestinationWidget.setMaximumWidth(100)
-        self.mainLayout.addWidget(self.sendDestinationWidget)
 
         self.cameraLayout = QVBoxLayout()
         self.mainLayout.addLayout(self.cameraLayout)

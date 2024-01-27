@@ -43,6 +43,11 @@ class NetworkTableManager(QObject):
             raise Exception("Wrong message type!")
         self.table.putBoolean(self.entry_name, message)
         print("finished")
+    def putInt(self, message: int):
+        if(type(message) is not int):
+            raise Exception("Wrong message type!")
+        self.table.putNumber(self.entry_name, message)
+
 
         
         
