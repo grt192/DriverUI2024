@@ -1,10 +1,8 @@
 import sys
 import time
-from threading import Thread
 from PySide6 import QtCore
 from PySide6.QtWidgets import *
 from PySide6.QtGui import *
-from pyqtgraph import ImageItem, PlotWidget
 import numpy as np
 from time import perf_counter
 import cv2
@@ -24,8 +22,8 @@ class CameraWidget(QWidget):
     def __init__(self, displayName='GRT Driver Cam', parent=None):
         super(CameraWidget, self).__init__(parent)
 
-        self.display_name = QLabel(displayName)
-        self.display_name.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Maximum)
+        self.displayName = QLabel(displayName)
+        self.displayName.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Maximum)
         
         self.camera_display = QLabel()
         self.camera_display.setScaledContents(True)
@@ -34,10 +32,17 @@ class CameraWidget(QWidget):
         self.errorLabel = QLabel()
         self.errorLabel.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Maximum)
 
+        if self.displayName == "Camera1":
+            self.URL = "http://10.1.92.2:1181/stream.mjpg"
+            self.TEST_URL = "http://10.1.92.2:1181"
+        elif self.displayName == "Camera2":
+            self.URL = "http://10.1.92.2:1182/stream.mjpg"
+            self.TEST_URL = "http://10.1.92.2:1182"
         # Check if network is available
         self.is_network_available = self.check_network()
 
         if self.is_network_available:
+
             #init url, response, and byte stream.
             self.url = self.URL
             self.response = requests.get(self.url, stream=True)
@@ -58,7 +63,7 @@ class CameraWidget(QWidget):
         layout = QVBoxLayout(self)
 
         #Add everything layout.
-        layout.addWidget(self.display_name)
+        layout.addWidget(self.displayName)
         layout.addWidget(self.camera_display)
         layout.addWidget(self.errorLabel)
 

@@ -46,8 +46,8 @@ class GRT2024DriverUI(QMainWindow):
         self.cameraLayout = QVBoxLayout()
         self.mainLayout.addLayout(self.cameraLayout)
 
-        self.cameraWidget1 = CameraWidget()
-        self.cameraWidget2 = CameraWidget()
+        self.cameraWidget1 = CameraWidget("Camera1")
+        self.cameraWidget2 = CameraWidget("Camera2")
         self.cameraLayout.addWidget(self.cameraWidget1)
         self.cameraLayout.addWidget(self.cameraWidget2)
 
