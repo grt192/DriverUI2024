@@ -11,31 +11,25 @@ from threading import *
 
 
 class CameraWidget(QWidget):
-    #TEST_URL = "http://127.0.0.1:5001"
-    TEST_URL = "http://10.1.92.2:1181"
-    #TEST_URL = "http://photonvision.local:5800/#/dashboard"
-
-    #URL = "http://127.0.0.1:5001/cam.mjpg"
-    URL = "http://10.1.92.2:1181/stream.mjpg"
-    #URL = "http://photonvision.local:1184/stream.mjpg"
-
     def __init__(self, displayName='GRT Driver Cam', parent=None):
         super(CameraWidget, self).__init__(parent)
 
         self.displayName = QLabel(displayName)
         self.displayName.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Maximum)
         
-        self.camera_display = QLabel()
-        self.camera_display.setScaledContents(True)
-        self.camera_display.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        self.cameraDisplay = QLabel()
+        self.cameraDisplay.setScaledContents(True)
+        self.cameraDisplay.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        self.cameraDisplay.setMaximumWidth(416)
+        self.cameraDisplay.setMaximumHeight(200)
 
         self.errorLabel = QLabel()
         self.errorLabel.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Maximum)
 
-        if self.displayName == "Camera1":
+        if displayName == "Camera1":
             self.URL = "http://10.1.92.2:1181/stream.mjpg"
             self.TEST_URL = "http://10.1.92.2:1181"
-        elif self.displayName == "Camera2":
+        elif displayName == "Camera2":
             self.URL = "http://10.1.92.2:1182/stream.mjpg"
             self.TEST_URL = "http://10.1.92.2:1182"
         # Check if network is available
@@ -45,26 +39,29 @@ class CameraWidget(QWidget):
 
             #init url, response, and byte stream.
             self.url = self.URL
+            print(self.url)
             self.response = requests.get(self.url, stream=True)
             self.bytes = b''
 
+        self.cap = cv2.VideoCapture(self.url)
         #use this time to call the DisplayStream method to retrieve and display frames.
         self.timer = QtCore.QTimer()
-        self.timer.timeout.connect(self.DisplayStream)
+        self.timer.timeout.connect(self.displayStream)
         self.timer.start(1)  # Adjust the interval as needed (e.g., 100 ms for 10 FPS)
+        #self.startTime = time.time()
 
         #FPS calculation
         self.actual_fps = 0
         self.past_five_instantaneous_fps = [0, 0, 0, 0, 0]
         self.updateTime = perf_counter()
         self.elapsed = 0
-        self.time_old = time.time()
+        #self.time_old = time.time()
 
         layout = QVBoxLayout(self)
 
         #Add everything layout.
         layout.addWidget(self.displayName)
-        layout.addWidget(self.camera_display)
+        layout.addWidget(self.cameraDisplay)
         layout.addWidget(self.errorLabel)
 
 
@@ -93,7 +90,7 @@ class CameraWidget(QWidget):
 
         # Convert QImage to QPixmap and set it to the QLabel
         pixmap = QPixmap.fromImage(image)
-        self.camera_display.setPixmap(pixmap.scaled(pixmap.size(), aspectMode=QtCore.Qt.AspectRatioMode.KeepAspectRatio))
+        self.cameraDisplay.setPixmap(pixmap.scaled(pixmap.size(), aspectMode=QtCore.Qt.AspectRatioMode.KeepAspectRatio))
 
         self.time_now = time.time()
         self.actual_fps = 1 / self.calculate_actual_fps(self.time_now - self.time_old)
@@ -115,52 +112,24 @@ class CameraWidget(QWidget):
         avg = total / 5
         return avg
 
-    def DisplayStream(self):
-        try:
-            if self.is_network_available:
-                print(1)
-                #if driver cam is accessable, then retrieve image from it.
-                #print("Network is available")
-                for chunk in self.response.iter_content(chunk_size=1024):
-                    #print("waitig for frame")
-                    self.bytes += chunk
-                    #Add new bytes to local list.
-                    a = self.bytes.find(b'\xff\xd8')  # JPEG start
-                    b = self.bytes.find(b'\xff\xd9')  # JPEG end
-                    if a != -1 and b != -1:
-                        #if the start index and end index are valid
-                        #print("got a frame!")
-                        jpg = self.bytes[a:b + 2]  # Extract the JPEG image
-                        self.bytes = self.bytes[b + 2:]  # Remove the processed bytes
 
-                        # Decode the JPEG image to a frame
-                        try:
-                            frame = cv2.imdecode(np.frombuffer(jpg, dtype=np.uint8), cv2.IMREAD_COLOR)
-                        except Exception as e:
-                            print(e)
+    def displayStream(self):
+        ret, frame = self.cap.read()
+        if ret:
+            # Convert the image to Qt format
+            frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            h, w, ch = frame.shape
+            bytes_per_line = ch * w
+            convert_to_Qt_format = QImage(
+                frame.data, w, h, bytes_per_line, QImage.Format_RGB888
+                )
+            pixmap = QPixmap.fromImage(convert_to_Qt_format)
+            self.cameraDisplay.setPixmap(pixmap)
+            #self.endTime = time.time()
+            #print(self.endTime-self.startTime)
+            self.timer.start()
+            #self.startTime = time.time()
 
-                        # Convert to QImage
-                        height, width, channel = frame.shape
-                        bytesPerLine = 3 * width
-                        qImg = QImage(frame.data, width, height, bytesPerLine, QImage.Format_RGB888).rgbSwapped()
-                        pixmap = QPixmap.fromImage(qImg)
-                        scaledPixmap = pixmap.scaled(300, 300)
-
-                        self.camera_display.setPixmap(scaledPixmap.scaled(scaledPixmap.size(), aspectMode=QtCore.Qt.AspectRatioMode.KeepAspectRatio))
-                        #Close current response to avoid errors.
-                        #print("Finished processing this frame")
-                        self.response.close()
-                        #Create new responce for the next frame
-                        self.response = requests.get(url=self.url, stream=True)
-                        self.bytes = b''
-                        self.timer.start(1)
-                        return
-            else:
-                self.update_frame()
-        except Exception as e:
-            # self.response = requests.get(self.url, stream=True)
-            # self.bytes = b''
-            print(e)
 
 class DriverCameraWindow(QMainWindow):
     def __init__(self, parent=None):
