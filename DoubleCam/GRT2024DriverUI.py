@@ -11,9 +11,12 @@ from Widgets.MapDisplayWidget import MapDisplayWidget
 from Widgets.DriverCameraWidget import CameraWidget
 from Widgets.ToggleWidget import ToggleWidget
 from Widgets.MapWidget import MapWidget
+from Widgets.SendIncreaseIntWidget import SendIncreaseIntWidget
+
 
 class GRT2024DriverUI(QMainWindow):
     newCrosshairPosition = Signal(int, int)
+
     def __init__(self):
         super().__init__()
 
@@ -30,18 +33,37 @@ class GRT2024DriverUI(QMainWindow):
         self.controlWidget.setMaximumWidth(100)
         self.mainLayout.addWidget(self.controlWidget)
 
-        self.mapWidget = MapWidget(self.controlWidget.allianceToggle.currentText)
-        self.controlWidget.allianceToggle.toggled.connect(self.mapWidget.changeAllianceColor)
-        self.mainLayout.addWidget(self.mapWidget)
-
+        self.mapWidget = MapWidget(
+            self.controlWidget.allianceToggle.currentText
+        )
+        self.controlWidget.allianceToggle.toggled.connect(
+            self.mapWidget.changeAllianceColor
+        )
+        self.mapLayout = QVBoxLayout()
+        self.mapLayout.addWidget(self.mapWidget)
+        self.alignLayout = QHBoxLayout()
+        self.sourceAlignWidget = SendIncreaseIntWidget(
+            "Source", "Alignment", "Source", self
+        )
+        self.alignLayout.addWidget(self.sourceAlignWidget)
+        self.ampAlignWidget = SendIncreaseIntWidget(
+            "AMP", "Alignment", "AMP", self
+        )
+        self.alignLayout.addWidget(self.ampAlignWidget)
+        self.speakerAlignWidget = SendIncreaseIntWidget(
+            "Speaker", "Alignment", "Speaker", self
+        )
+        self.alignLayout.addWidget(self.speakerAlignWidget)
+        self.mapLayout.addLayout(self.alignLayout)
+        self.mainLayout.addLayout(self.mapLayout)
 
         self.cameraLayout = QVBoxLayout()
         self.mainLayout.addLayout(self.cameraLayout)
 
         self.cameraWidget1 = CameraWidget("Camera1")
-        self.cameraWidget2 = CameraWidget("Camera2")
+        self.cameraWidget1.setMaximumWidth(832)
+        self.cameraWidget1.setMaximumHeight(480)
         self.cameraLayout.addWidget(self.cameraWidget1)
-        self.cameraLayout.addWidget(self.cameraWidget2)
 
 
 if __name__ == "__main__":
