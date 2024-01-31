@@ -15,7 +15,7 @@ class MapWidget(QWidget):
 
         self.mapDisplayWidget.newCrosshairPosition.connect(self.sendDestinationWidget.updateMessage)
 
-        self.layout = QHBoxLayout(self)
+        self.layout = QHBoxLayout()
         self.layout.addWidget(self.mapDisplayWidget)
         self.layout.addWidget(self.sendDestinationWidget)
         self.setLayout(self.layout)
