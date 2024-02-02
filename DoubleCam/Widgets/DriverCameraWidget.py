@@ -42,6 +42,8 @@ class CameraWidget(QWidget):
             print(self.url)
             self.response = requests.get(self.url, stream=True)
             self.bytes = b''
+        else:
+            self.url = None
 
         self.cap = cv2.VideoCapture(self.url)
         #use this time to call the DisplayStream method to retrieve and display frames.
