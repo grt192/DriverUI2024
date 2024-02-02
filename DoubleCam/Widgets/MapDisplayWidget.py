@@ -66,7 +66,7 @@ class MapDisplayWidget(QWidget):
         self.crosshairX = position.x()
         self.crosshairY = position.y()
         self.crosshairLabel.show()
-
+        self.crosshairLabel.raise_()
         self.newCrosshairPosition.emit((self.crosshairX, self.crosshairY))
 
         
