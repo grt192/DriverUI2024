@@ -30,7 +30,7 @@ class GRT2024DriverUI(QMainWindow):
         self.centralWidget.setLayout(self.mainLayout)
 
         self.controlWidget = ControlWidget()
-        self.controlWidget.setMaximumWidth(100)
+        self.controlWidget.setMaximumWidth(130)
         self.mainLayout.addWidget(self.controlWidget)
 
         self.mapWidget = MapWidget(
@@ -41,20 +41,7 @@ class GRT2024DriverUI(QMainWindow):
         )
         self.mapLayout = QVBoxLayout()
         self.mapLayout.addWidget(self.mapWidget)
-        self.alignLayout = QHBoxLayout()
-        self.sourceAlignWidget = SendIncreaseIntWidget(
-            "Source", "Alignment", "Source", self
-        )
-        self.alignLayout.addWidget(self.sourceAlignWidget)
-        self.ampAlignWidget = SendIncreaseIntWidget(
-            "AMP", "Alignment", "AMP", self
-        )
-        self.alignLayout.addWidget(self.ampAlignWidget)
-        self.speakerAlignWidget = SendIncreaseIntWidget(
-            "Speaker", "Alignment", "Speaker", self
-        )
-        self.alignLayout.addWidget(self.speakerAlignWidget)
-        self.mapLayout.addLayout(self.alignLayout)
+
         self.mainLayout.addLayout(self.mapLayout)
 
         self.cameraLayout = QVBoxLayout()
@@ -62,9 +49,14 @@ class GRT2024DriverUI(QMainWindow):
 
         self.cameraWidget1 = CameraWidget("Camera1")
         self.cameraWidget1.setMaximumWidth(832)
-        self.cameraWidget1.setMaximumHeight(480)
+        self.cameraWidget1.setMaximumHeight(400)
         self.cameraLayout.addWidget(self.cameraWidget1)
-
+        """
+        self.cameraWidget2 = CameraWidget("Camera2")
+        self.cameraWidget2.setMaximumWidth(832)
+        self.cameraWidget2.setMaximumHeight(400)
+        self.cameraLayout.addWidget(self.cameraWidget2)
+        """
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
