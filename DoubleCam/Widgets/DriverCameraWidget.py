@@ -20,8 +20,8 @@ class CameraWidget(QWidget):
         self.cameraDisplay = QLabel()
         self.cameraDisplay.setScaledContents(True)
         self.cameraDisplay.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-        self.cameraDisplay.setMaximumWidth(416)
-        self.cameraDisplay.setMaximumHeight(200)
+        self.cameraDisplay.setMaximumWidth(528)
+        self.cameraDisplay.setMaximumHeight(432)
 
         self.errorLabel = QLabel()
         self.errorLabel.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Maximum)
@@ -51,6 +51,7 @@ class CameraWidget(QWidget):
         self.timer.timeout.connect(self.displayStream)
         self.timer.start(1)  # Adjust the interval as needed (e.g., 100 ms for 10 FPS)
         #self.startTime = time.time()
+        self.cnt = 0
 
         #FPS calculation
         self.actual_fps = 0
@@ -117,6 +118,11 @@ class CameraWidget(QWidget):
 
     def displayStream(self):
         ret, frame = self.cap.read()
+        if self.cnt > 60:
+            self.cap.release()
+            self.cap = cv2.VideoCapture(self.url)
+            self.cnt = 0
+            print("cap resetted")
         if ret:
             # Convert the image to Qt format
             frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
@@ -131,6 +137,7 @@ class CameraWidget(QWidget):
             #print(self.endTime-self.startTime)
             self.timer.start()
             #self.startTime = time.time()
+            self.cnt += 1
 
 
 class DriverCameraWindow(QMainWindow):

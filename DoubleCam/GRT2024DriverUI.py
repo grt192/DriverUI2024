@@ -12,6 +12,7 @@ from Widgets.DriverCameraWidget import CameraWidget
 from Widgets.ToggleWidget import ToggleWidget
 from Widgets.MapWidget import MapWidget
 from Widgets.SendIncreaseIntWidget import SendIncreaseIntWidget
+from Widgets.SendCamIDWidget import SendCamIDWidget
 
 
 class GRT2024DriverUI(QMainWindow):
@@ -51,12 +52,13 @@ class GRT2024DriverUI(QMainWindow):
         self.cameraWidget1.setMaximumWidth(832)
         self.cameraWidget1.setMaximumHeight(400)
         self.cameraLayout.addWidget(self.cameraWidget1)
-        """
-        self.cameraWidget2 = CameraWidget("Camera2")
-        self.cameraWidget2.setMaximumWidth(832)
-        self.cameraWidget2.setMaximumHeight(400)
-        self.cameraLayout.addWidget(self.cameraWidget2)
-        """
+        # self.cameraWidget2 = CameraWidget("Camera2")
+        # self.cameraWidget2.setMaximumWidth(832)
+        # self.cameraWidget2.setMaximumHeight(400)
+        # self.cameraLayout.addWidget(self.cameraWidget2)
+        self.sendCamIDWidget = SendCamIDWidget("Switch", "camera", "id")
+        self.cameraLayout.addWidget(self.sendCamIDWidget)
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
