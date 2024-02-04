@@ -1,17 +1,11 @@
 import sys
 # PySide6 imports
-from PySide6 import QtCore, QtGui, QtWidgets
 from PySide6.QtCore import *
-from PySide6.QtGui import *
 from PySide6.QtWidgets import *
 
-from Helpers.NetworktableHelper import NetworkTableManager
 from Widgets.ControlWidget import ControlWidget
-from Widgets.MapDisplayWidget import MapDisplayWidget
 from Widgets.DriverCameraWidget import CameraWidget
-from Widgets.ToggleWidget import ToggleWidget
 from Widgets.MapWidget import MapWidget
-from Widgets.SendIncreaseIntWidget import SendIncreaseIntWidget
 from Widgets.SendCamIDWidget import SendCamIDWidget
 
 
@@ -52,10 +46,6 @@ class GRT2024DriverUI(QMainWindow):
         self.cameraWidget1.setMaximumWidth(832)
         self.cameraWidget1.setMaximumHeight(400)
         self.cameraLayout.addWidget(self.cameraWidget1)
-        # self.cameraWidget2 = CameraWidget("Camera2")
-        # self.cameraWidget2.setMaximumWidth(832)
-        # self.cameraWidget2.setMaximumHeight(400)
-        # self.cameraLayout.addWidget(self.cameraWidget2)
         self.sendCamIDWidget = SendCamIDWidget("Switch", "camera", "id")
         self.cameraLayout.addWidget(self.sendCamIDWidget)
 
