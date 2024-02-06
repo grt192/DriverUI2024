@@ -60,14 +60,20 @@ class CameraWidget(QWidget):
         self.elapsed = 0
         #self.time_old = time.time()
 
+        self.reconnectButton = QPushButton("Reconnect")
+        self.reconnectButton.clicked.connect(self.reconnect)
+
         layout = QVBoxLayout(self)
 
         #Add everything layout.
         layout.addWidget(self.displayName)
         layout.addWidget(self.cameraDisplay)
         layout.addWidget(self.errorLabel)
+        layout.addWidget(self.reconnectButton)
 
 
+    def reconnect(self):
+        self.cap = cv2.VideoCapture(self.url)
     def check_network(self):
         # Check if network is available
         try:
