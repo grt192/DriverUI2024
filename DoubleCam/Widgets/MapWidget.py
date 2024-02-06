@@ -1,9 +1,9 @@
 from PySide6.QtWidgets import *
 from PySide6.QtGui import *
 from PySide6.QtCore import *
-from DoubleCam.Widgets.MapDisplayWidget import MapDisplayWidget
-from DoubleCam.Widgets.SendIntTupleWidget import SendIntTupleWidget
-from DoubleCam.Widgets.SendIncreaseIntWidget import SendIncreaseIntWidget
+from Widgets.MapDisplayWidget import MapDisplayWidget
+from Widgets.SendIntTupleWidget import SendIntTupleWidget
+from Widgets.SendIncreaseIntWidget import SendIncreaseIntWidget
 class MapWidget(QWidget):
     def __init__(self, alliance, parent=None):
         super().__init__(parent)

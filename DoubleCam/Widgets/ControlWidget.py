@@ -3,7 +3,7 @@ from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import (QApplication, QWidget, QVBoxLayout, QLabel,
                                QLineEdit, QComboBox, QCheckBox, QSizePolicy,
                                QGroupBox)
-from DoubleCam.Widgets.ToggleWidget import ToggleWidget
+from Widgets.ToggleWidget import ToggleWidget
 
 
 class ControlWidget(QWidget):
