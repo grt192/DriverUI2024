@@ -43,8 +43,6 @@ class GRT2024DriverUI(QMainWindow):
         self.mainLayout.addLayout(self.cameraLayout)
 
         self.cameraWidget1 = CameraWidget("Camera1")
-        self.cameraWidget1.setMaximumWidth(832)
-        self.cameraWidget1.setMaximumHeight(400)
         self.cameraLayout.addWidget(self.cameraWidget1)
         self.sendCamIDWidget = SendCamIDWidget("Switch", "camera", "id")
         self.cameraLayout.addWidget(self.sendCamIDWidget)

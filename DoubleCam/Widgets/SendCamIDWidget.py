@@ -55,4 +55,5 @@ class SendCamIDWidget(QWidget):
             self.cnt = 1
 
     def sendNTValue(self):
+        print("sending" + str(self.cnt))
         self.NTManager1.putInt(self.cnt)

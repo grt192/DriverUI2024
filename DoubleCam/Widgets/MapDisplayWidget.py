@@ -1,21 +1,29 @@
 from PySide6.QtWidgets import QWidget, QLabel, QSizePolicy, QVBoxLayout
 from PySide6.QtGui import QPixmap, QTransform
 from PySide6.QtCore import *
+import time
 import sys
 from PySide6.QtWidgets import QApplication
-    
+from Helpers.NestedNetworktableHelper import NestedNetworkTableManager
+
+
 class MapDisplayWidget(QWidget):
     newCrosshairPosition = Signal(tuple)
+    fieldX = 16.591788
+    fieldY = 8.211312
+
     def __init__(self, alliance, parent=None):
         super().__init__(parent)
-        
+
         self.mapLabel = QLabel()
         self.mapLabel.setScaledContents(True)
-        
+
         self.mapPixmap = QPixmap("./Images/field24.png").scaled(600, 300)
-        self.robotPixmap = QPixmap("./Images/grt23robot.png")
+        self.robotScale = 40
+        self.robotPixmap = QPixmap("./Images/robot_frame.png").scaled(self.robotScale,
+                                                                    self.robotScale)
         self.crosshairPixmap = QPixmap("./Images/crosshair.png")
-        
+
         self.alliance = alliance
 
         if self.alliance == "red":
@@ -24,28 +32,37 @@ class MapDisplayWidget(QWidget):
             rotationAngle = -90
         transform = QTransform().rotate(rotationAngle)
         self.mapPixmap = self.mapPixmap.transformed(transform)
-        
+
         # Set up QLabel for robot icon
         self.robotLabel = QLabel(self)
         self.robotLabel.setPixmap(self.robotPixmap)
+        self.robotLabel.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
         self.robotLabel.setMask(self.robotPixmap.mask())  # Use transparency information for masking
-        
+
         # Set up QLabel for crosshair (hide it for now)
         self.crosshairLabel = QLabel(self)
         self.crosshairLabel.setPixmap(self.crosshairPixmap)
         self.crosshairLabel.hide()
-        self.crosshairLabel.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)\
-
-        #init crosshair position
+        self.crosshairLabel.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed) \
+ \
+            # init crosshair position
         self.crosshairX = None
         self.crosshairY = None
+
+        self.robotPoseRootNTTableName = "Shuffleboard"
+        self.robotPoseNTTableNames = ["Auton", "Field"]
+        self.robotPoseNTManager = NestedNetworkTableManager(
+            self.robotPoseRootNTTableName,
+            self.robotPoseNTTableNames, "Robot"
+        )
+        self.robotPoseNTManager.new_value_available.connect(self.updateRobotPose)
+        self.robotPose = [0., 0., 0.]
         # Set up layout
-        
         self.mapLabel.setPixmap(self.mapPixmap)
         layout = QVBoxLayout()
         layout.addWidget(self.mapLabel)
         self.setLayout(layout)
-        
+
     def changeAllianceColor(self, new_alliance_color):
         self.alliance = new_alliance_color
         self.reloadMaps()
@@ -69,11 +86,59 @@ class MapDisplayWidget(QWidget):
         self.crosshairLabel.raise_()
         self.newCrosshairPosition.emit((self.crosshairX, self.crosshairY))
 
-        
+    def updateRobotPose(self, entryName, entryValue):
+        self.robotLabel.hide()
+        #type is tuple
+        return
+        print(entryValue)
+        # print(range(len(entryValue)))
+        for i in range(len(entryValue)):
+            self.robotPose[i] = entryValue[i]
+        # print(self.robotPose)
+        newRobotPose = [self.robotPose[0] / self.fieldX * self.mapLabel.height(),
+                        self.robotPose[1] / self.fieldY * self.mapLabel.width(),
+                        self.robotPose[2]]
+        #print(newRobotPose)
+        if self.alliance == "blue":
+            self.robotLabel.setPixmap(
+                self.robotPixmap.scaled(
+                    self.robotScale,
+                    self.robotScale,
+                    ).transformed(
+                    QTransform().rotate(newRobotPose[2])
+                )
+            )
+            self.robotLabel.setGeometry(
+                int(self.mapLabel.width() - newRobotPose[1] - self.robotScale / 2 + 10),
+                int(self.mapLabel.height() - newRobotPose[0] - self.robotScale / 2) + 10,
+                self.robotScale,
+                self.robotScale
+            )
+        else:
+            self.robotLabel.setPixmap(
+                self.robotPixmap.scaled(
+                    self.robotScale,
+                    self.robotScale,
+                ).transformed(
+                    QTransform().rotate(newRobotPose[2] - 180)
+                )
+            )
+            self.robotLabel.setGeometry(
+                int(newRobotPose[1] - self.robotScale / 2 + 10),
+                int(newRobotPose[0] - self.robotScale / 2 + 10),
+                self.robotScale,
+                self.robotScale
+            )
+        self.robotLabel.show()
+        self.robotLabel.raise_()
+        self.robotLabel.raise_()
+        #print(self.mapLabel.height())
+
+
 if __name__ == '__main__':
     app = QApplication(sys.argv)
 
     mw = MapDisplayWidget('red')
-    
+
     mw.show()
     sys.exit(app.exec())

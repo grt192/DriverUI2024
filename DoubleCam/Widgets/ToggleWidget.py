@@ -21,10 +21,10 @@ class ToggleWidget(QWidget):
         if tableName != "":
             self.tableName = tableName
             self.entryName = entryName
-            print(
-                "ToggleWidget table name: " + self.tableName + "Entry name: "
-                + entryName
-            )
+            # print(
+            #     "ToggleWidget table name: " + self.tableName + "Entry name: "
+            #     + entryName
+            # )
             self.NTManager = NetworkTableManager(
                 table_name=tableName, entry_name=entryName
             )
@@ -101,7 +101,7 @@ class ToggleWidget(QWidget):
 
     def update_button(self):
         # Update the button text and background color based on the boolean value
-        print(self.currentText)
+        #print(self.currentText)
         self.button.setText(self.currentText)
         if self.currentState:
             self.currentColor = self.trueColor
@@ -112,7 +112,7 @@ class ToggleWidget(QWidget):
 
     @Slot(str, object)
     def updateNTValue(self, key: str, value: object):
-        print(f"key {key}, value {value}")
+        #print(f"key {key}, value {value}")
         self.currentText = key
         #currently not used. needs to be implemented when this method is used.
 

@@ -31,7 +31,7 @@ class ControlWidget(QWidget):
         self.allianceColorChanged.emit(new_alliance_color)
 
     def lockAlliance(self, lockState):
-        print("lockAlliance:" + lockState)
+        #print("lockAlliance:" + lockState)
         if lockState == 'Locked':
             self.allianceToggle.setEnabled(False)
         else:
