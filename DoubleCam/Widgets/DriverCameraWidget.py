@@ -13,8 +13,8 @@ from threading import *
 
 
 class CameraWidget(QWidget):
-    visionURL = "http://photonvision.local:1186/stream.mjpg"
-    visionTestURL = "http://photonvision.local:1186"
+    visionURL = "http://10.1.92.11:1186/stream.mjpg"
+    visionTestURL = "http://10.1.92.11:1186"
     camURl = "http://10.1.92.2:1181/stream.mjpg"
     camTestURL = "http://10.1.92.2:1181"
     vision = False
@@ -36,12 +36,9 @@ class CameraWidget(QWidget):
         print("Created NTManager")
 
         # Check if network is available
-        self.is_network_available = self.check_network()
-        self.endTime = time.time()
-        self.duration = self.endTime - self.startTime
-        print("Duration: " + str(self.duration))
+        self.is_network_available = self.checkNetwork()
         print("runned is_network_available")
-        return
+        # return
         if self.is_network_available:
             try:
                 self.driverCap = cv2.VideoCapture(self.camURl)
@@ -56,11 +53,12 @@ class CameraWidget(QWidget):
         #use this time to call the DisplayStream method to retrieve and display frames.
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.displayStream)
+        self.timer.setSingleShot(True)
         self.timer.start(1)  # Adjust the interval as needed (e.g., 100 ms for 10 FPS)
         self.vtimer = QtCore.QTimer()
         self.vtimer.timeout.connect(self.captureVision)
+        self.vtimer.setSingleShot(True)
         self.vtimer.start(1)
-        self.cnt = 0
         self.reconnectButton = QPushButton("Reconnect")
         self.reconnectButton.clicked.connect(self.reconnect)
         print("Created reconnect button")
@@ -73,12 +71,17 @@ class CameraWidget(QWidget):
 
 
     def reconnect(self):
-        self.driverCap = cv2.VideoCapture(self.camURl)
-        self.visionCap = cv2.VideoCapture(self.visionURL)
-        print("reconnect finished")
-    def check_network(self):
+        if self.checkNetwork():
+            self.driverCap = cv2.VideoCapture(self.camURl)
+            self.visionCap = cv2.VideoCapture(self.visionURL)
+            self.timer.start(1)
+            self.vtimer.start(1)
+            print("reconnect finished")
+        else:
+           print("Network Issue!")
+    def checkNetwork(self):
         # Check if network is available
-        self.startTime = time.time()
+        print("checking network")
         try:
             response = requests.get(self.visionTestURL, timeout=1)
             if response.status_code != 200:
@@ -91,14 +94,12 @@ class CameraWidget(QWidget):
                 return False
             response.close()
         except Exception as e:
+            print("Check Netowrk exception")
             print(e)
             return False
         return True
     def switchBasedOnElevatorPosition(self, position):
         #type of position is tuple
-        #print(type(position))
-        # print(type(position[1]))
-        # print(position[1])
         if position[1] == 0.:
             print("is 0")
             self.switchToDriverCam()
@@ -112,47 +113,44 @@ class CameraWidget(QWidget):
         print("switch to driver")
         self.vision = False
     def captureVision(self):
-        self.visionCap.grab()
-        self.visionCap.grab()
-        vret, vframe = self.visionCap.read()
-        if vret and self.vision:
-            vframe = cv2.cvtColor(vframe, cv2.COLOR_BGR2RGB)
-            h, w, ch = vframe.shape
-            bytes_per_line = ch * w
-            convert_to_Qt_format = QImage(
-                vframe.data, w, h, bytes_per_line, QImage.Format_RGB888
-            )
-            pixmap = QPixmap.fromImage(convert_to_Qt_format)
-            self.cameraDisplay.setPixmap(pixmap)
-            # self.endTime = time.time()
-            # print(self.endTime-self.startTime)
-            self.vtimer.start()
-            self.cnt += 1
-            # self.startTime = time.time()
-    def displayStream(self):
-        self.driverCap.grab()
-        self.driverCap.grab()
-        if self.cnt > 600:
-            #self.reconnect()
-            cnt = 0
-        ret, frame = self.driverCap.read()
-        if ret and not self.vision:
-            # print("got new frame")
-            # Convert the image to Qt format
-            frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-            h, w, ch = frame.shape
-            bytes_per_line = ch * w
-            convert_to_Qt_format = QImage(
-                frame.data, w, h, bytes_per_line, QImage.Format_RGB888
+        print("Capture Vision")
+        if not self.checkNetwork():
+            return
+        elif not self.visionCap.isOpened():
+            print("Can't access vision camera")
+        else:
+            vret, vframe = self.visionCap.read()
+            if self.vision:
+                vframe = cv2.cvtColor(vframe, cv2.COLOR_BGR2RGB)
+                h, w, ch = vframe.shape
+                bytes_per_line = ch * w
+                convert_to_Qt_format = QImage(
+                    vframe.data, w, h, bytes_per_line, QImage.Format_RGB888
                 )
-            pixmap = QPixmap.fromImage(convert_to_Qt_format)
-            self.cameraDisplay.setPixmap(pixmap)
-            #self.endTime = time.time()
-            #print(self.endTime-self.startTime)
-            self.timer.start()
-            self.cnt += 1
-            #self.startTime = time.time()
-
+                pixmap = QPixmap.fromImage(convert_to_Qt_format)
+                self.cameraDisplay.setPixmap(pixmap)
+        print(1)
+        self.vtimer.start(1)
+    def displayStream(self):
+        print("Display Stream")
+        if not self.checkNetwork():
+            return
+        elif not self.driverCap.isOpened():
+            print("Can't access driver camera")
+        else:
+            ret, frame = self.driverCap.read()
+            if not self.vision:
+                # Convert the image to Qt format
+                frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+                h, w, ch = frame.shape
+                bytesPerLine = ch * w
+                cvtToQtFormat = QImage(
+                    frame.data, w, h, bytesPerLine, QImage.Format_RGB888
+                )
+                pixmap = QPixmap.fromImage(cvtToQtFormat)
+                self.cameraDisplay.setPixmap(pixmap)
+        print("start timer")
+        self.timer.start(1)
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     player = CameraWidget()
