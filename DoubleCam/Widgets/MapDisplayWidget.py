@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import QWidget, QLabel, QSizePolicy, QVBoxLayout
 from PySide6.QtGui import QPixmap, QTransform
-from PySide6.QtCore import *
+from PySide6.QtCore import Signal
 import time
 import sys
 from PySide6.QtWidgets import QApplication
