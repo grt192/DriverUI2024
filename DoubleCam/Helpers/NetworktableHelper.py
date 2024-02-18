@@ -1,5 +1,5 @@
 from networktables import NetworkTables
-from PySide6.QtCore import Qt, Signal, QObject, Slot
+from PySide6.QtCore import Signal, QObject
 import requests
 class NetworkTableManager(QObject):
     new_value_available = Signal(tuple)

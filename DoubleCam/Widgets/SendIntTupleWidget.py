@@ -1,7 +1,5 @@
-from PySide6.QtWidgets import QPushButton, QVBoxLayout, QLabel, QWidget, \
-    QGroupBox, QSizePolicy
-from PySide6.QtGui import QColor
-from PySide6.QtCore import Qt, SignalInstance, Slot, Signal
+from PySide6.QtWidgets import QPushButton, QVBoxLayout, QLabel, QWidget, QGroupBox, QSizePolicy
+from PySide6.QtCore import Qt, Slot
 from Helpers.NetworktableHelper import NetworkTableManager
 
 
