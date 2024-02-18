@@ -1,12 +1,12 @@
-from PySide6.QtWidgets import QPushButton, QVBoxLayout, QLabel, QWidget, \
-    QGroupBox, QSizePolicy
-from PySide6.QtGui import QColor
-from PySide6.QtCore import Qt, SignalInstance, Slot, Signal
+from PySide6.QtWidgets import QPushButton, QVBoxLayout, QLabel, QWidget, QGroupBox, QSizePolicy
+from PySide6.QtCore import Qt
 from Helpers.NetworktableHelper import NetworkTableManager
+
 
 class SendCamIDWidget(QWidget):
 
     message = None
+
     def __init__(self, parameterName, tableName, entryName, parent=None):
         super().__init__(parent)
 
@@ -46,7 +46,7 @@ class SendCamIDWidget(QWidget):
         if self.cnt is None:
             raise Exception("Message is None")
         # Toggle the boolean value and update the button
-        #Update State
+        # Update State
 
         self.sendNTValue()
         if self.cnt == 1:
