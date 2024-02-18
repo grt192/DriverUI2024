@@ -1,8 +1,9 @@
 import sys
 import time
 from PySide6 import QtCore
-from PySide6.QtWidgets import *
-from PySide6.QtGui import *
+from PySide6.QtWidgets import QLabel, QWidget, QPushButton, QVBoxLayout
+from PySide6.QtWidgets import QApplication, QSizePolicy
+from PySide6.QtGui import QImage, QPixmap
 import numpy as np
 from time import perf_counter
 import cv2
@@ -13,98 +14,91 @@ from threading import *
 
 class CameraWidget(QWidget):
     visionURL = "http://photonvision.local:1186/stream.mjpg"
-    cam1URl = "http://10.1.92.2:1181/stream.mjpg"
+    visionTestURL = "http://photonvision.local:1186"
+    camURl = "http://10.1.92.2:1181/stream.mjpg"
+    camTestURL = "http://10.1.92.2:1181"
     vision = False
+    driverCamWidth = 176
+    driverCamHeight = 144
     def __init__(self, displayName='GRT Driver Cam', parent=None):
         super(CameraWidget, self).__init__(parent)
 
-        self.displayName = QLabel(displayName)
-        self.displayName.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Maximum)
-        
-        self.cameraDisplay = QLabel()
+        self.cameraDisplay = QLabel(self)
         self.cameraDisplay.setScaledContents(True)
-        self.cameraDisplay.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-        self.cameraDisplay.setMaximumWidth(528)
-        self.cameraDisplay.setMaximumHeight(432)
-
-        self.errorLabel = QLabel()
-        self.errorLabel.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Maximum)
+        self.cameraDisplay.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
+        self.cameraDisplay.setMaximumWidth(3 * self.driverCamWidth)
+        self.cameraDisplay.setMaximumHeight(3 * self.driverCamHeight)
+        print("Created cameraDisplay label")
 
         #listen to elevator state change
         self.elevatorPositionNTManager = NetworkTableManager("elevator", "position")
         self.elevatorPositionNTManager.new_value_available.connect(self.switchBasedOnElevatorPosition)
+        print("Created NTManager")
 
-        if displayName == "Camera1":
-            self.URL = "http://10.1.92.2:1181/stream.mjpg"
-            self.TEST_URL = "http://10.1.92.2:1181"
-        elif displayName == "Camera2":
-            self.URL = "http://10.1.92.2:1182/stream.mjpg"
-            self.TEST_URL = "http://10.1.92.2:1182"
         # Check if network is available
         self.is_network_available = self.check_network()
-
+        self.endTime = time.time()
+        self.duration = self.endTime - self.startTime
+        print("Duration: " + str(self.duration))
+        print("runned is_network_available")
+        return
         if self.is_network_available:
-
-            #init url, response, and byte stream.
-            self.url = self.URL
             try:
-                self.cap = cv2.VideoCapture(self.url)
-                self.driverCap = cv2.VideoCapture(self.url)
-                self.visionCap = cv2.VideoCapture("http://photonvision.local:1186/stream.mjpg")
+                self.driverCap = cv2.VideoCapture(self.camURl)
+                self.driverCap.set(cv2.CAP_PROP_FRAME_WIDTH, 176)
+                self.driverCap.set(cv2.CAP_PROP_FRAME_HEIGHT, 144)
+                self.visionCap = cv2.VideoCapture(self.visionURL)
             except Exception as e:
                 print(e)
         else:
-            self.url = None
-            return
+            self.cameraDisplay.setText("Unable to access cameras")
+        print("Created video caps")
         #use this time to call the DisplayStream method to retrieve and display frames.
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.displayStream)
         self.timer.start(1)  # Adjust the interval as needed (e.g., 100 ms for 10 FPS)
-        #self.startTime = time.time()
+        self.vtimer = QtCore.QTimer()
+        self.vtimer.timeout.connect(self.captureVision)
+        self.vtimer.start(1)
         self.cnt = 0
-
-        #FPS calculation
-        self.actual_fps = 0
-        self.past_five_instantaneous_fps = [0, 0, 0, 0, 0]
-        self.updateTime = perf_counter()
-        self.elapsed = 0
-        #self.time_old = time.time()
-
         self.reconnectButton = QPushButton("Reconnect")
         self.reconnectButton.clicked.connect(self.reconnect)
+        print("Created reconnect button")
 
         layout = QVBoxLayout(self)
 
         #Add everything layout.
-        layout.addWidget(self.displayName)
         layout.addWidget(self.cameraDisplay)
         layout.addWidget(self.reconnectButton)
 
 
     def reconnect(self):
-        self.cap.release()
-        self.cnt = 0
-        self.cap = cv2.VideoCapture(self.url)
+        self.driverCap = cv2.VideoCapture(self.camURl)
+        self.visionCap = cv2.VideoCapture(self.visionURL)
         print("reconnect finished")
     def check_network(self):
         # Check if network is available
+        self.startTime = time.time()
         try:
-            response = requests.get(self.TEST_URL, timeout=2)
-            if response.status_code == 200:
-                response.close()
-                return True
-            else:
-                print(response.status_code)
-                response.close()
+            response = requests.get(self.visionTestURL, timeout=1)
+            if response.status_code != 200:
+                print("Vision not accessable! Status Code: " + str(response.status_code))
                 return False
+            response.close()
+            response = requests.get(self.camTestURL, timeout=1)
+            if response.status_code != 200:
+                print("Driver cam not accessable! Status Code: " + str(response.status_code))
+                return False
+            response.close()
         except Exception as e:
             print(e)
             return False
+        return True
     def switchBasedOnElevatorPosition(self, position):
         #type of position is tuple
         #print(type(position))
-        print(type(position[1]))
-        print(position[1])
+        # print(type(position[1]))
+        # print(position[1])
         if position[1] == 0.:
             print("is 0")
             self.switchToDriverCam()
@@ -113,25 +107,13 @@ class CameraWidget(QWidget):
             self.switchToVisionCam()
     def switchToVisionCam(self):
         print("switch to vision")
-        # self.cap.release()
-        # self.cap = cv2.VideoCapture(self.visionURL)
-        # self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 2)
-        # self.url = self.visionURL
         self.vision = True
     def switchToDriverCam(self):
         print("switch to driver")
-        # self.cap.release()
-        # self.cap = cv2.VideoCapture(self.cam1URL)
-        # self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 2)
-        # self.url = self.cam1URl
         self.vision = False
-    def displayStream(self):
-        ret, frame = self.cap.read()
-        # if self.cnt > 60:
-        #     self.cap.release()
-        #     self.cap = cv2.VideoCapture(self.url)
-        #     self.cnt = 0
-        #     #print("cap resetted")
+    def captureVision(self):
+        self.visionCap.grab()
+        self.visionCap.grab()
         vret, vframe = self.visionCap.read()
         if vret and self.vision:
             vframe = cv2.cvtColor(vframe, cv2.COLOR_BGR2RGB)
@@ -144,10 +126,16 @@ class CameraWidget(QWidget):
             self.cameraDisplay.setPixmap(pixmap)
             # self.endTime = time.time()
             # print(self.endTime-self.startTime)
-            self.timer.start()
-            # self.startTime = time.time()
+            self.vtimer.start()
             self.cnt += 1
-            return
+            # self.startTime = time.time()
+    def displayStream(self):
+        self.driverCap.grab()
+        self.driverCap.grab()
+        if self.cnt > 600:
+            #self.reconnect()
+            cnt = 0
+        ret, frame = self.driverCap.read()
         if ret and not self.vision:
             # print("got new frame")
             # Convert the image to Qt format
@@ -162,8 +150,8 @@ class CameraWidget(QWidget):
             #self.endTime = time.time()
             #print(self.endTime-self.startTime)
             self.timer.start()
-            #self.startTime = time.time()
             self.cnt += 1
+            #self.startTime = time.time()
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
