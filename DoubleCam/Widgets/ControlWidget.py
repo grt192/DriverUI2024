@@ -1,8 +1,5 @@
-import sys
-from PySide6.QtCore import Qt, Signal
-from PySide6.QtWidgets import (QApplication, QWidget, QVBoxLayout, QLabel,
-                               QLineEdit, QComboBox, QCheckBox, QSizePolicy,
-                               QGroupBox)
+from PySide6.QtCore import Signal
+from PySide6.QtWidgets import QWidget, QVBoxLayout
 from Widgets.ToggleWidget import ToggleWidget
 
 
