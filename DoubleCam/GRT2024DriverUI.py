@@ -1,7 +1,7 @@
 import sys
 # PySide6 imports
-from PySide6.QtCore import *
-from PySide6.QtWidgets import *
+from PySide6.QtCore import Signal
+from PySide6.QtWidgets import QApplication, QWidget, QMainWindow, QHBoxLayout, QVBoxLayout
 
 from Widgets.ControlWidget import ControlWidget
 from Widgets.DriverCameraWidget import CameraWidget
@@ -27,6 +27,7 @@ class GRT2024DriverUI(QMainWindow):
         self.controlWidget = ControlWidget()
         self.controlWidget.setMaximumWidth(130)
         self.mainLayout.addWidget(self.controlWidget)
+        print("Created controlWidget")
 
         self.mapWidget = MapWidget(
             self.controlWidget.allianceToggle.currentText
@@ -38,14 +39,17 @@ class GRT2024DriverUI(QMainWindow):
         self.mapLayout.addWidget(self.mapWidget)
 
         self.mainLayout.addLayout(self.mapLayout)
+        print("Created mapLayout")
 
         self.cameraLayout = QVBoxLayout()
         self.mainLayout.addLayout(self.cameraLayout)
 
         self.cameraWidget1 = CameraWidget("Camera1")
+        print("Created cameraWidget1")
         self.cameraLayout.addWidget(self.cameraWidget1)
         self.sendCamIDWidget = SendCamIDWidget("Switch", "camera", "id")
         self.cameraLayout.addWidget(self.sendCamIDWidget)
+        print("Created cameraLayout")
 
 
 if __name__ == "__main__":
