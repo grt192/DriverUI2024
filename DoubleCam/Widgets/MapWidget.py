@@ -1,6 +1,4 @@
-from PySide6.QtWidgets import *
-from PySide6.QtGui import *
-from PySide6.QtCore import *
+from PySide6.QtWidgets import QHBoxLayout, QVBoxLayout, QWidget
 from Widgets.MapDisplayWidget import MapDisplayWidget
 from Widgets.SendIntTupleWidget import SendIntTupleWidget
 from Widgets.SendIncreaseIntWidget import SendIncreaseIntWidget
