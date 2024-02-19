@@ -148,7 +148,7 @@ class CameraWidget(QWidget):
         elif not self.visionCap.isOpened():
             print("Can't access vision camera")
             return
-        elif self.vision:
+        else:
             vret, vframe = self.visionCap.read()
             if self.vision:
                 vframe = cv2.cvtColor(vframe, cv2.COLOR_BGR2RGB)
@@ -159,7 +159,8 @@ class CameraWidget(QWidget):
                 )
                 pixmap = QPixmap.fromImage(convert_to_Qt_format)
                 self.cameraDisplay.setPixmap(pixmap)
-                self.vtimer.start(1)
+                self.setVisionCap()
+        self.vtimer.start(1)
     def displayStream(self):
         print("Display Stream")
         if not self.checkDriver():
@@ -167,7 +168,7 @@ class CameraWidget(QWidget):
         elif not self.driverCap.isOpened():
             print("Can't access driver camera")
             return
-        elif not self.vision:
+        else:
             ret, frame = self.driverCap.read()
             if not self.vision:
                 # Convert the image to Qt format
@@ -179,7 +180,8 @@ class CameraWidget(QWidget):
                 )
                 pixmap = QPixmap.fromImage(cvtToQtFormat)
                 self.cameraDisplay.setPixmap(pixmap)
-                self.timer.start(1)
+                self.setDriverCap()
+        self.timer.start(1)
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     player = CameraWidget()
