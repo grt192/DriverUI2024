@@ -1,7 +1,7 @@
 import sys
 import time
 from PySide6 import QtCore
-from PySide6.QtWidgets import QLabel, QWidget, QPushButton, QVBoxLayout
+from PySide6.QtWidgets import QLabel, QWidget, QPushButton, QVBoxLayout, QHBoxLayout
 from PySide6.QtWidgets import QApplication, QSizePolicy
 from PySide6.QtGui import QImage, QPixmap
 import numpy as np
@@ -13,8 +13,8 @@ from threading import *
 
 
 class CameraWidget(QWidget):
-    visionURL = "http://10.1.92.11:1186/stream.mjpg"
-    visionTestURL = "http://10.1.92.11:1186"
+    visionURL = "http://10.1.92.19:1186/stream.mjpg"
+    visionTestURL = "http://10.1.92.19:1186"
     camURl = "http://10.1.92.2:1181/stream.mjpg"
     camTestURL = "http://10.1.92.2:1181"
     vision = False
@@ -25,7 +25,7 @@ class CameraWidget(QWidget):
 
         self.cameraDisplay = QLabel(self)
         self.cameraDisplay.setScaledContents(True)
-        self.cameraDisplay.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
+        self.cameraDisplay.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.cameraDisplay.setMaximumWidth(3 * self.driverCamWidth)
         self.cameraDisplay.setMaximumHeight(3 * self.driverCamHeight)
         print("Created cameraDisplay label")
@@ -41,10 +41,8 @@ class CameraWidget(QWidget):
         # return
         if self.is_network_available:
             try:
-                self.driverCap = cv2.VideoCapture(self.camURl)
-                self.driverCap.set(cv2.CAP_PROP_FRAME_WIDTH, 176)
-                self.driverCap.set(cv2.CAP_PROP_FRAME_HEIGHT, 144)
-                self.visionCap = cv2.VideoCapture(self.visionURL)
+                self.setDriverCap()
+                self.setVisionCap()
             except Exception as e:
                 print(e)
         else:
@@ -61,33 +59,61 @@ class CameraWidget(QWidget):
         self.vtimer.start(1)
         self.reconnectButton = QPushButton("Reconnect")
         self.reconnectButton.clicked.connect(self.reconnect)
+
+        self.switchToDriverButton = QPushButton("Driver")
+        self.switchToDriverButton.clicked.connect(self.switchToDriverCam)
+
+        self.switchToVisionButton = QPushButton("Vision")
+        self.switchToVisionButton.clicked.connect(self.switchToVisionCam)
+
+        self.switchWidget = QWidget()
+        self.switchLayout = QHBoxLayout(self)
+        self.switchLayout.addWidget(self.reconnectButton)
+        self.switchLayout.addWidget(self.switchToDriverButton)
+        self.switchLayout.addWidget(self.switchToVisionButton)
+        self.switchWidget.setLayout(self.switchLayout)
         print("Created reconnect button")
 
         layout = QVBoxLayout(self)
 
         #Add everything layout.
         layout.addWidget(self.cameraDisplay)
-        layout.addWidget(self.reconnectButton)
-
-
+        layout.addWidget(self.switchWidget)
+        self.setLayout(layout)
+    def setVisionCap(self):
+        self.visionCap = cv2.VideoCapture(self.visionURL)
+        self.visionCap.set(cv2.CAP_PROP_FRAME_WIDTH, 320)
+        self.visionCap.set(cv2.CAP_PROP_FRAME_HEIGHT, 240)
+        self.visionCap.set(cv2.CAP_PROP_FPS, 30)
+        self.visionCap.set(cv2.CAP_PROP_EXPOSURE, 0.5)
+    def setDriverCap(self):
+        self.driverCap = cv2.VideoCapture(self.camURl)
+        self.driverCap.set(cv2.CAP_PROP_FRAME_WIDTH, 176)
+        self.driverCap.set(cv2.CAP_PROP_FRAME_HEIGHT, 144)
+        self.driverCap.set(cv2.CAP_PROP_FPS, 60)
+        self.driverCap.set(cv2.CAP_PROP_EXPOSURE, 0.5)
     def reconnect(self):
-        if self.checkNetwork():
-            self.driverCap = cv2.VideoCapture(self.camURl)
-            self.visionCap = cv2.VideoCapture(self.visionURL)
+        if self.checkDriver():
+            self.setDriverCap()
             self.timer.start(1)
+        if self.checkVision():
+            self.setVisionCap()
             self.vtimer.start(1)
-            print("reconnect finished")
         else:
            print("Network Issue!")
-    def checkNetwork(self):
-        # Check if network is available
-        print("checking network")
+    def checkVision(self):
         try:
             response = requests.get(self.visionTestURL, timeout=1)
             if response.status_code != 200:
                 print("Vision not accessable! Status Code: " + str(response.status_code))
                 return False
             response.close()
+        except Exception as e:
+            print("Check Netowrk exception")
+            print(e)
+        return True
+    def checkDriver(self):
+        try:
             response = requests.get(self.camTestURL, timeout=1)
             if response.status_code != 200:
                 print("Driver cam not accessable! Status Code: " + str(response.status_code))
@@ -96,8 +122,9 @@ class CameraWidget(QWidget):
         except Exception as e:
             print("Check Netowrk exception")
             print(e)
-            return False
         return True
+    def checkNetwork(self):
+        return self.checkVision() and self.checkDriver()
     def switchBasedOnElevatorPosition(self, position):
         #type of position is tuple
         if position[1] == 0.:
@@ -109,16 +136,19 @@ class CameraWidget(QWidget):
     def switchToVisionCam(self):
         print("switch to vision")
         self.vision = True
+        self.vtimer.start(1)
     def switchToDriverCam(self):
         print("switch to driver")
         self.vision = False
+        self.timer.start(1)
     def captureVision(self):
         print("Capture Vision")
-        if not self.checkNetwork():
+        if not self.checkVision():
             return
         elif not self.visionCap.isOpened():
             print("Can't access vision camera")
-        else:
+            return
+        elif self.vision:
             vret, vframe = self.visionCap.read()
             if self.vision:
                 vframe = cv2.cvtColor(vframe, cv2.COLOR_BGR2RGB)
@@ -129,15 +159,15 @@ class CameraWidget(QWidget):
                 )
                 pixmap = QPixmap.fromImage(convert_to_Qt_format)
                 self.cameraDisplay.setPixmap(pixmap)
-        print(1)
-        self.vtimer.start(1)
+                self.vtimer.start(1)
     def displayStream(self):
         print("Display Stream")
-        if not self.checkNetwork():
+        if not self.checkDriver():
             return
         elif not self.driverCap.isOpened():
             print("Can't access driver camera")
-        else:
+            return
+        elif not self.vision:
             ret, frame = self.driverCap.read()
             if not self.vision:
                 # Convert the image to Qt format
@@ -149,8 +179,7 @@ class CameraWidget(QWidget):
                 )
                 pixmap = QPixmap.fromImage(cvtToQtFormat)
                 self.cameraDisplay.setPixmap(pixmap)
-        print("start timer")
-        self.timer.start(1)
+                self.timer.start(1)
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     player = CameraWidget()
