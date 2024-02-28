@@ -7,6 +7,7 @@ from Widgets.ControlWidget import ControlWidget
 from Widgets.DriverCameraWidget import CameraWidget
 from Widgets.MapWidget import MapWidget
 from Widgets.SendCamIDWidget import SendCamIDWidget
+from Widgets.RobotStatusWidget import RobotStatusWidget
 
 
 class GRT2024DriverUI(QMainWindow):
@@ -36,6 +37,7 @@ class GRT2024DriverUI(QMainWindow):
             self.mapWidget.changeAllianceColor
         )
         self.mapLayout = QVBoxLayout()
+        print(type(self.mapWidget))
         self.mapLayout.addWidget(self.mapWidget)
 
         self.mainLayout.addLayout(self.mapLayout)
@@ -47,9 +49,24 @@ class GRT2024DriverUI(QMainWindow):
         self.cameraWidget1 = CameraWidget("Camera1")
         print("Created cameraWidget1")
         self.cameraLayout.addWidget(self.cameraWidget1)
+
+        self.robotStatusLayout = QHBoxLayout()
+        self.frontSensorWidget = RobotStatusWidget("Front Sensor", "RobotStatus", "frontSensor")
+        self.robotStatusLayout.addWidget(self.frontSensorWidget)
+        self.backSensorWidget = RobotStatusWidget("Back Sensor", "RobotStatus", "backSensor")
+        self.robotStatusLayout.addWidget(self.backSensorWidget)
+        self.shooterReadyWidget = RobotStatusWidget("Shooter Ready", "RobotStatus", "shooterReady")
+        self.robotStatusLayout.addWidget(self.shooterReadyWidget)
+        self.cameraLayout.addLayout(self.robotStatusLayout)
+
         self.sendCamIDWidget = SendCamIDWidget("Switch", "camera", "id")
         self.cameraLayout.addWidget(self.sendCamIDWidget)
         print("Created cameraLayout")
+
+
+
+
+
 
 
 if __name__ == "__main__":

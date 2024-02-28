@@ -37,6 +37,7 @@ class CameraWidget(QWidget):
 
         # Check if network is available
         self.is_network_available = self.checkNetwork()
+        print(self.is_network_available)
         print("runned is_network_available")
         # return
         if self.is_network_available:
@@ -88,11 +89,17 @@ class CameraWidget(QWidget):
         self.visionCap.set(cv2.CAP_PROP_EXPOSURE, 0.5)
     def setDriverCap(self):
         self.driverCap = cv2.VideoCapture(self.camURl)
-        self.driverCap.set(cv2.CAP_PROP_FRAME_WIDTH, 176)
-        self.driverCap.set(cv2.CAP_PROP_FRAME_HEIGHT, 144)
-        self.driverCap.set(cv2.CAP_PROP_FPS, 60)
+        self.driverCap.set(cv2.CAP_PROP_FRAME_WIDTH, 320)
+        self.driverCap.set(cv2.CAP_PROP_FRAME_HEIGHT, 240)
+        self.driverCap.set(cv2.CAP_PROP_FPS, 30)
         self.driverCap.set(cv2.CAP_PROP_EXPOSURE, 0.5)
     def reconnect(self):
+        try:
+            if not self.checkNetwork():
+                return
+        except Exception as e:
+            print(e)
+            return
         if self.checkDriver():
             self.setDriverCap()
             self.timer.start(1)
@@ -109,8 +116,9 @@ class CameraWidget(QWidget):
                 return False
             response.close()
         except Exception as e:
-            print("Check Netowrk exception")
+            print("Check Vision exception in the")
             print(e)
+            return False
         return True
     def checkDriver(self):
         try:
@@ -120,19 +128,20 @@ class CameraWidget(QWidget):
                 return False
             response.close()
         except Exception as e:
-            print("Check Netowrk exception")
+            print("Check Driver exception in the following line:")
             print(e)
+            return False
         return True
     def checkNetwork(self):
-        return self.checkVision() and self.checkDriver()
+        return self.checkVision() or self.checkDriver()
     def switchBasedOnElevatorPosition(self, position):
         #type of position is tuple
         if position[1] == 0.:
-            print("is 0")
-            self.switchToDriverCam()
+            print("elevator position is 0")
+            # self.switchToDriverCam()
         elif position[1] == 3.:
-            print("is 3")
-            self.switchToVisionCam()
+            print("elevator position is 3")
+            # self.switchToVisionCam()
     def switchToVisionCam(self):
         print("switch to vision")
         self.vision = True
@@ -142,7 +151,7 @@ class CameraWidget(QWidget):
         self.vision = False
         self.timer.start(1)
     def captureVision(self):
-        print("Capture Vision")
+        # print("Capture Vision")
         if not self.checkVision():
             return
         elif not self.visionCap.isOpened():
@@ -162,7 +171,7 @@ class CameraWidget(QWidget):
                 self.setVisionCap()
         self.vtimer.start(1)
     def displayStream(self):
-        print("Display Stream")
+        # print("Display Stream")
         if not self.checkDriver():
             return
         elif not self.driverCap.isOpened():
@@ -172,6 +181,7 @@ class CameraWidget(QWidget):
             ret, frame = self.driverCap.read()
             if not self.vision:
                 # Convert the image to Qt format
+                frame = cv2.flip(frame, flipCode=-1)
                 frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
                 h, w, ch = frame.shape
                 bytesPerLine = ch * w

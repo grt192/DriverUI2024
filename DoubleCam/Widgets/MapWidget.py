@@ -8,32 +8,33 @@ class MapWidget(QWidget):
 
         self.layout = QHBoxLayout()
         self.alignLayout = QVBoxLayout()
-        self.sourceAlignWidget = SendIncreaseIntWidget(
-            "Source", "Alignment", "Source", self
-        )
-        self.sourceAlignWidget.setMaximumWidth(115)
-        self.alignLayout.addWidget(self.sourceAlignWidget)
-        self.ampAlignWidget = SendIncreaseIntWidget(
-            "AMP", "Alignment", "AMP", self
-        )
-        self.ampAlignWidget.setMaximumWidth(115)
-        self.alignLayout.addWidget(self.ampAlignWidget)
-        self.speakerAlignWidget = SendIncreaseIntWidget(
-            "Speaker", "Alignment", "Speaker", self
-        )
-        self.speakerAlignWidget.setMaximumWidth(115)
-        self.alignLayout.addWidget(self.speakerAlignWidget)
-        self.layout.addLayout(self.alignLayout)
+        # self.sourceAlignWidget = SendIncreaseIntWidget(
+        #     "Source", "Alignment", "Source", self
+        # )
+        # self.sourceAlignWidget.setMaximumWidth(115)
+        # self.alignLayout.addWidget(self.sourceAlignWidget)
+        # self.ampAlignWidget = SendIncreaseIntWidget(
+        #     "AMP", "Alignment", "AMP", self
+        # )
+        # self.ampAlignWidget.setMaximumWidth(115)
+        # self.alignLayout.addWidget(self.ampAlignWidget)
+        # self.speakerAlignWidget = SendIncreaseIntWidget(
+        #     "Speaker", "Alignment", "Speaker", self
+        # )
+        # self.speakerAlignWidget.setMaximumWidth(115)
+        # self.alignLayout.addWidget(self.speakerAlignWidget)
+        # self.layout.addLayout(self.alignLayout)
 
         self.mapDisplayWidget = MapDisplayWidget(alliance)
-        self.mapDisplayWidget.setMaximumWidth(536)
+        self.mapDisplayWidget.setMaximumWidth(400)
+        self.mapDisplayWidget.setMaximumHeight(806)
         self.layout.addWidget(self.mapDisplayWidget)
 
-        self.sendDestinationWidget = SendIntTupleWidget("Send Destination", "Map", "TargetX", "Map", "TargetY")
-        self.sendDestinationWidget.setMaximumWidth(100)
-        self.layout.addWidget(self.sendDestinationWidget)
+        # self.sendDestinationWidget = SendIntTupleWidget("Send Destination", "Map", "TargetX", "Map", "TargetY")
+        # self.sendDestinationWidget.setMaximumWidth(100)
+        # self.layout.addWidget(self.sendDestinationWidget)
 
-        self.mapDisplayWidget.newCrosshairPosition.connect(self.sendDestinationWidget.updateMessage)
+        # self.mapDisplayWidget.newCrosshairPosition.connect(self.sendDestinationWidget.updateMessage)
 
 
 
