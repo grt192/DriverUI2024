@@ -19,7 +19,6 @@ class RobotStatusWidget(QWidget):
         self.layout.addWidget(self.label)
         self.setLayout(self.layout)
         self.setAutoFillBackground(True)
-        self.updateValue(("sijd", True))
     def updateLabel(self):
         if self.currentState:
             self.label.setStyleSheet(f"background-color: {self.trueColor.name()};")
@@ -27,5 +26,6 @@ class RobotStatusWidget(QWidget):
             self.label.setStyleSheet(f"background-color: {self.falseColor.name()};")
 
     def updateValue(self, value: tuple):
+        print(value)
         self.currentState = value[1]
         self.updateLabel()
