@@ -19,6 +19,7 @@ class RobotStatusWidget(QWidget):
         self.layout.addWidget(self.label)
         self.setLayout(self.layout)
         self.setAutoFillBackground(True)
+        self.setMinimumHeight(50)
     def updateLabel(self):
         if self.currentState:
             self.label.setStyleSheet(f"background-color: {self.trueColor.name()};")

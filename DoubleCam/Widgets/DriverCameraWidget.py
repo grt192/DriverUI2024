@@ -168,7 +168,7 @@ class CameraWidget(QWidget):
                 )
                 pixmap = QPixmap.fromImage(convert_to_Qt_format)
                 self.cameraDisplay.setPixmap(pixmap)
-                self.setVisionCap()
+                # self.setVisionCap()
         self.vtimer.start(1)
     def displayStream(self):
         # print("Display Stream")
@@ -190,7 +190,7 @@ class CameraWidget(QWidget):
                 )
                 pixmap = QPixmap.fromImage(cvtToQtFormat)
                 self.cameraDisplay.setPixmap(pixmap)
-                self.setDriverCap()
+                # self.setDriverCap()
         self.timer.start(1)
 if __name__ == '__main__':
     app = QApplication(sys.argv)
