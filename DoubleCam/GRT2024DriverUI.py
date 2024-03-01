@@ -2,7 +2,7 @@ import sys
 # PySide6 imports
 from PySide6.QtCore import Signal
 from PySide6.QtWidgets import QApplication, QWidget, QMainWindow, QHBoxLayout, QVBoxLayout
-
+from PySide6.QtCore import Qt
 from Widgets.ControlWidget import ControlWidget
 from Widgets.DriverCameraWidget import CameraWidget
 from Widgets.MapWidget import MapWidget
@@ -49,19 +49,24 @@ class GRT2024DriverUI(QMainWindow):
         self.cameraWidget1 = CameraWidget("Camera1")
         print("Created cameraWidget1")
         self.cameraLayout.addWidget(self.cameraWidget1)
-
         self.robotStatusLayout = QHBoxLayout()
         self.frontSensorWidget = RobotStatusWidget("Front Sensor", "RobotStatus", "frontSensor")
+        self.frontSensorWidget.setMinimumHeight(200)
         self.robotStatusLayout.addWidget(self.frontSensorWidget)
         self.backSensorWidget = RobotStatusWidget("Back Sensor", "RobotStatus", "backSensor")
+        self.backSensorWidget.setMinimumHeight(200)
         self.robotStatusLayout.addWidget(self.backSensorWidget)
         self.shooterReadyWidget = RobotStatusWidget("Shooter Ready", "RobotStatus", "shooterReady")
+        self.shooterReadyWidget.setMinimumHeight(200)
         self.robotStatusLayout.addWidget(self.shooterReadyWidget)
+        self.noteDetectedWidget = RobotStatusWidget("Note Detected", "Vision", "noteDetected")
+        self.noteDetectedWidget.setMinimumHeight(200)
+        self.robotStatusLayout.addWidget(self.noteDetectedWidget)
         self.cameraLayout.addLayout(self.robotStatusLayout)
 
-        self.sendCamIDWidget = SendCamIDWidget("Switch", "camera", "id")
-        self.cameraLayout.addWidget(self.sendCamIDWidget)
-        print("Created cameraLayout")
+        # self.sendCamIDWidget = SendCamIDWidget("Switch", "camera", "id")
+        # self.cameraLayout.addWidget(self.sendCamIDWidget)
+        # print("Created cameraLayout")
 
 
 

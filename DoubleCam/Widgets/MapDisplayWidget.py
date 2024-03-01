@@ -89,7 +89,7 @@ class MapDisplayWidget(QWidget):
     def updateRobotPose(self, entryName, entryValue):
         self.robotLabel.hide()
         #type is tuple
-        return
+        # return
         print(entryValue)
         # print(range(len(entryValue)))
         for i in range(len(entryValue)):
