@@ -14,11 +14,13 @@ class MapDisplayWidget(QWidget):
 
     def __init__(self, alliance, parent=None):
         super().__init__(parent)
+        self.setContentsMargins(0,0,0,0)
 
         self.mapLabel = QLabel()
         self.mapLabel.setScaledContents(True)
+        self.mapLabel.setContentsMargins(0,0,0,0)
 
-        self.mapPixmap = QPixmap("./Images/field24.png").scaled(600, 300)
+        self.mapPixmap = QPixmap("./Images/field24.png")
         self.robotScale = 40
         self.robotPixmap = QPixmap("./Images/robot_frame.png").scaled(self.robotScale,
                                                                     self.robotScale)
@@ -35,6 +37,7 @@ class MapDisplayWidget(QWidget):
 
         # Set up QLabel for robot icon
         self.robotLabel = QLabel(self)
+        self.robotLabel.setContentsMargins(0,0,0,0)
         self.robotLabel.setPixmap(self.robotPixmap)
         self.robotLabel.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
         self.robotLabel.setMask(self.robotPixmap.mask())  # Use transparency information for masking
@@ -68,7 +71,7 @@ class MapDisplayWidget(QWidget):
         self.reloadMaps()
 
     def reloadMaps(self):
-        self.mapPixmap = QPixmap("./Images/field24.png").scaled(600, 300)
+        self.mapPixmap = QPixmap("./Images/field24.png")
         rotation_angle = 90 if self.alliance == "red" else -90
         transform = QTransform().rotate(rotation_angle)
         self.mapPixmap = self.mapPixmap.transformed(transform)
@@ -109,8 +112,8 @@ class MapDisplayWidget(QWidget):
                 )
             )
             self.robotLabel.setGeometry(
-                int(self.mapLabel.width() - newRobotPose[1] - self.robotScale / 2 + 10),
-                int(self.mapLabel.height() - newRobotPose[0] - self.robotScale / 2) + 10,
+                int(self.mapLabel.width() - 10 - newRobotPose[1] - self.robotScale / 2 ),
+                int(self.mapLabel.height() - 10 - newRobotPose[0] - self.robotScale / 2),
                 self.robotScale,
                 self.robotScale
             )
@@ -124,8 +127,8 @@ class MapDisplayWidget(QWidget):
                 )
             )
             self.robotLabel.setGeometry(
-                int(newRobotPose[1] - self.robotScale / 2 + 10),
-                int(newRobotPose[0] - self.robotScale / 2 + 10),
+                int(newRobotPose[1] - self.robotScale / 2 + 12),
+                int(newRobotPose[0] - self.robotScale / 2 + 12),
                 self.robotScale,
                 self.robotScale
             )

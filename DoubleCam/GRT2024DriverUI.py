@@ -5,7 +5,7 @@ from PySide6.QtWidgets import QApplication, QWidget, QMainWindow, QHBoxLayout, Q
 from PySide6.QtCore import Qt
 from Widgets.ControlWidget import ControlWidget
 from Widgets.DriverCameraWidget import CameraWidget
-from Widgets.MapWidget import MapWidget
+from Widgets.MapDisplayWidget import MapDisplayWidget
 from Widgets.SendCamIDWidget import SendCamIDWidget
 from Widgets.RobotStatusWidget import RobotStatusWidget
 
@@ -30,17 +30,17 @@ class GRT2024DriverUI(QMainWindow):
         self.mainLayout.addWidget(self.controlWidget)
         print("Created controlWidget")
 
-        self.mapWidget = MapWidget(
+        self.mapWidget = MapDisplayWidget(
             self.controlWidget.allianceToggle.currentText
         )
+        self.mapWidget.setContentsMargins(0,0,0,0)
+        self.mapWidget.setMaximumHeight(800)
+        self.mapWidget.setMaximumWidth(400)
         self.controlWidget.allianceToggle.toggled.connect(
             self.mapWidget.changeAllianceColor
         )
-        self.mapLayout = QVBoxLayout()
-        print(type(self.mapWidget))
-        self.mapLayout.addWidget(self.mapWidget)
 
-        self.mainLayout.addLayout(self.mapLayout)
+        self.mainLayout.addWidget(self.mapWidget)
         print("Created mapLayout")
 
         self.cameraLayout = QVBoxLayout()

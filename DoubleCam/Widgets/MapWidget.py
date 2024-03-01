@@ -8,6 +8,7 @@ class MapWidget(QWidget):
 
         self.layout = QHBoxLayout()
         self.alignLayout = QVBoxLayout()
+        self.setContentsMargins(0,0,0,0)
         # self.sourceAlignWidget = SendIncreaseIntWidget(
         #     "Source", "Alignment", "Source", self
         # )
@@ -26,6 +27,7 @@ class MapWidget(QWidget):
         # self.layout.addLayout(self.alignLayout)
 
         self.mapDisplayWidget = MapDisplayWidget(alliance)
+        self.mapDisplayWidget.setContentsMargins(0,0,0,0)
         self.mapDisplayWidget.setMaximumWidth(400)
         self.mapDisplayWidget.setMaximumHeight(806)
         self.layout.addWidget(self.mapDisplayWidget)

@@ -185,7 +185,7 @@ class CameraWidget(QWidget):
             )
             pixmap = QPixmap.fromImage(cvtToQtFormat)
             self.cameraDisplay.setPixmap(pixmap)
-            self.cameraDisplay.resize(800,self.windowHeight)
+            # self.cameraDisplay.resize(800,self.windowHeight)
             self.cameraDisplay.setAlignment(Qt.AlignCenter)
             #self.setDriverCap()
             self.timer.start(1)
