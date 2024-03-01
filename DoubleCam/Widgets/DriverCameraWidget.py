@@ -35,29 +35,23 @@ class CameraWidget(QWidget):
         self.elevatorPositionNTManager.new_value_available.connect(self.switchBasedOnElevatorPosition)
         print("Created NTManager")
 
-        # Check if network is available
-        self.is_network_available = self.checkNetwork()
-        print(self.is_network_available)
-        print("runned is_network_available")
-        # return
-        if self.is_network_available:
-            try:
-                self.setDriverCap()
-                self.setVisionCap()
-            except Exception as e:
-                print(e)
-        else:
-            self.cameraDisplay.setText("Unable to access cameras")
-        print("Created video caps")
         #use this time to call the DisplayStream method to retrieve and display frames.
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.displayStream)
         self.timer.setSingleShot(True)
-        self.timer.start(1)  # Adjust the interval as needed (e.g., 100 ms for 10 FPS)
+        # self.timer.start(1)  # Adjust the interval as needed (e.g., 100 ms for 10 FPS)
         self.vtimer = QtCore.QTimer()
         self.vtimer.timeout.connect(self.captureVision)
         self.vtimer.setSingleShot(True)
-        self.vtimer.start(1)
+
+        if self.checkDriver():
+            self.setDriverCap()
+            self.timer.start(1)
+        if self.checkVision():
+            self.setVisionCap()
+            self.vtimer.start(1)
+
+        # self.vtimer.start(1)
         self.reconnectButton = QPushButton("Reconnect")
         self.reconnectButton.clicked.connect(self.reconnect)
 
@@ -94,12 +88,6 @@ class CameraWidget(QWidget):
         self.driverCap.set(cv2.CAP_PROP_FPS, 30)
         self.driverCap.set(cv2.CAP_PROP_EXPOSURE, 0.5)
     def reconnect(self):
-        try:
-            if not self.checkNetwork():
-                return
-        except Exception as e:
-            print(e)
-            return
         if self.checkDriver():
             self.setDriverCap()
             self.timer.start(1)
