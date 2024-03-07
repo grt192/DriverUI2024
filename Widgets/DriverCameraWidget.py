@@ -11,6 +11,9 @@ import requests
 class CameraWidget(QWidget):
     camURl = "http://10.1.92.2:1181/stream.mjpg"
     camTestURL = "http://10.1.92.2:1181"
+    resolutionX = 176
+    resolutionY = 144
+    FPS = 30
     scale = 2
     driverCamWidth = 320 * scale
     driverCamHeight = 240 * scale
@@ -49,9 +52,9 @@ class CameraWidget(QWidget):
 
     def setDriverCap(self):
         self.driverCap = cv2.VideoCapture(self.camURl)
-        self.driverCap.set(cv2.CAP_PROP_FRAME_WIDTH, 320)
-        self.driverCap.set(cv2.CAP_PROP_FRAME_HEIGHT, 240)
-        self.driverCap.set(cv2.CAP_PROP_FPS, 60)
+        self.driverCap.set(cv2.CAP_PROP_FRAME_WIDTH, self.resolutionX)
+        self.driverCap.set(cv2.CAP_PROP_FRAME_HEIGHT, self.resolutionY)
+        self.driverCap.set(cv2.CAP_PROP_FPS, self.FPS)
         # self.driverCap.set(cv2.CAP_PROP_EXPOSURE, 0.5)
         # self.driverCap.set(cv2.CAP_PROP_CONVERT_RGB, 1)
     def reconnect(self):
