@@ -18,7 +18,7 @@ class NetworkTableManager(QObject):
         self.table.addEntryListener(self.valueChanged)
 
     def valueChanged(self, table, key, value, isNew):
-        print("Key: " + key + " Value: " + str(value))
+        # print("Key: " + key + " Value: " + str(value))
         if key == self.entry_name:
             self.new_value_available.emit((key, value))
 

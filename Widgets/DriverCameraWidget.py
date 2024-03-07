@@ -52,26 +52,9 @@ class CameraWidget(QWidget):
         if self.checkDriver():
             self.setDriverCap()
             self.timer.start(1)
-        # if self.checkVision():
-        #     self.setVisionCap()
-        #     self.vtimer.start(1)
 
-        # self.vtimer.start(1)
         self.reconnectButton = QPushButton("Reconnect")
         self.reconnectButton.clicked.connect(self.reconnect)
-
-        # self.switchToDriverButton = QPushButton("Driver")
-        # self.switchToDriverButton.clicked.connect(self.switchToDriverCam)
-
-        # self.switchToVisionButton = QPushButton("Vision")
-        # self.switchToVisionButton.clicked.connect(self.switchToVisionCam)
-
-        # self.switchWidget = QWidget()
-        # self.switchLayout = QHBoxLayout(self)
-        # self.switchLayout.addWidget(self.reconnectButton)
-        # self.switchLayout.addWidget(self.switchToDriverButton)
-        # self.switchLayout.addWidget(self.switchToVisionButton)
-        # self.switchWidget.setLayout(self.switchLayout)
         print("Created reconnect button")
 
         layout = QVBoxLayout(self)
@@ -92,8 +75,8 @@ class CameraWidget(QWidget):
         self.driverCap = cv2.VideoCapture(self.camURl)
         self.driverCap.set(cv2.CAP_PROP_FRAME_WIDTH, 320)
         self.driverCap.set(cv2.CAP_PROP_FRAME_HEIGHT, 240)
-        self.driverCap.set(cv2.CAP_PROP_FPS, 30)
-        self.driverCap.set(cv2.CAP_PROP_EXPOSURE, 0.5)
+        self.driverCap.set(cv2.CAP_PROP_FPS, 60)
+        # self.driverCap.set(cv2.CAP_PROP_EXPOSURE, 0.5)
         # self.driverCap.set(cv2.CAP_PROP_CONVERT_RGB, 1)
     def reconnect(self):
         if self.checkDriver():
@@ -187,7 +170,7 @@ class CameraWidget(QWidget):
             self.cameraDisplay.setPixmap(pixmap)
             # self.cameraDisplay.resize(800,self.windowHeight)
             self.cameraDisplay.setAlignment(Qt.AlignCenter)
-            #self.setDriverCap()
+            # self.setDriverCap()
             self.timer.start(1)
 if __name__ == '__main__':
     app = QApplication(sys.argv)

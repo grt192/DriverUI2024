@@ -46,8 +46,7 @@ class MapDisplayWidget(QWidget):
         self.crosshairLabel = QLabel(self)
         self.crosshairLabel.setPixmap(self.crosshairPixmap)
         self.crosshairLabel.hide()
-        self.crosshairLabel.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed) \
- \
+        self.crosshairLabel.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
             # init crosshair position
         self.crosshairX = None
         self.crosshairY = None
@@ -90,16 +89,18 @@ class MapDisplayWidget(QWidget):
         self.newCrosshairPosition.emit((self.crosshairX, self.crosshairY))
 
     def updateRobotPose(self, entryName, entryValue):
+        print("height" + str(self.height()))
+        print()
         self.robotLabel.hide()
         #type is tuple
         # return
-        print(entryValue)
+        # print(entryValue)
         # print(range(len(entryValue)))
         for i in range(len(entryValue)):
             self.robotPose[i] = entryValue[i]
         # print(self.robotPose)
-        newRobotPose = [self.robotPose[0] / self.fieldX * self.mapLabel.height(),
-                        self.robotPose[1] / self.fieldY * self.mapLabel.width(),
+        newRobotPose = [self.robotPose[0] / self.fieldX * self.height(),
+                        self.robotPose[1] / self.fieldY * self.width(),
                         self.robotPose[2]]
         #print(newRobotPose)
         if self.alliance == "blue":
@@ -112,8 +113,8 @@ class MapDisplayWidget(QWidget):
                 )
             )
             self.robotLabel.setGeometry(
-                int(self.mapLabel.width() - 10 - newRobotPose[1] - self.robotScale / 2 ),
-                int(self.mapLabel.height() - 10 - newRobotPose[0] - self.robotScale / 2),
+                int(self.mapLabel.width() - newRobotPose[1] - self.robotScale / 2 ),
+                int(self.mapLabel.height() - newRobotPose[0] - self.robotScale / 2),
                 self.robotScale,
                 self.robotScale
             )
@@ -127,8 +128,8 @@ class MapDisplayWidget(QWidget):
                 )
             )
             self.robotLabel.setGeometry(
-                int(newRobotPose[1] - self.robotScale / 2 + 12),
-                int(newRobotPose[0] - self.robotScale / 2 + 12),
+                int(newRobotPose[1] - self.robotScale / 2 ),
+                int(newRobotPose[0] - self.robotScale / 2 ),
                 self.robotScale,
                 self.robotScale
             )
