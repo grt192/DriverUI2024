@@ -28,51 +28,24 @@ class GRT2024DriverUI(QMainWindow):
         self.controlWidget = ControlWidget()
         self.controlWidget.setMaximumWidth(130)
         self.mainLayout.addWidget(self.controlWidget)
-        print("Created controlWidget")
 
         self.mapWidget = MapDisplayWidget(
             self.controlWidget.allianceToggle.currentText
         )
         self.mapWidget.setContentsMargins(0,0,0,0)
-        self.mapWidget.setMaximumHeight(800)
-        self.mapWidget.setMaximumWidth(400)
+        self.mapWidget.setMaximumWidth(450)
         self.controlWidget.allianceToggle.toggled.connect(
             self.mapWidget.changeAllianceColor
         )
 
         self.mainLayout.addWidget(self.mapWidget)
-        print("Created mapLayout")
 
         self.cameraLayout = QVBoxLayout()
         self.mainLayout.addLayout(self.cameraLayout)
 
-        self.cameraWidget1 = CameraWidget("Camera1")
-        print("Created cameraWidget1")
-        self.cameraLayout.addWidget(self.cameraWidget1)
-        self.robotStatusLayout = QHBoxLayout()
-        self.frontSensorWidget = RobotStatusWidget("Front Sensor", "RobotStatus", "frontSensor")
-        self.frontSensorWidget.setMinimumHeight(200)
-        self.robotStatusLayout.addWidget(self.frontSensorWidget)
-        self.backSensorWidget = RobotStatusWidget("Back Sensor", "RobotStatus", "backSensor")
-        self.backSensorWidget.setMinimumHeight(200)
-        self.robotStatusLayout.addWidget(self.backSensorWidget)
-        self.shooterReadyWidget = RobotStatusWidget("Shooter Ready", "RobotStatus", "shooterReady")
-        self.shooterReadyWidget.setMinimumHeight(200)
-        self.robotStatusLayout.addWidget(self.shooterReadyWidget)
-        self.noteDetectedWidget = RobotStatusWidget("Note Detected", "Vision", "noteDetected")
-        self.noteDetectedWidget.setMinimumHeight(200)
-        self.robotStatusLayout.addWidget(self.noteDetectedWidget)
-        self.cameraLayout.addLayout(self.robotStatusLayout)
-
-        # self.sendCamIDWidget = SendCamIDWidget("Switch", "camera", "id")
-        # self.cameraLayout.addWidget(self.sendCamIDWidget)
-        # print("Created cameraLayout")
-
-
-
-
-
-
+        self.cameraWidget = CameraWidget()
+        self.cameraLayout.addWidget(self.cameraWidget)
+        print(self.cameraWidget.cameraDisplay.size())
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
