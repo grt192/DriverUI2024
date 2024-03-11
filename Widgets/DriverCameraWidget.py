@@ -11,37 +11,40 @@ import requests
 class CameraWidget(QWidget):
     camURl = "http://10.1.92.2:1181/stream.mjpg"
     camTestURL = "http://10.1.92.2:1181"
+    #320*240@120fps for fisheye
     resolutionX = 176
     resolutionY = 144
     FPS = 30
-    scale = 2
-    driverCamWidth = 320 * scale
-    driverCamHeight = 240 * scale
-    xScale = 1.5
-    windowHeight = 300
-    windowWidth = driverCamWidth * xScale
-    def __init__(self, displayName='GRT Driver Cam', parent=None):
+    # resolutionX = 320
+    # resolutionY = 240
+    # FPS = 120
+    scale = 3
+    #The actual video size on the UI
+    windowWidth = resolutionX * scale
+    windowHeight = resolutionY * scale
+
+    connected = False
+    def __init__(self, parent=None):
         super(CameraWidget, self).__init__(parent)
 
         self.cameraDisplay = QLabel(self)
         self.cameraDisplay.setScaledContents(True)
         self.cameraDisplay.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
-        self.cameraDisplay.setMaximumWidth(800)
-        self.cameraDisplay.setMaximumHeight(400)
-        print("Created cameraDisplay label")
+        self.cameraDisplay.setMaximumWidth(self.windowWidth)
+        self.cameraDisplay.setMaximumHeight(self.windowHeight)
 
         #use this time to call the DisplayStream method to retrieve and display frames.
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.displayStream)
+        # self.timer.timeout.connect(self.testDisplay)
         self.timer.setSingleShot(True)
 
         if self.checkDriver():
             self.setDriverCap()
             self.timer.start(1)
-
+            self.connected = True
         self.reconnectButton = QPushButton("Reconnect")
         self.reconnectButton.clicked.connect(self.reconnect)
-        print("Created reconnect button")
 
         layout = QVBoxLayout(self)
 
@@ -49,6 +52,7 @@ class CameraWidget(QWidget):
         layout.addWidget(self.cameraDisplay)
         layout.addWidget(self.reconnectButton)
         self.setLayout(layout)
+
 
     def setDriverCap(self):
         self.driverCap = cv2.VideoCapture(self.camURl)
@@ -61,8 +65,10 @@ class CameraWidget(QWidget):
         if self.checkDriver():
             self.setDriverCap()
             self.timer.start(1)
+            self.connected = True
         else:
-           print("Network Issue!")
+            self.connected = False
+            print("Network Issue!")
     def checkDriver(self):
         try:
             response = requests.get(self.camTestURL, timeout=1)
@@ -75,8 +81,14 @@ class CameraWidget(QWidget):
             print(e)
             return False
         return True
+    def testDisplay(self):
+        ret, frame = self.driverCap.read()
+        cv2.imshow("frame", frame)
+        cv2.waitKey(1)
+        self.timer.start(1)
+
     def displayStream(self):
-        if not self.checkDriver():
+        if not self.connected:
             return
         elif not self.driverCap.isOpened():
             print("Can't access driver camera")
@@ -84,7 +96,6 @@ class CameraWidget(QWidget):
         else:
             ret, frame = self.driverCap.read()
             # Convert the image to Qt format
-            frame = cv2.flip(frame, flipCode=-1)
             frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             h, w, ch = frame.shape
             bytesPerLine = ch * w
@@ -93,7 +104,5 @@ class CameraWidget(QWidget):
             )
             pixmap = QPixmap.fromImage(cvtToQtFormat)
             self.cameraDisplay.setPixmap(pixmap)
-            # self.cameraDisplay.resize(800,self.windowHeight)
             self.cameraDisplay.setAlignment(Qt.AlignCenter)
-            # self.setDriverCap()
             self.timer.start(1)
