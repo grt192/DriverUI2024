@@ -83,7 +83,7 @@ class MapDisplayWidget(QWidget):
             self.robotPose[i] = entryValue[i]
         newRobotPose = [self.robotPose[0] / self.fieldX * self.mapY,
                         self.robotPose[1] / self.fieldY * self.mapX,
-                        self.robotPose[2]]
+                        180 - self.robotPose[2]]
         if self.alliance == "blue":
             self.robotLabel.setPixmap(
                 self.robotPixmap.scaled(
