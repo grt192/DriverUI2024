@@ -12,13 +12,14 @@ class CameraWidget(QWidget):
     camURl = "http://10.1.92.2:1181/stream.mjpg"
     camTestURL = "http://10.1.92.2:1181"
     #320*240@120fps for fisheye
-    resolutionX = 176
-    resolutionY = 144
+    resolutionX = 160
+    resolutionY = 120
+    
     FPS = 30
     # resolutionX = 320
     # resolutionY = 240
     # FPS = 120
-    scale = 3
+    scale = 4
     #The actual video size on the UI
     windowWidth = resolutionX * scale
     windowHeight = resolutionY * scale
