@@ -1,0 +1,5 @@
+numpy==1.26.3
+opencv-python==4.9.0.80
+pynetworktables==2021.0.0
+pyside6==6.5.0
+requests==2.31.0
