@@ -25,8 +25,10 @@ class MapDisplayWidget(QWidget):
         self.mapLabel.setMaximumHeight(self.mapY)
 
         self.mapPixmap = QPixmap("./Images/Field.png")
-        self.robotPixmap = QPixmap("./Images/Robot.png").scaled(self.robotScale,
-                                                                    self.robotScale)
+        self.robotPixmap = QPixmap("./Images/Robot.png").scaled(
+            self.robotScale,
+            self.robotScale
+            )
 
         self.alliance = alliance
 
@@ -43,13 +45,16 @@ class MapDisplayWidget(QWidget):
         self.robotLabel.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
         self.robotLabel.setMask(self.robotPixmap.mask())  # Use transparency information for masking
 
-
         self.robotPoseRootNTTableName = "Shuffleboard"
         self.robotPoseNTTableNames = ["Auton", "Field"]
         self.robotPoseNTManager = NestedNetworkTableManager(
             self.robotPoseRootNTTableName,
             self.robotPoseNTTableNames, "Robot"
         )
+        self.robotPoseOffsetNTManager = NestedNetworkTableManager(
+            self.robotPoseRootNTTableName, ["Auton"], "position"
+        )
+        self.robotPoseOffsetNTManager.new_value_available.connect(self.updateRobotPose)
         self.robotPoseNTManager.new_value_available.connect(self.updateRobotPose)
         self.robotPose = [0., 0., 0.]
         # Set up layout
@@ -59,8 +64,8 @@ class MapDisplayWidget(QWidget):
         layout.addWidget(self.mapLabel)
         self.setLayout(layout)
         # print(self.mapLabel.size())
-        self.updateRobotPose("pose", (3,0,0))
-        self.printSize()
+        # self.updateRobotPose("pose", (3,0,0))
+        # self.printSize()
 
     def changeAllianceColor(self, new_alliance_color):
         self.alliance = new_alliance_color
@@ -74,10 +79,15 @@ class MapDisplayWidget(QWidget):
         self.mapLabel.setPixmap(self.mapPixmap)
 
     def updateRobotPose(self, entryName, entryValue):
-        print(entryValue)
+        if entryValue != "position" and entryName != "Robot":
+            return
         self.robotLabel.hide()
-        for i in range(len(entryValue)):
-            self.robotPose[i] = entryValue[i]
+        if entryName == "Robot":
+            for i in range(len(entryValue)):
+                self.robotPose[i] = entryValue[i]
+        # elif entryName == "position":
+        #     self.robotPose[0] = entryValue
+        #     print(entryValue)
         newRobotPose = [self.robotPose[0] / self.fieldX * self.mapY,
                         self.robotPose[1] / self.fieldY * self.mapX,
                         180 - self.robotPose[2]]
@@ -86,7 +96,7 @@ class MapDisplayWidget(QWidget):
                 self.robotPixmap.scaled(
                     self.robotScale,
                     self.robotScale,
-                    ).transformed(
+                ).transformed(
                     QTransform().rotate(newRobotPose[2])
                 )
             )
@@ -109,14 +119,15 @@ class MapDisplayWidget(QWidget):
                 )
             )
             self.robotLabel.setGeometry(
-                int(newRobotPose[1] - self.robotScale / 2 ),
-                int(newRobotPose[0] - self.robotScale / 2 ),
+                int(newRobotPose[1] - self.robotScale / 2),
+                int(newRobotPose[0] - self.robotScale / 2),
                 self.robotScale,
                 self.robotScale
             )
         self.robotLabel.show()
         self.robotLabel.raise_()
         self.robotLabel.raise_()
+
     def printSize(self):
         print("Entire widget size:")
         print(self.size())
@@ -125,6 +136,7 @@ class MapDisplayWidget(QWidget):
         print("Robot label size:")
         print(self.robotLabel.size())
         print("---------------------")
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
