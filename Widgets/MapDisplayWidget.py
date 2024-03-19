@@ -12,7 +12,7 @@ class MapDisplayWidget(QWidget):
     fieldX = 16.451
     fieldY = 8.211
     mapX = 400
-    mapY = 810
+    mapY = 801
     robotScale = 50
 
     def __init__(self, alliance, parent=None):
@@ -20,20 +20,20 @@ class MapDisplayWidget(QWidget):
 
         self.mapLabel = QLabel()
         self.mapLabel.setScaledContents(True)
-        self.mapLabel.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        self.mapLabel.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
         self.mapLabel.setMaximumWidth(self.mapX)
         self.mapLabel.setMaximumHeight(self.mapY)
 
-        self.mapPixmap = QPixmap("./Images/field24.png")
-        self.robotPixmap = QPixmap("./Images/robot_frame.png").scaled(self.robotScale,
+        self.mapPixmap = QPixmap("./Images/Field.png")
+        self.robotPixmap = QPixmap("./Images/Robot.png").scaled(self.robotScale,
                                                                     self.robotScale)
 
         self.alliance = alliance
 
         if self.alliance == "red":
-            rotationAngle = 90
+            rotationAngle = 180
         else:
-            rotationAngle = -90
+            rotationAngle = 0
         transform = QTransform().rotate(rotationAngle)
         self.mapPixmap = self.mapPixmap.transformed(transform)
 
@@ -54,30 +54,27 @@ class MapDisplayWidget(QWidget):
         self.robotPose = [0., 0., 0.]
         # Set up layout
         self.mapLabel.setPixmap(self.mapPixmap)
+        print(self.mapLabel.size())
         layout = QVBoxLayout()
         layout.addWidget(self.mapLabel)
         self.setLayout(layout)
-
-
-        #Debug:
-        # self.timer = QTimer()
-        # self.timer.timeout.connect(self.printSize)
-        # self.timer.start(1000)
-
-        # self.robotLabel.setGeometry(0, 0, self.robotScale, self.robotScale)
+        # print(self.mapLabel.size())
+        self.updateRobotPose("pose", (3,0,0))
+        self.printSize()
 
     def changeAllianceColor(self, new_alliance_color):
         self.alliance = new_alliance_color
         self.reloadMaps()
 
     def reloadMaps(self):
-        self.mapPixmap = QPixmap("./Images/field24.png")
-        rotation_angle = 90 if self.alliance == "red" else -90
+        self.mapPixmap = QPixmap("./Images/Field.png")
+        rotation_angle = 180 if self.alliance == "red" else 0
         transform = QTransform().rotate(rotation_angle)
         self.mapPixmap = self.mapPixmap.transformed(transform)
         self.mapLabel.setPixmap(self.mapPixmap)
 
     def updateRobotPose(self, entryName, entryValue):
+        print(entryValue)
         self.robotLabel.hide()
         for i in range(len(entryValue)):
             self.robotPose[i] = entryValue[i]
@@ -120,7 +117,6 @@ class MapDisplayWidget(QWidget):
         self.robotLabel.show()
         self.robotLabel.raise_()
         self.robotLabel.raise_()
-
     def printSize(self):
         print("Entire widget size:")
         print(self.size())

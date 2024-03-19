@@ -32,7 +32,6 @@ class GRT2024DriverUI(QMainWindow):
         self.mapWidget = MapDisplayWidget(
             self.controlWidget.allianceToggle.currentText
         )
-        self.mapWidget.setContentsMargins(0,0,0,0)
         self.mapWidget.setMaximumWidth(450)
         self.controlWidget.allianceToggle.toggled.connect(
             self.mapWidget.changeAllianceColor
@@ -45,7 +44,7 @@ class GRT2024DriverUI(QMainWindow):
 
         self.cameraWidget = CameraWidget()
         self.cameraLayout.addWidget(self.cameraWidget)
-        print(self.cameraWidget.cameraDisplay.size())
+        # print(self.cameraWidget.cameraDisplay.size())
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
