@@ -8,7 +8,7 @@ from Widgets.DriverCameraWidget import CameraWidget
 from Widgets.MapDisplayWidget import MapDisplayWidget
 from Widgets.SendCamIDWidget import SendCamIDWidget
 from Widgets.RobotStatusWidget import RobotStatusWidget
-
+from Widgets.PoseSwitchWidget import PoseSwitchWidget
 
 class GRT2024DriverUI(QMainWindow):
     newCrosshairPosition = Signal(int, int)
@@ -44,6 +44,10 @@ class GRT2024DriverUI(QMainWindow):
 
         self.cameraWidget = CameraWidget()
         self.cameraLayout.addWidget(self.cameraWidget)
+
+        self.poseWidget = PoseSwitchWidget()
+        self.poseWidget.setMaximumHeight(200)
+        self.cameraLayout.addWidget(self.poseWidget)
         # print(self.cameraWidget.cameraDisplay.size())
 
 if __name__ == "__main__":
