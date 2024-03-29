@@ -3,12 +3,11 @@ import sys
 from PySide6.QtCore import Signal
 from PySide6.QtWidgets import QApplication, QWidget, QMainWindow, QHBoxLayout, QVBoxLayout
 from PySide6.QtCore import Qt
-from Widgets.ControlWidget import ControlWidget
+from Widgets.FMSInfoWidget import FMSInfoWidget
 from Widgets.DriverCameraWidget import CameraWidget
 from Widgets.MapDisplayWidget import MapDisplayWidget
 from Widgets.SendCamIDWidget import SendCamIDWidget
 from Widgets.RobotStatusWidget import RobotStatusWidget
-from Widgets.PoseSwitchWidget import PoseSwitchWidget
 
 class GRT2024DriverUI(QMainWindow):
     newCrosshairPosition = Signal(int, int)
@@ -25,17 +24,14 @@ class GRT2024DriverUI(QMainWindow):
         self.setCentralWidget(self.centralWidget)
         self.centralWidget.setLayout(self.mainLayout)
 
-        self.controlWidget = ControlWidget()
-        self.controlWidget.setMaximumWidth(130)
-        self.mainLayout.addWidget(self.controlWidget)
+        self.FMSInfoWidget = FMSInfoWidget()
+        self.FMSInfoWidget.setMaximumWidth(200)
+        self.mainLayout.addWidget(self.FMSInfoWidget)
 
         self.mapWidget = MapDisplayWidget(
-            self.controlWidget.allianceToggle.currentText
+            self.FMSInfoWidget.isRedAlliance
         )
         self.mapWidget.setMaximumWidth(450)
-        self.controlWidget.allianceToggle.toggled.connect(
-            self.mapWidget.changeAllianceColor
-        )
 
         self.mainLayout.addWidget(self.mapWidget)
 
@@ -44,11 +40,6 @@ class GRT2024DriverUI(QMainWindow):
 
         self.cameraWidget = CameraWidget()
         self.cameraLayout.addWidget(self.cameraWidget)
-
-        self.poseWidget = PoseSwitchWidget()
-        self.poseWidget.setMaximumHeight(200)
-        self.cameraLayout.addWidget(self.poseWidget)
-        # print(self.cameraWidget.cameraDisplay.size())
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
