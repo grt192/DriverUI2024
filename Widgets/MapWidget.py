@@ -1,7 +1,5 @@
 from PySide6.QtWidgets import QHBoxLayout, QVBoxLayout, QWidget
 from Widgets.MapDisplayWidget import MapDisplayWidget
-from Widgets.SendIntTupleWidget import SendIntTupleWidget
-from Widgets.SendIncreaseIntWidget import SendIncreaseIntWidget
 class MapWidget(QWidget):
     def __init__(self, alliance, parent=None):
         super().__init__(parent)
