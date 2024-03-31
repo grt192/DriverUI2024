@@ -1,6 +1,8 @@
 from PySide6.QtCore import Signal, Qt
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QSizePolicy
-from Widgets.ToggleWidget import ToggleWidget
+from Widgets.BaseWidgets.BoolDisplayLabel import BoolDisplayLabel
+from Widgets.BaseWidgets.IntDisplayLabel import IntDisplayLabel
+from Widgets.BaseWidgets.DoubleDisplayLabel import DoubleDisplayLabel
 from Helpers.NetworktableManager import NetworkTableManager
 
 class InfoWidget(QWidget):
@@ -9,29 +11,36 @@ class InfoWidget(QWidget):
     def __init__(self):
         super().__init__()
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
-        self.isRedAllianceNTM = NetworkTableManager("FMSInfo", "IsRedAlliance")
-        self.isRedAllianceNTM.new_value_available.connect(self.updateAllianceColor)
-
-        self.stationNumberNTM = NetworkTableManager("FMSInfo", "StationNumber")
-        self.stationNumberNTM.new_value_available.connect(self.updateMatchNumber)
-
-        self.matchNumberNTM = NetworkTableManager("FMSInfo", "MatchNumber")
-        self.matchNumberNTM.new_value_available.connect(self.updateMatchNumber)
-
-        self.allianceLabel = QLabel(self)
-        self.allianceLabel.setMaximumHeight(50)
-        self.allianceLabel.setAlignment(Qt.AlignCenter)
+        # self.isRedAllianceNTM = NetworkTableManager("FMSInfo", "IsRedAlliance")
+        # self.isRedAllianceNTM.new_value_available.connect(self.updateAllianceColor)
+        #
+        # self.stationNumberNTM = NetworkTableManager("FMSInfo", "StationNumber")
+        # self.stationNumberNTM.new_value_available.connect(self.updateMatchNumber)
+        #
+        # self.matchNumberNTM = NetworkTableManager("FMSInfo", "MatchNumber")
+        # self.matchNumberNTM.new_value_available.connect(self.updateMatchNumber)
+        #
+        # self.allianceLabel = QLabel(self)
+        # self.allianceLabel.setMaximumHeight(50)
+        # self.allianceLabel.setAlignment(Qt.AlignCenter)
         self.isRedAlliance = None
-        self.stationNumber = None
+        # self.stationNumber = None
+        #
+        # self.matchLabel = QLabel(self)
+        # self.matchLabel.setMaximumHeight(50)
+        # self.matchLabel.setAlignment(Qt.AlignCenter)
+        # self.matchNumber = None
 
-        self.matchLabel = QLabel(self)
-        self.matchLabel.setMaximumHeight(50)
-        self.matchLabel.setAlignment(Qt.AlignCenter)
-        self.matchNumber = None
+        self.allianceLabel= BoolDisplayLabel("Alliance", "FMSInfo", "IsRedAlliance", "red", "blue", self)
+        self.stationLabel= IntDisplayLabel("Station: ", "FMSInfo", "StationNumber", self)
+        self.matchLabel = IntDisplayLabel("Match: ", "FMSInfo", "MatchNumber", self)
+        self.elevatorExtensionPercentLabel = DoubleDisplayLabel("Elevator%: ", "Elevator", "ExtensionPercent", self)
 
         layout = QVBoxLayout(self)
         layout.addWidget(self.allianceLabel)
+        layout.addWidget(self.stationLabel)
         layout.addWidget(self.matchLabel)
+        layout.addWidget(self.elevatorExtensionPercentLabel)
 
         #self.updateLabels()
     def updateLabels(self):
