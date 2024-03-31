@@ -1,18 +1,22 @@
 from PySide6.QtCore import Signal, Qt
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QSizePolicy
 from Widgets.ToggleWidget import ToggleWidget
-from Helpers.NetworktableHelper import NetworkTableManager
+from Helpers.NetworktableManager import NetworkTableManager
 
-class FMSInfoWidget(QWidget):
+class InfoWidget(QWidget):
     allianceColorChanged = Signal((str))
 
     def __init__(self):
         super().__init__()
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.isRedAllianceNTM = NetworkTableManager("FMSInfo", "IsRedAlliance")
+        self.isRedAllianceNTM.new_value_available.connect(self.updateAllianceColor)
+
         self.stationNumberNTM = NetworkTableManager("FMSInfo", "StationNumber")
+        self.stationNumberNTM.new_value_available.connect(self.updateMatchNumber)
+
         self.matchNumberNTM = NetworkTableManager("FMSInfo", "MatchNumber")
-        self.matchTypeNTM = NetworkTableManager("FMSInfo", "MatchType")
+        self.matchNumberNTM.new_value_available.connect(self.updateMatchNumber)
 
         self.allianceLabel = QLabel(self)
         self.allianceLabel.setMaximumHeight(50)
@@ -21,20 +25,18 @@ class FMSInfoWidget(QWidget):
         self.stationNumber = None
 
         self.matchLabel = QLabel(self)
+        self.matchLabel.setMaximumHeight(50)
+        self.matchLabel.setAlignment(Qt.AlignCenter)
         self.matchNumber = None
-        self.matchType = None
 
         layout = QVBoxLayout(self)
         layout.addWidget(self.allianceLabel)
         layout.addWidget(self.matchLabel)
 
-        self.isRedAlliance = False
-        self.stationNumber = 1
-        self.updateAllianceLabel()
-
+        #self.updateLabels()
     def updateLabels(self):
         self.updateAllianceLabel()
-        self.updatematchNumberLabel()
+        self.updateMatchLabel()
     def updateAllianceLabel(self):
         text = None
         if self.isRedAlliance:
@@ -42,6 +44,7 @@ class FMSInfoWidget(QWidget):
             self.allianceLabel.setStyleSheet(
                 "background-color: black; color: red; font-size: 46px;"
             )
+
         else:
             text ="Blue "
         if self.stationNumber is not None:
@@ -51,8 +54,28 @@ class FMSInfoWidget(QWidget):
             )
         self.allianceLabel.setText(text)
     def updateMatchLabel(self):
-        text = None
-    def updateAllianceColor(self, entryName, isRedAlliance):
-        if entryName == IsRedAlliance:
+        text = "Match #" + str(int(self.matchNumber))
+        self.matchLabel.setText(text)
+        self.matchLabel.setStyleSheet(
+                "background-color: black; color: red; font-size: 26px;"
+        )
+
+    def updateAllianceColor(self, info):
+        entryName = info[0]
+        isRedAlliance = info[1]
+        if entryName == "IsRedAlliance":
             self.isRedAlliance = isRedAlliance
             self.updateAllianceLabel()
+
+    def updateStationNumber(self, info):
+        entryName = info[0]
+        stationNumber = info[1]
+        if entryName == "StationNumber":
+            self.stationNumber = stationNumber
+            self.updateAllianceLabel()
+    def updateMatchNumber(self, info):
+        entryName = info[0]
+        matchNumber = info[1]
+        if entryName == "MatchNumber":
+            self.matchNumber = matchNumber
+            self.updateMatchLabel()
