@@ -3,6 +3,7 @@ from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QSizePolicy
 from Widgets.BaseWidgets.BoolDisplayLabel import BoolDisplayLabel
 from Widgets.BaseWidgets.IntDisplayLabel import IntDisplayLabel
 from Widgets.BaseWidgets.DoubleDisplayLabel import DoubleDisplayLabel
+from Widgets.BaseWidgets.ConnectionDisplayLabel import ConnectionDisplayLabel
 from Helpers.NetworktableManager import NetworkTableManager
 
 class InfoWidget(QWidget):
@@ -35,56 +36,27 @@ class InfoWidget(QWidget):
         self.stationLabel= IntDisplayLabel("Station: ", "FMSInfo", "StationNumber", self)
         self.matchLabel = IntDisplayLabel("Match: ", "FMSInfo", "MatchNumber", self)
         self.elevatorExtensionPercentLabel = DoubleDisplayLabel("Elevator%: ", "Elevator", "ExtensionPercent", self)
+        self.elevatorLimitSwitchLabel = BoolDisplayLabel("ElevatorLS", "Elevator", "LimitSwitch", "green", "red", self)
+        self.motor10CurrentLabel = DoubleDisplayLabel("10 Current: ", "Motors", "10Current", self)
+        self.motor10VoltageLabel = DoubleDisplayLabel("10 Voltage: ", "Motors", "10Voltage", self)
+        self.motor10TemperatureLabel = DoubleDisplayLabel("10 Temp: ", "Motors", "10Temperature", self)
+        self.motor11CurrentLabel = DoubleDisplayLabel("11 Current: ", "Motors", "11Current", self)
+        self.motor11VoltageLabel = DoubleDisplayLabel("11 Voltage: ", "Motors", "11Voltage", self)
+        self.motor11TemperatureLabel = DoubleDisplayLabel("11 Temp: ", "Motors", "11Temperature", self)
+        # self.AMPRockwellLabel = BoolDisplayLabel("AMPSensor", "Intake", "AMP", "green", "red", self)
+        self.visionConnectionLabel = ConnectionDisplayLabel("Vision", "http://10.1.92.13:5800", self)
 
         layout = QVBoxLayout(self)
         layout.addWidget(self.allianceLabel)
         layout.addWidget(self.stationLabel)
         layout.addWidget(self.matchLabel)
         layout.addWidget(self.elevatorExtensionPercentLabel)
-
-        #self.updateLabels()
-    def updateLabels(self):
-        self.updateAllianceLabel()
-        self.updateMatchLabel()
-    def updateAllianceLabel(self):
-        text = None
-        if self.isRedAlliance:
-            text = "Red "
-            self.allianceLabel.setStyleSheet(
-                "background-color: black; color: red; font-size: 46px;"
-            )
-
-        else:
-            text ="Blue "
-        if self.stationNumber is not None:
-            text = text + str(self.stationNumber)
-            self.allianceLabel.setStyleSheet(
-                "background-color: black; color: blue; font-size: 46px;"
-            )
-        self.allianceLabel.setText(text)
-    def updateMatchLabel(self):
-        text = "Match #" + str(int(self.matchNumber))
-        self.matchLabel.setText(text)
-        self.matchLabel.setStyleSheet(
-                "background-color: black; color: red; font-size: 26px;"
-        )
-
-    def updateAllianceColor(self, info):
-        entryName = info[0]
-        isRedAlliance = info[1]
-        if entryName == "IsRedAlliance":
-            self.isRedAlliance = isRedAlliance
-            self.updateAllianceLabel()
-
-    def updateStationNumber(self, info):
-        entryName = info[0]
-        stationNumber = info[1]
-        if entryName == "StationNumber":
-            self.stationNumber = stationNumber
-            self.updateAllianceLabel()
-    def updateMatchNumber(self, info):
-        entryName = info[0]
-        matchNumber = info[1]
-        if entryName == "MatchNumber":
-            self.matchNumber = matchNumber
-            self.updateMatchLabel()
+        layout.addWidget(self.elevatorLimitSwitchLabel)
+        layout.addWidget(self.motor10CurrentLabel)
+        layout.addWidget(self.motor10VoltageLabel)
+        layout.addWidget(self.motor10TemperatureLabel)
+        layout.addWidget(self.motor11CurrentLabel)
+        layout.addWidget(self.motor11VoltageLabel)
+        layout.addWidget(self.motor11TemperatureLabel)
+        # layout.addWidget(self.AMPRockwellLabel)
+        layout.addWidget(self.visionConnectionLabel)
