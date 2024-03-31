@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import QPushButton, QVBoxLayout, QLabel, QWidget, QGroupBox, QSizePolicy
 from PySide6.QtCore import Qt, Slot, Signal
-from Helpers.NetworktableHelper import NetworkTableManager
+from Helpers.NetworktableManager import NetworkTableManager
 
 
 class ToggleWidget(QWidget):
@@ -15,22 +15,6 @@ class ToggleWidget(QWidget):
         super().__init__(parent)
 
         self.parameterName = parameterName
-        # Set NTManager
-        if tableName != "":
-            self.tableName = tableName
-            self.entryName = entryName
-            # print(
-            #     "ToggleWidget table name: " + self.tableName + "Entry name: "
-            #     + entryName
-            # )
-            self.NTManager = NetworkTableManager(
-                table_name=tableName, entry_name=entryName
-            )
-            self.NTManager.new_value_available.connect(self.updateNTValue)
-        else:
-            self.tableName = None
-            self.entryName = None
-            self.NTManager = None
 
         self.trueText = texts[0]
         self.falseText = texts[1]
@@ -93,8 +77,6 @@ class ToggleWidget(QWidget):
         else:
             self.currentText = self.falseText
         self.update_button()
-        if self.NTManager is not None:
-            self.sendNTValue()
         self.toggled.emit(self.currentText)
 
     def update_button(self):
@@ -107,18 +89,3 @@ class ToggleWidget(QWidget):
             self.currentColor = self.falseColor
         self.button.setStyleSheet(f"background-color: {self.currentColor};")
         self.button.setAutoFillBackground(True)
-
-    @Slot(str, object)
-    def updateNTValue(self, key: str, value: object):
-        #print(f"key {key}, value {value}")
-        self.currentText = key
-        #currently not used. needs to be implemented when this method is used.
-
-    def sendNTValue(self):
-        if self.tableName is None:
-            return
-        if type(self.current) is bool:
-            self.NTManager.putBool(self.currentState)
-        elif type(self.currentState) is str:
-            self.NTManager.putString(self.currentState.lower())
-        return
