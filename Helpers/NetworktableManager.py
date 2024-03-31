@@ -5,8 +5,8 @@ class NetworkTableManager(QObject):
     new_value_available = Signal(tuple)
     def __init__(self, tableName, entryName, parent = None):
         super().__init__(parent)
-        # NetworkTables.initialize(server='10.1.92.2')
-        NetworkTables.initialize(server='localhost')
+        NetworkTables.initialize(server='10.1.92.2')
+        # NetworkTables.initialize(server='localhost')
         print("Connecting to " + tableName + "-> " + entryName + ":")
         while not NetworkTables.isConnected():
             print("#", end="")
