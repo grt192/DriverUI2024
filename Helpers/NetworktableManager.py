@@ -18,14 +18,6 @@ class NetworkTableManager(QObject):
         if key == self.entry_name:
             self.new_value_available.emit((key, value))
 
-    def check_network(self):
-        # Check if network is available
-        try:
-            response = requests.get("http://10.1.92.2:1181", timeout=2)
-            return True
-        except requests.ConnectionError:
-            return False
-
     def putString(self, message: str):
         print("puting: " + message)
         if (type(message) is not str):
