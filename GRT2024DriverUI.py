@@ -1,12 +1,11 @@
 import sys
 # PySide6 imports
+from PySide6.QtGui import QFontDatabase
 from PySide6.QtCore import Signal
 from PySide6.QtWidgets import QApplication, QWidget, QMainWindow, QHBoxLayout, QVBoxLayout
-from PySide6.QtCore import Qt
-from Widgets.FMSInfoWidget import FMSInfoWidget
+from Widgets.InfoWidget import InfoWidget
 from Widgets.DriverCameraWidget import CameraWidget
 from Widgets.MapDisplayWidget import MapDisplayWidget
-from Widgets.SendCamIDWidget import SendCamIDWidget
 from Widgets.RobotStatusWidget import RobotStatusWidget
 
 class GRT2024DriverUI(QMainWindow):
@@ -24,14 +23,15 @@ class GRT2024DriverUI(QMainWindow):
         self.setCentralWidget(self.centralWidget)
         self.centralWidget.setLayout(self.mainLayout)
 
-        self.FMSInfoWidget = FMSInfoWidget()
+        self.FMSInfoWidget = InfoWidget()
         self.FMSInfoWidget.setMaximumWidth(200)
         self.mainLayout.addWidget(self.FMSInfoWidget)
 
         self.mapWidget = MapDisplayWidget(
             self.FMSInfoWidget.isRedAlliance
         )
-        self.mapWidget.setMaximumWidth(450)
+        self.mapWidget.setMaximumWidth(400)
+        self.mapWidget.setMaximumHeight(810)
 
         self.mainLayout.addWidget(self.mapWidget)
 
