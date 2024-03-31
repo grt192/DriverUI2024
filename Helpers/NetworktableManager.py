@@ -1,20 +1,30 @@
 from networktables import NetworkTables
 from PySide6.QtCore import Signal, QObject
-import requests
+import time
 class NetworkTableManager(QObject):
     new_value_available = Signal(tuple)
     def __init__(self, tableName, entryName, parent = None):
         super().__init__(parent)
-        NetworkTables.initialize(server='10.1.92.2')
+        # NetworkTables.initialize(server='10.1.92.2')
+        NetworkTables.initialize(server='localhost')
+        print("Connecting to " + tableName + "-> " + entryName + ":")
+        while not NetworkTables.isConnected():
+            print("#", end="")
+            time.sleep(0.2)
 
-        #print("creating table: "+ table_name)
+        print("Connected!")
+
         self.tableName = tableName
-        self.table = NetworkTables.getTable(tableName)
-        self.entry_name = entryName
-        
-        self.table.addEntryListener(self.valueChanged)
+        self.entryName = entryName
+        self.table = NetworkTables.getTable(self.tableName)
+        self.entry = self.table.getEntry(self.entryName)
+        self.entry.addListener(self.valueChanged, NetworkTables.NotifyFlags.UPDATE)
 
     def valueChanged(self, table, key, value, isNew):
-        if key == self.entry_name:
-            self.new_value_available.emit((key, value))
+        print("called")
+        print(key)
+        print(value)
+        self.new_value_available.emit((key, value))
 
+    def getValue(self):
+        return self.table.getValue(self.entryName, None)
