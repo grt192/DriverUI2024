@@ -1,7 +1,7 @@
 from PySide6.QtWidgets import QWidget, QLabel, QVBoxLayout
 from PySide6.QtGui import QColor
 from PySide6.QtCore import Qt
-from Helpers.NetworktableHelper import NetworkTableManager
+from Helpers.NetworktableManager import NetworkTableManager
 
 
 class RobotStatusWidget(QWidget):
