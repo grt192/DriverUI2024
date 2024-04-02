@@ -24,7 +24,7 @@ class MapDisplayWidget(QWidget):
         self.mapLabel.setMaximumWidth(self.mapX)
         self.mapLabel.setMaximumHeight(self.mapY)
 
-        self.mapPixmap = QPixmap("./Images/Field.png")
+        self.mapPixmap = QPixmap("./Images/Field_clean.png")
         self.robotPixmap = QPixmap("./Images/Robot.png").scaled(
             self.robotScale,
             self.robotScale
@@ -42,7 +42,7 @@ class MapDisplayWidget(QWidget):
         # Set up QLabel for robot icon
         self.robotLabel = QLabel(self.mapLabel)
         self.robotLabel.setPixmap(self.robotPixmap)
-        self.robotLabel.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+        self.robotLabel.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
         self.robotLabel.setMask(self.robotPixmap.mask())  # Use transparency information for masking
 
         self.robotPoseRootNTTableName = "Shuffleboard"
@@ -72,7 +72,7 @@ class MapDisplayWidget(QWidget):
         self.reloadMaps()
 
     def reloadMaps(self):
-        self.mapPixmap = QPixmap("./Images/Field.png")
+        self.mapPixmap = QPixmap("./Images/Field_clean.png")
         rotation_angle = 180 if self.alliance == "red" else 0
         transform = QTransform().rotate(rotation_angle)
         self.mapPixmap = self.mapPixmap.transformed(transform)
