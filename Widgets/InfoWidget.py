@@ -1,4 +1,4 @@
-from PySide6.QtCore import Signal
+from PySide6.QtCore import Signal, QTimer
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QSizePolicy, QPushButton
 from Widgets.CustomWidgets.BaseWidgets.BoolDisplayLabel import BoolDisplayLabel
 from Widgets.CustomWidgets.BaseWidgets.IntDisplayLabel import IntDisplayLabel
@@ -14,17 +14,20 @@ class InfoWidget(QWidget):
         super().__init__()
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
 
+        self.timer = QTimer()
+        self.timer.start(500)
         self.allianceLabel = AllianceLabel(self)
         self.timeLeftLabel = GradientWarningDoubleDisplayLabel(
             "Time", "FMS", "TimeLeft",
             (255, 105, 0), (255, 219, 194),
-            0., 135,
+            20., 135,
+            self.timer,
             parent = self, debug = False
         )
         self.elevatorExtensionPercentLabel = GradientDoubleDisplayLabel(
             "Elevator%", "Elevator", "ExtensionPercent",
             (214, 157, 250),(157, 0, 255),
-            0., 100.,
+            0., 1.,
             "color: white; font-weight: bold; font-size: 20px;",
             parent = self, debug = False
         )
@@ -37,6 +40,7 @@ class InfoWidget(QWidget):
             "10 Current", "Motors", "10Current",
             (0,180, 70), (1, 181, 71),
             0, 40,
+            self.timer,
             "color: white; font-weight: bold; font-size: 20px;",
             parent = self, debug = False
         )
@@ -44,6 +48,7 @@ class InfoWidget(QWidget):
             "10 Voltage: ", "Motors", "10Voltage",
             (0, 180, 70), (1, 181, 71),
             12, 13,
+            self.timer,
             "color: white; font-weight: bold; font-size: 20px;",
             parent = self, debug = False
         )
@@ -52,6 +57,7 @@ class InfoWidget(QWidget):
             "10 Temp", "Motors", "10Temperature",
             (153, 215, 189), (243, 95, 0),
             10, 50,
+            self.timer,
             "color: white; font-weight: bold; font-size: 20px;",
             parent = self, debug = False
         )
@@ -59,6 +65,7 @@ class InfoWidget(QWidget):
             "11 Current", "Motors", "11Current",
             (0, 180, 70), (1, 181, 71),
             0, 40,
+            self.timer,
             "color: white; font-weight: bold; font-size: 20px;",
             parent=self, debug=False
         )
@@ -66,6 +73,7 @@ class InfoWidget(QWidget):
             "11 Voltage: ", "Motors", "11Voltage",
             (0, 180, 70), (1, 181, 71),
             12, 13,
+            self.timer,
             "color: white; font-weight: bold; font-size: 20px;",
             parent=self, debug=False
         )
@@ -73,6 +81,7 @@ class InfoWidget(QWidget):
             "11 Temp", "Motors", "11Temperature",
             (153, 215, 189), (243, 95, 0),
             10, 50,
+            self.timer,
             "color: white; font-weight: bold; font-size: 20px;",
             parent=self, debug= False
         )
@@ -81,6 +90,21 @@ class InfoWidget(QWidget):
             (0,180,70), (255, 0, 0),
             "color: white; font-weight: bold; font-size: 16px;",
             parent = self
+        )
+        self.ampSensorLabel = BoolDisplayLabel(
+            "AMP Sensor", "Intake", "AMPSensor",
+            (0, 255, 0), (255, 0, 0),
+            parent=self
+        )
+        self.frontSensorLabel = BoolDisplayLabel(
+            "Front Sensor", "Intake", "FrontSensor",
+            (0,255,0), (255, 0, 0),
+            parent = self
+        )
+        self.rockwellSensorLabel = BoolDisplayLabel(
+            "R Sensor", "Intake", "Rockwell",
+            (0, 255, 0), (255, 0, 0),
+            parent=self
         )
         self.updateButton = QPushButton("Update")
         self.updateButton.setStyleSheet("color: white; font-weight: bold; font-size: 20px;")
@@ -98,6 +122,9 @@ class InfoWidget(QWidget):
         layout.addWidget(self.motor11VoltageLabel)
         layout.addWidget(self.motor11TemperatureLabel)
         layout.addWidget(self.visionConnectionLabel)
+        layout.addWidget(self.ampSensorLabel)
+        layout.addWidget(self.frontSensorLabel)
+        layout.addWidget(self.rockwellSensorLabel)
         layout.addWidget(self.updateButton)
 
     def updateLabels(self):
