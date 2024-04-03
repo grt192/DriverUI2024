@@ -4,18 +4,18 @@ from PySide6.QtCore import Signal, QTimer
 from PySide6.QtWidgets import QApplication
 import sys
 import os
+from Helpers.NetworktableManager import NetworkTableManager
 from Helpers.NestedNetworktableHelper import NestedNetworkTableManager
 
 
 class MapDisplayWidget(QWidget):
-    newCrosshairPosition = Signal(tuple)
     fieldX = 16.451
     fieldY = 8.211
-    mapX = 400
-    mapY = 801
-    robotScale = 50
+    mapX = 300
+    mapY = 606
+    robotScale = 40
 
-    def __init__(self, alliance, parent=None):
+    def __init__(self, isRedAlliance, parent=None):
         super().__init__(parent)
 
         self.mapLabel = QLabel()
@@ -29,10 +29,12 @@ class MapDisplayWidget(QWidget):
             self.robotScale,
             self.robotScale
             )
+        self.isRedAllianceNTTable = NetworkTableManager("FMSInfo", "IsRedAlliance")
+        self.isRedAllianceNTTable.new_value_available.connect(self.changeAllianceColor)
+        self.isRedAlliance= self.isRedAllianceNTTable.getValue()
+        print(self.isRedAllianceNTTable.getValue())
 
-        self.alliance = alliance
-
-        if self.alliance == "red":
+        if self.isRedAlliance:
             rotationAngle = 180
         else:
             rotationAngle = 0
@@ -60,8 +62,12 @@ class MapDisplayWidget(QWidget):
         layout.addWidget(self.mapLabel)
         self.setLayout(layout)
 
-    def changeAllianceColor(self, new_alliance_color):
-        self.alliance = new_alliance_color
+    def changeAllianceColor(self, info: tuple):
+        print(info[1])
+        if info[1]:
+            self.alliance = "red"
+        else:
+            self.alliance = "blue"
         self.reloadMaps()
 
     def reloadMaps(self):
@@ -71,21 +77,21 @@ class MapDisplayWidget(QWidget):
         self.mapPixmap = self.mapPixmap.transformed(transform)
         self.mapLabel.setPixmap(self.mapPixmap)
 
-    def updateRobotPose(self, entryName, entryValue):
+    def updateRobotPose(self, info: tuple):
+        entryName = info[0]
+        entryValue = info[1]
         if entryName == "position" and entryValue != None:
-            print("position")
             self.robotPose[0] = entryValue
         elif entryName == "Robot" and entryValue != None:
             for i in range(1, len(entryValue)):
                 self.robotPose[i] = entryValue[i]
-            print("Robot")
         else:
             return
         self.robotLabel.hide()
         newRobotPose = [self.robotPose[0] / self.fieldX * self.mapY,
                         self.robotPose[1] / self.fieldY * self.mapX,
                         180 - self.robotPose[2]]
-        if self.alliance == "blue":
+        if not self.isRedAlliance:
             self.robotLabel.setPixmap(
                 self.robotPixmap.scaled(
                     self.robotScale,
