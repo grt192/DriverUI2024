@@ -36,7 +36,6 @@ class BoolDisplayLabel(QLabel):
             self.setText(self.parameterName)
 
     def manualUpdate(self):
-        print(self.entryName)
         if (self.NTManager.getValue() != None):
             self.updateFromNT(("init", self.NTManager.getValue()))
         else:
