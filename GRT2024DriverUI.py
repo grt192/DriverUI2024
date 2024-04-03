@@ -7,7 +7,6 @@ from Widgets.InfoWidget import InfoWidget
 from Widgets.DriverCameraWidget import CameraWidget
 from Widgets.MapDisplayWidget import MapDisplayWidget
 from Widgets.RobotStatusWidget import RobotStatusWidget
-
 class GRT2024DriverUI(QMainWindow):
     newCrosshairPosition = Signal(int, int)
 
@@ -15,8 +14,8 @@ class GRT2024DriverUI(QMainWindow):
         super().__init__()
 
         self.setWindowTitle("GRT 2024 Driver UI")
-        self.resize(1920, 1080)
-
+        self.resize(1920, 850)
+        self.setMaximumHeight(630)
         self.mainLayout = QHBoxLayout()
 
         self.centralWidget = QWidget(self)
@@ -27,11 +26,9 @@ class GRT2024DriverUI(QMainWindow):
         self.FMSInfoWidget.setMaximumWidth(200)
         self.mainLayout.addWidget(self.FMSInfoWidget)
 
-        self.mapWidget = MapDisplayWidget(
-            self.FMSInfoWidget.isRedAlliance
-        )
-        self.mapWidget.setMaximumWidth(400)
-        self.mapWidget.setMaximumHeight(810)
+        self.mapWidget = MapDisplayWidget(self.FMSInfoWidget.allianceLabel.isRedAlliance, self)
+        self.mapWidget.setMaximumWidth(300)
+        self.mapWidget.setMaximumHeight(606)
 
         self.mainLayout.addWidget(self.mapWidget)
 
@@ -40,6 +37,7 @@ class GRT2024DriverUI(QMainWindow):
 
         self.cameraWidget = CameraWidget()
         self.cameraLayout.addWidget(self.cameraWidget)
+        self.setStyleSheet("background-color: black; color: white;")
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
