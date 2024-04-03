@@ -14,8 +14,8 @@ class GRT2024DriverUI(QMainWindow):
         super().__init__()
 
         self.setWindowTitle("GRT 2024 Driver UI")
-        self.resize(1920, 1080)
-
+        self.resize(1920, 850)
+        self.setMaximumHeight(630)
         self.mainLayout = QHBoxLayout()
 
         self.centralWidget = QWidget(self)
@@ -27,8 +27,8 @@ class GRT2024DriverUI(QMainWindow):
         self.mainLayout.addWidget(self.FMSInfoWidget)
 
         self.mapWidget = MapDisplayWidget(self.FMSInfoWidget.allianceLabel.isRedAlliance, self)
-        self.mapWidget.setMaximumWidth(400)
-        self.mapWidget.setMaximumHeight(810)
+        self.mapWidget.setMaximumWidth(300)
+        self.mapWidget.setMaximumHeight(606)
 
         self.mainLayout.addWidget(self.mapWidget)
 
