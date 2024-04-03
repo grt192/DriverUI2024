@@ -9,6 +9,7 @@ class GradientWarningDoubleDisplayLabel(QLabel):
         self, parameterName: str, tableName: str, entryName: str,
         minColor: tuple[int, int, int], maxColor: tuple[int, int, int],
         minValue: float, maxValue: float,
+        timer: QTimer,
         generalStyleSheet: str = "color: white; font-weight: bold; font-size: 30px;",
         parent= None, debug = False):
         super().__init__(parameterName, parent)
@@ -43,10 +44,9 @@ class GradientWarningDoubleDisplayLabel(QLabel):
 
         self.setAlignment(Qt.AlignCenter)
         self.setAutoFillBackground(True)
-
+        self.warning = False
         self.isFlushing = False
-        self.warnTimer = QTimer()
-        self.warnTimer.timeout.connect(self.flushWarning)
+        timer.timeout.connect(self.flushWarning)
 
         self.manualUpdate()
 
@@ -60,9 +60,9 @@ class GradientWarningDoubleDisplayLabel(QLabel):
     def updateFromNT(self, message: tuple):
         newValue = float(message[1])
         if newValue < self.minValue or newValue > self.maxValue:
-            self.warnTimer.start(100)
+            self.warning = True
         else:
-            self.warnTimer.stop()
+            self.warning = False
             difference = newValue - self.minValue
             newR = int(self.minR + difference * self.rRatio)
             newG = int(self.minG + difference * self.gRatio)
@@ -86,6 +86,8 @@ class GradientWarningDoubleDisplayLabel(QLabel):
             self.debugValue = self.minValue
 
     def flushWarning(self):
+        if not self.warning:
+            return
         if self.isFlushing:
             self.setStyleSheet("background-color: black;" + self.generalStyleSheet)
             self.isFlushing = False
