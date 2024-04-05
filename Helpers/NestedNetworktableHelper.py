@@ -18,3 +18,6 @@ class NestedNetworkTableManager(QObject):
 
     def valueChanged(self, table, key, value, isNew):
         self.new_value_available.emit((key, value))
+
+    def getValue(self):
+        return self.table.getValue(self.entry_name, 0)
