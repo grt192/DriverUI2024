@@ -19,7 +19,7 @@ class CameraWidget(QWidget):
     # resolutionX = 320
     # resolutionY = 240
     # FPS = 120
-    scale = 4
+    scale =5
     #The actual video size on the UI
     windowWidth = resolutionX * scale
     windowHeight = resolutionY * scale
