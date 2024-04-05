@@ -13,7 +13,7 @@ class MapDisplayWidget(QWidget):
     fieldY = 8.211
     mapX = 300
     mapY = 606
-    robotScale = 40
+    robotScale = 30
 
     def __init__(self, isRedAlliance, parent=None):
         super().__init__(parent)
@@ -25,7 +25,7 @@ class MapDisplayWidget(QWidget):
         self.mapLabel.setMaximumHeight(self.mapY)
 
         self.mapPixmap = QPixmap("./Images/Field.png")
-        self.robotPixmap = QPixmap("./Images/Robot.png").scaled(
+        self.robotPixmap = QPixmap("./Images/Circle.jpg").scaled(
             self.robotScale,
             self.robotScale
             )
@@ -87,6 +87,7 @@ class MapDisplayWidget(QWidget):
                 self.robotPose[i] = entryValue[i]
         else:
             return
+        # print(self.robotPose[2])
         self.robotLabel.hide()
         newRobotPose = [self.robotPose[0] / self.fieldX * self.mapY,
                         self.robotPose[1] / self.fieldY * self.mapX,
