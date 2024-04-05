@@ -40,7 +40,7 @@ class GRT2024DriverUI(QMainWindow):
         self.cameraLayout.addWidget(self.cameraWidget)
 
         self.infoWidget2 = InfoWidget2()
-        self.infoWidget2.setMaximumWidth(200)
+        self.infoWidget2.setMaximumWidth(250)
         self.mainLayout.addWidget(self.infoWidget2)
         self.setStyleSheet("background-color: black; color: white;")
 
