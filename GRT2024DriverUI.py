@@ -4,9 +4,10 @@ from PySide6.QtGui import QFontDatabase
 from PySide6.QtCore import Signal
 from PySide6.QtWidgets import QApplication, QWidget, QMainWindow, QHBoxLayout, QVBoxLayout
 from Widgets.InfoWidget import InfoWidget
+from Widgets.InfoWidget2 import InfoWidget2
 from Widgets.DriverCameraWidget import CameraWidget
 from Widgets.MapDisplayWidget import MapDisplayWidget
-from Widgets.RobotStatusWidget import RobotStatusWidget
+
 class GRT2024DriverUI(QMainWindow):
     newCrosshairPosition = Signal(int, int)
 
@@ -37,6 +38,10 @@ class GRT2024DriverUI(QMainWindow):
 
         self.cameraWidget = CameraWidget()
         self.cameraLayout.addWidget(self.cameraWidget)
+
+        self.infoWidget2 = InfoWidget2()
+        self.infoWidget2.setMaximumWidth(250)
+        self.mainLayout.addWidget(self.infoWidget2)
         self.setStyleSheet("background-color: black; color: white;")
 
 if __name__ == "__main__":

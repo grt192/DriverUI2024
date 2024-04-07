@@ -13,7 +13,7 @@ class MapDisplayWidget(QWidget):
     fieldY = 8.211
     mapX = 300
     mapY = 606
-    robotScale = 40
+    robotScale = 30
 
     def __init__(self, isRedAlliance, parent=None):
         super().__init__(parent)
@@ -25,10 +25,13 @@ class MapDisplayWidget(QWidget):
         self.mapLabel.setMaximumHeight(self.mapY)
 
         self.mapPixmap = QPixmap("./Images/Field.png")
-        self.robotPixmap = QPixmap("./Images/Robot.png").scaled(
+        self.robotPixmap = QPixmap("./Images/Circle.jpg").scaled(
             self.robotScale,
             self.robotScale
             )
+        self.shootPixmap = QPixmap("./Images/Circle.jpg").scaled(10, 10)
+        self.shootLabel = QLabel(self.mapLabel)
+        self.shootLabel.setPixmap(self.shootPixmap)
         self.isRedAllianceNTTable = NetworkTableManager("FMSInfo", "IsRedAlliance")
         self.isRedAllianceNTTable.new_value_available.connect(self.changeAllianceColor)
         self.isRedAlliance= self.isRedAllianceNTTable.getValue()
@@ -56,6 +59,11 @@ class MapDisplayWidget(QWidget):
         self.xPoseNTManager.new_value_available.connect(self.updateRobotPose)
         self.robotPose = [0., 0., 0.]
 
+        self.xShootNTManager = NetworkTableManager("Testing", "x", self)
+        self.xShootNTManager.new_value_available.connect(self.updateShootingPose)
+        self.yShootNTManager = NetworkTableManager("Testing", "y", self)
+        self.yShootNTManager.new_value_available.connect(self.updateShootingPose)
+        self.shootPose = [0., 0.]
         # Set up layout
         self.mapLabel.setPixmap(self.mapPixmap)
         layout = QVBoxLayout()
@@ -87,6 +95,7 @@ class MapDisplayWidget(QWidget):
                 self.robotPose[i] = entryValue[i]
         else:
             return
+        # print(self.robotPose[2])
         self.robotLabel.hide()
         newRobotPose = [self.robotPose[0] / self.fieldX * self.mapY,
                         self.robotPose[1] / self.fieldY * self.mapX,
@@ -125,8 +134,28 @@ class MapDisplayWidget(QWidget):
                 self.robotScale
             )
         self.robotLabel.show()
-        self.robotLabel.raise_()
-        self.robotLabel.raise_()
+        # self.robotLabel.raise_()
+        # self.robotLabel.raise_()
+
+    def updateShootingPose(self, info):
+        entryName = info[0]
+        entryValue = info[1]
+        # print(entryName)
+        self.shootLabel.hide()
+        if entryName == "/Testing/x":
+            self.shootPose[0] = entryValue
+        else:
+            self.shootPose[1] = entryValue
+        # print(self.shootPose)
+        newShootPose = [self.shootPose[0] / self.fieldX * self.mapY,
+                        self.shootPose[1] / self.fieldY * self.mapX]
+        if not self.isRedAlliance:
+           self.shootLabel.setGeometry(int(self.mapX - newShootPose[1] - 5), int(self.mapY - newShootPose[0] - 5), 10, 10)
+        else:
+            self.shootLabel.setGeometry(int(newShootPose[0])-5, int(newShootPose[1])-5, 10, 10)
+        self.shootLabel.show()
+        self.shootLabel.raise_()
+
 
     def printSize(self):
         print("Entire widget size:")
