@@ -9,7 +9,7 @@ class MotorWidget(QWidget):
         self.name = name
         self.timer = timer
         self.nameLabel = QLabel(name)
-        self.nameLabel.setStyleSheet("color: red; background-color: black; font-size: 14px")
+        self.nameLabel.setStyleSheet("color: red; background-color: black; font-size: 10px")
         self.currentLabel = GradientWarningDoubleDisplayLabel(
             "C", "Motors", NTName + "Current",
             (153, 215, 189), (243, 95, 0),
