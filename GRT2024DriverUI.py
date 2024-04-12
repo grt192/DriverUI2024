@@ -1,6 +1,5 @@
 import sys
 # PySide6 imports
-from PySide6.QtGui import QFontDatabase
 from PySide6.QtCore import Signal
 from PySide6.QtWidgets import QApplication, QWidget, QMainWindow, QHBoxLayout, QVBoxLayout
 from Widgets.InfoWidget import InfoWidget
