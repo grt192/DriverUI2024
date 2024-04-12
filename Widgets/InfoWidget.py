@@ -5,7 +5,7 @@ from Widgets.CustomWidgets.BaseWidgets.ConnectionDisplayLabel import ConnectionD
 from Widgets.CustomWidgets.AllianceLabel import AllianceLabel
 from Widgets.CustomWidgets.BaseWidgets.GradientDoubleDisplayLabel import GradientDoubleDisplayLabel
 from Widgets.CustomWidgets.BaseWidgets.GradientWarningDoubleDisplayLabel import GradientWarningDoubleDisplayLabel
-from Widgets.CustomWidgets.BaseWidgets.TranslationalSpeedLabel import TranslationalSpeedLabel
+# from Widgets.CustomWidgets.BaseWidgets.TranslationalSpeedLabel import TranslationalSpeedLabel
 class InfoWidget(QWidget):
 
     def __init__(self):
@@ -56,7 +56,7 @@ class InfoWidget(QWidget):
             "color: white; font-weight: bold; font-size: 16px;",
             parent = self
         )
-        self.translationalSpeedLabel = TranslationalSpeedLabel(self.timer, self)
+        # self.translationalSpeedLabel = TranslationalSpeedLabel(self.timer, self)
         self.updateButton = QPushButton("Update")
         self.updateButton.setStyleSheet("color: white; font-weight: bold; font-size: 20px;")
         self.updateButton.clicked.connect(self.updateLabels)
@@ -71,7 +71,7 @@ class InfoWidget(QWidget):
         layout.addWidget(self.frontSensorLabel)
         layout.addWidget(self.rockwellSensorLabel)
         layout.addWidget(self.visionConnectionLabel)
-        layout.addWidget(self.translationalSpeedLabel)
+        # layout.addWidget(self.translationalSpeedLabel)
         layout.addWidget(self.updateButton)
 
     def updateLabels(self):
