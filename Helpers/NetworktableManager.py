@@ -25,3 +25,6 @@ class NetworkTableManager(QObject):
 
     def getValue(self):
         return self.table.getValue(self.entryName, None)
+
+    def putString(self, value):
+        self.entry.setString(value)
