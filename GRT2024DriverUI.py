@@ -1,6 +1,5 @@
 import sys
 # PySide6 imports
-from PySide6.QtGui import QFontDatabase
 from PySide6.QtCore import Signal
 from PySide6.QtWidgets import QApplication, QWidget, QMainWindow, QHBoxLayout, QVBoxLayout
 from Widgets.InfoWidget import InfoWidget
@@ -15,7 +14,7 @@ class GRT2024DriverUI(QMainWindow):
         super().__init__()
 
         self.setWindowTitle("GRT 2024 Driver UI")
-        self.resize(1920, 850)
+        self.resize(1920, 630)
         self.setMaximumHeight(630)
         self.mainLayout = QHBoxLayout()
 
@@ -30,6 +29,7 @@ class GRT2024DriverUI(QMainWindow):
         self.mapWidget = MapDisplayWidget(self.FMSInfoWidget.allianceLabel.isRedAlliance, self)
         self.mapWidget.setMaximumWidth(300)
         self.mapWidget.setMaximumHeight(606)
+        self.FMSInfoWidget.allianceLabel.isRedSignal.connect(self.mapWidget.changeAllianceColor)
 
         self.mainLayout.addWidget(self.mapWidget)
 
@@ -47,5 +47,6 @@ class GRT2024DriverUI(QMainWindow):
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     window = GRT2024DriverUI()
-    window.show()
+    window.showFullScreen()
+    window.setGeometry(0, 0, 1920, 780)
     app.exec()
