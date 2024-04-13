@@ -71,16 +71,15 @@ class MapDisplayWidget(QWidget):
         self.setLayout(layout)
 
     def changeAllianceColor(self, info: tuple):
-        print(info[1])
-        if info[1]:
-            self.alliance = "red"
+        if info:
+            self.isRedAlliance = True
         else:
-            self.alliance = "blue"
+            self.isRedAlliance = False
         self.reloadMaps()
 
     def reloadMaps(self):
         self.mapPixmap = QPixmap("./Images/Field.png")
-        rotation_angle = 180 if self.alliance == "red" else 0
+        rotation_angle = 180 if self.isRedAlliance else 0
         transform = QTransform().rotate(rotation_angle)
         self.mapPixmap = self.mapPixmap.transformed(transform)
         self.mapLabel.setPixmap(self.mapPixmap)
@@ -95,11 +94,12 @@ class MapDisplayWidget(QWidget):
                 self.robotPose[i] = entryValue[i]
         else:
             return
-        # print(self.robotPose[2])
         self.robotLabel.hide()
         newRobotPose = [self.robotPose[0] / self.fieldX * self.mapY,
                         self.robotPose[1] / self.fieldY * self.mapX,
                         180 - self.robotPose[2]]
+        print(newRobotPose)
+        print("IS red: ", self.isRedAlliance)
         if not self.isRedAlliance:
             self.robotLabel.setPixmap(
                 self.robotPixmap.scaled(
@@ -115,6 +115,7 @@ class MapDisplayWidget(QWidget):
                 self.robotScale,
                 self.robotScale
             )
+            print("Set to blue")
             # print(int(self.mapX - newRobotPose[1] - self.robotScale / 2))
             # print(int(self.mapY - newRobotPose[0] - self.robotScale / 2))
             # print("-----------------------")
