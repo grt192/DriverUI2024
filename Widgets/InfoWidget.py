@@ -7,6 +7,7 @@ from Widgets.CustomWidgets.BaseWidgets.GradientDoubleDisplayLabel import Gradien
 from Widgets.CustomWidgets.BaseWidgets.GradientWarningDoubleDisplayLabel import GradientWarningDoubleDisplayLabel
 # from Widgets.CustomWidgets.BaseWidgets.TranslationalSpeedLabel import TranslationalSpeedLabel
 from Widgets.CustomWidgets.BaseWidgets.AutonSelectionLabel import AutonSelectionLabel
+from Widgets.CustomWidgets.BaseWidgets.StringDisplayLabel import StringDisplayLabel
 
 class InfoWidget(QWidget):
 
@@ -61,11 +62,16 @@ class InfoWidget(QWidget):
 #        self.translationalSpeedLabel = TranslationalSpeedLabel(self.timer, self)
 
         self.autonSelection = AutonSelectionLabel(self)
-
+        self.selectedAutonDisplayLabel = StringDisplayLabel(
+            "Selected: ", "Auton", "Selected",
+            "color: red; font-weight: bold; font-size: 10px;",
+            parent = self
+        )
 
         self.updateButton = QPushButton("Update")
         self.updateButton.setStyleSheet("color: white; font-weight: bold; font-size: 20px;")
         self.updateButton.clicked.connect(self.updateLabels)
+
 
         layout = QVBoxLayout(self)
         layout.addWidget(self.allianceLabel)
@@ -80,6 +86,7 @@ class InfoWidget(QWidget):
         # layout.addWidget(self.translationalSpeedLabel)
 
         layout.addWidget(self.autonSelection)
+        layout.addWidget(self.selectedAutonDisplayLabel)
         layout.addWidget(self.updateButton)
 
     def updateLabels(self):
@@ -91,4 +98,6 @@ class InfoWidget(QWidget):
         self.ampSensorLabel.update()
         self.rockwellSensorLabel.update()
         self.visionConnectionLabel.updateConnectionStatus()
+        self.autonSelection.update()
+        self.selectedAutonDisplayLabel.manualUpdate()
 
