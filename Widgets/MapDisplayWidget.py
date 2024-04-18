@@ -35,7 +35,7 @@ class MapDisplayWidget(QWidget):
         self.isRedAllianceNTTable = NetworkTableManager("FMSInfo", "IsRedAlliance")
         self.isRedAllianceNTTable.new_value_available.connect(self.changeAllianceColor)
         self.isRedAlliance= self.isRedAllianceNTTable.getValue()
-        print(self.isRedAllianceNTTable.getValue())
+        # print(self.isRedAllianceNTTable.getValue())
 
         if self.isRedAlliance:
             rotationAngle = 180
@@ -98,8 +98,8 @@ class MapDisplayWidget(QWidget):
         newRobotPose = [self.robotPose[0] / self.fieldX * self.mapY,
                         self.robotPose[1] / self.fieldY * self.mapX,
                         180 - self.robotPose[2]]
-        print(newRobotPose)
-        print("IS red: ", self.isRedAlliance)
+        # print(newRobotPose)
+        # print("IS red: ", self.isRedAlliance)
         if not self.isRedAlliance:
             self.robotLabel.setPixmap(
                 self.robotPixmap.scaled(
